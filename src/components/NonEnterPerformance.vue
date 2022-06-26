@@ -1,3 +1,10 @@
+<!--
+추가 사항
+  1. 데이터 바인딩을 통해서 반복문 돌리기, ajax 사용하기
+  2. 최대 height를 지정하고 overflow: scroll 적용하기(때에 따라서 무한 스크롤로 돌려보기)
+  3. alert창 구현하기
+-->
+
 <template>
       <!--검색 부분 -->
      <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">

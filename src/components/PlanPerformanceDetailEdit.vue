@@ -1,3 +1,9 @@
+<!--
+고려사항 :
+  1. 시간 음수로 못하게 막기
+  2. +를 누르면 칸이 새로 생성되게 하고, 순서 데이터에 2를 자동으로 넣기
+  3. X를 누르면 칸이 사라지게 하며, 순서 테이블이 초기회 되기
+-->
 <template>
   <div class="bg-slate-700 relative">
     <div class="modal bg-slate-600 rounded-lg absolute">

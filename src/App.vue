@@ -1,4 +1,5 @@
 <template>
+  <!-- 상단 메뉴 바-->
   <div class="bg-slate-700 relative">
 
     <div class="flex" style="width:100vw;">
@@ -57,6 +58,7 @@
             </ul>
           </div>
         <!--프로젝트 관리 폴더-->
+
         <!--승인 관리 폴더-->
           <div>
             <div @click="smallMenuToggle('approve')" class="text-lg bg-green-300 w-44 pl-3">승인관리</div>
@@ -180,7 +182,7 @@ export default {
 
 <style>
 #app {
-   width: 100vw;
+   width: 1200px;
   height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

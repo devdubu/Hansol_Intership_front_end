@@ -1,3 +1,14 @@
+<!--
+개선 사항
+
+추가사항
+  1. 데이터 바인딩 하기
+  2. ajax를 통해서 데이터 바인딩하기
+  3. view페이지는 위 시간대를 고정적으로 바꾸기(select구문 삭제 후 div 박스로 변경하기)
+고려 사항
+  1. 확정, 팀장 승인, 사업부 승인, 마감 등등 표기 버튼 만들기
+  2. 입력한 시간에 따라서 동적으로 상단 시간 변경하기
+-->
 <template>
   <div class="bg-slate-700 relative">
     <div class="modal bg-slate-600 rounded-lg absolute">
