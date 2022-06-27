@@ -84,7 +84,7 @@
             </div>
            
             <!-- 실제 데이터 인풋 -->
-            <div class="bg-slate-600 mr-16" >
+            <div class="bg-slate-600 mr-16" style="width: 1230px;">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 middle-table"><p>221670</p></div>
                 <div class="pt-2 border-l middle-table">

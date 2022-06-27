@@ -66,7 +66,7 @@
               <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <!-- 컨텐츠 부분 -->
-          <div class="ml-5 mt-10 text-white">
+          <div class="ml-5 mt-10 text-white" style="width: 1294px">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
             <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg border-b table-size">
@@ -78,22 +78,25 @@
                 <div class="pt-2 name-interval border-l"><p class="pr-2">PM</p></div>
                 <div class="pt-2 name-interval border-l"><p class="pr-2">영업사원</p></div>
                 <div class="pt-2 interval border-l"><p class="pr-2">SAP 등록일</p></div>
-                <div class="pt-2 interval border"><p class="pr-2">추가</p></div>
+                <div class="pt-2 interval border-l"><p class="pr-2">추가</p></div>
               </div>
             </div>
            
             <!-- 실제 데이터 인풋 -->
-            <div class="bg-slate-600 mr-16" >
+            <div class="bg-slate-600 mr-16" v-for="(project,index) in proj" >
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 " style="width:150px"><p>CRM-0054.119</p></div>
+                <div class="mr-3 pt-2 ml-5 " style="width:150px"><p>{{ project.project_id }}</p></div>
                 <div class="pt-2 textover border-l" style="height:40px; width: 480px;">
-                  <p>SKT/2022년_지능망 리빌딩에 따른 MMSC 연동 기능 변경 개발 </p>
+                  <p>{{ project.project_name }} </p>
                 </div>
-                <div class="pt-2 interval border-l"><p >2022-05-24</p></div>
-                <div class="pt-2 interval border-l"><p >2022-08-23</p></div>
-                <div class="pt-2 name-interval border-l"><p class="pr-2">손진호</p></div>
-                <div class="pt-2 name-interval border-l"><p class="pr-2">손진호</p></div>
-                <div class="pt-2 interval border-l"><p>2022-05-24</p></div>
+                <div class="pt-2 interval border-l"><p>{{proj_start[index]}}</p></div>
+                <div class="pt-2 interval border-l"><p >{{ proj_end[index] }}</p></div>
+                <div class="pt-2 name-interval border-l"><p class="pr-2">{{ project.PM }}</p></div>
+                <!--영업 사원 이름 ajax 통신에는 교체 요망-->
+                <div class="pt-2 name-interval border-l"><p class="pr-2">{{ project.PM }}</p></div>
+                <!--SAP에 등록 날짜 임으로 ajax 요청 후에 교체 요망-->
+                <div class="pt-2 interval border-l"><p>{{ proj_end[index] }}</p></div>
+                <!---->
                 <div class="interval border-l">
                   <button class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
                 </div>
@@ -106,15 +109,35 @@
 
 </template>
 <script>
+import project from '../assets/projData.json';
 export default {
   name: 'CompanyProject',
   data(){
     return{
-      
+      proj : project,
+      proj_start : [],
+      proj_end : [],
     }
   },
+  mounted() {
+    this.writeDate(project);
+  },
   methods:{
-   
+   writeDate(proj){
+     var year = '', month = '', day = '';
+     for(var i = 0; i<proj.length;i++){
+       year = proj[i].project_start.substr(0,4);
+       month = proj[i].project_start.substr(4,2);
+       day = proj[i].project_start.substr(6,2);
+       this.proj_start[i] = year +'-'+month+'-'+ day;
+       console.log(this.proj_start[i])
+
+       year = proj[i].project_ended.substr(0,4);
+       month = proj[i].project_ended.substr(4,2);
+       day = proj[i].project_ended.substr(6,2);
+       this.proj_end[i] = year+'-'+month+'-'+day;
+     }
+   }
   },
   components: {
   }

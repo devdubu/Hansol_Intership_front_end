@@ -92,6 +92,7 @@
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core'
 
+
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
@@ -183,7 +184,7 @@ export default {
 <style>
 #app {
    width: 1200px;
-  height: 100vh;
+  height: 800px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -1,19 +1,20 @@
 import { createWebHistory, createRouter } from "vue-router";
-import CalendarTable from './components/CalenderTable.vue';
 import CompanyProject from './components/CompanyProject.vue';
 import ComfirmManager from './components/ConfirmManager.vue';
 import NonEnterPerformance from './components/NonEnterPerformance.vue';
 import StandardCode from './components/StandardCode.vue';
 import DeadlineCalender from './components/DeadlineCalender.vue'
+import PlanCalender from './components/PlanCalender.vue';
+import PerfCalender from './components/PerfCalender.vue';
 
 const routes = [
   {
     path: "/performance",
-    component: CalendarTable,
+    component: PerfCalender,
   },
   {
     path: "/plan",
-    component: CalendarTable,
+    component: PlanCalender,
   },
   {
     path: "/project",

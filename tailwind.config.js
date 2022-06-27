@@ -8,7 +8,9 @@ module.exports = {
     "./src/components/NonEnterPerformance.vue",
     "./src/components/StandardCode.vue",
     "./src/components/DeadlineCalender.vue",
-    "./src/components/PlanPerformanceDetail.vue"
+    "./src/components/PlanPerformanceDetail.vue",
+      ".src/components/PlanCalender.vue",
+      "./src/components/PerfCalender.vue"
     
   ],
   theme: {

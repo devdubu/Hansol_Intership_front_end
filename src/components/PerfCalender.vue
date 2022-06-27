@@ -23,7 +23,11 @@ Mon 부터 시작하기
     <PlanPerformanceDetailVue v-if="viewModal" @closeModal="showViewModal()" @showEditModal="showViewModalEdit(), showViewModal()"/>
     <PlanPerformanceDetailEditVue v-if="editModal" @closeEditModal="showViewModalEdit()"/>
   </div>
-    <div>    
+    <div>
+      <div class="text-white flex ml-8 text-xl">
+        <h1>실적관리</h1>
+      </div>
+      <div class="grow"></div>
          <!--검색 부분 -->
       <div class="bg-slate-700 rounded-lg ml-2 mt-5">
                 
@@ -58,13 +62,16 @@ Mon 부터 시작하기
 
             </div>
             <div class="grow"></div>
-            <div class="text-white mr-8 mt-2" style="max-width:1200px">
+            <div class="text-white mr-3 mt-2" style="max-width:1200px">
                 <div>
-                  <p class="text-left	">1주차 계획: 40.0Hr - 개인실적: 45.5Hr - 실적 : 97.5Hr</p>
+                  <p class="text-left	">1주차 계획: <span class="text-cyan-400">40.0Hr</span> - 개인실적: <span class="text-emerald-400">45.5Hr</span></p>
                 </div>
                 <div>
-                  <p class="text-left	">2주차 계획: 40.0Hr - 개인실적 52.0Hr - 실적 : 97.5Hr</p>
+                  <p class="text-left	">2주차 계획: <span class="text-cyan-400">40.0Hr</span> - 개인실적: <span class="text-emerald-400">52.0Hr</span></p>
                 </div>
+            </div>
+            <div class="mr-5 mt-5 text-white">
+              <p>2주 총 실적 : <span class="text-rose-500">97.5Hr</span></p>
             </div>
               <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
@@ -73,12 +80,7 @@ Mon 부터 시작하기
                 <p>DT개발팀 Web R&D 파트</p>
             </div>
             <div class="grow"></div>
-            <div class="flex mt-7">
-                <div class="mr-4 bg-orange-500 w-40 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></div>
-                <div class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></div>
-                <div class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></div>
-                <div class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></div>
-            </div>
+
           </div>
 
 
@@ -202,7 +204,7 @@ import PlanPerformanceDetailVue from './PlanPerformanceDetail.vue'
 import PlanPerformanceDetailEditVue from './PlanPerformanceDetailEdit.vue';
 
 export default {
-    name: 'CalendarTable',
+    name: 'PerfCalender',
     data(){
         return{
           viewModal: false,
