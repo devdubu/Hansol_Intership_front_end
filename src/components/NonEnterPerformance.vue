@@ -72,7 +72,7 @@
           <div class="ml-5 mt-5 text-white">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg border-b table-size">
+            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg  table-size">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 middle-table"><p>부서 코드</p></div>
                 <div class="pt-2 border-l middle-table"><p>부서 명</p></div>
@@ -84,16 +84,16 @@
             </div>
            
             <!-- 실제 데이터 인풋 -->
-            <div class="bg-slate-600 mr-16" style="width: 1230px;">
+            <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 middle-table"><p>221670</p></div>
+                <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ noenter.depart_id }}</p></div>
                 <div class="pt-2 border-l middle-table">
-                  <p>재무팀</p>
+                  <p>{{ noenter.depart_name }}</p>
                 </div>
-                <div class="pt-2 interval border-l middle-table"><p >김화영</p></div>
-                <div class="pt-2 interval border-l middle-table"><p >01012341234</p></div>
-                <div class="pt-2 name-interval border-l short-table"><p class="pr-2">A</p></div>
-                <div class="pt-2 name-interval border-l long-table"><p class="ml-4">05,07,10,11,12,15,16,17,19,20,21,22,25</p></div>
+                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.empolyee_name }}</p></div>
+                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.phonenumber }}</p></div>
+                <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobile_type }}</p></div>
+                <div class="pt-2 name-interval border-l long-table"><p class="ml-4">{{ noenter.no_enter_day }}</p></div>
                 
               </div>
             </div>
@@ -104,11 +104,12 @@
 
 </template>
 <script>
+import noenter from '../assets/nonEnterData.json';
 export default {
   name: 'NonEnterPerformance',
   data(){
     return{
-      
+      noEnter : noenter,
     }
   },
   methods:{

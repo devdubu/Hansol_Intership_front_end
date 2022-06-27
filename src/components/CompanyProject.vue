@@ -69,7 +69,7 @@
           <div class="ml-5 mt-10 text-white" style="width: 1294px">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg border-b table-size">
+            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg table-size">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5" style="width:150px"><p>프로젝트 코드</p></div>
                 <div class="pt-2 border-l" style="width:480px"><p>프로젝트 명</p></div>
@@ -83,7 +83,7 @@
             </div>
            
             <!-- 실제 데이터 인풋 -->
-            <div class="bg-slate-600 mr-16" v-for="(project,index) in proj" >
+            <div class="bg-slate-600 mr-16 border-t" v-for="(project,index) in proj" >
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 " style="width:150px"><p>{{ project.project_id }}</p></div>
                 <div class="pt-2 textover border-l" style="height:40px; width: 480px;">

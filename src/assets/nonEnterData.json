@@ -1,0 +1,26 @@
+[
+  {
+    "depart_id" : "2211670",
+    "depart_name": "재무팀",
+    "empolyee_name": "김화영",
+    "phonenumber": "01012341234",
+    "mobile_type": "A",
+    "no_enter_day": "05,07,10,11,12,15,16,17,19,20,21,22,25"
+  },
+  {
+    "depart_id" : "2211670",
+    "depart_name": "재무팀",
+    "empolyee_name": "김화영",
+    "phonenumber": "01012341234",
+    "mobile_type": "A",
+    "no_enter_day": "05,07,10,11,12,15,16,17,19,20,21,22,25"
+  },
+  {
+    "depart_id" : "2211670",
+    "depart_name": "재무팀",
+    "empolyee_name": "김화영",
+    "phonenumber": "01012341234",
+    "mobile_type": "A",
+    "no_enter_day": "05,07,10,11,12,15,16,17,19,20,21,22,25"
+  }
+]

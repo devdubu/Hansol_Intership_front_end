@@ -66,16 +66,16 @@
             </div>
            
             <!-- 실제 데이터 인풋 -->
-             <div class="bg-slate-600 h-10 border-t table-size">
+             <div class="bg-slate-600 h-10 border-t table-size" v-for="(standardcode,index) in standardcode">
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 middle-table"><p>OT001</p></div>
-                <div class="pt-2 border-l long-table"><p>초과 근무 메일 대상</p></div>
-                <div class="pt-2  border-l middle-table"><p class="pl-1">1</p></div>
-                <div class="pt-2  border-l middle-table"><p class="l-1">050738</p></div>
-                <div class="pt-2  border-l middle-table"><p class="pl-1">1</p></div>
-                <div class="pt-2  border-l short-table"><p class="pl-1">Y</p></div>
-                <div class="pt-2  border-l short-table"><p class="pl-1">이재성</p></div>
-                <div class="pt-2  border-l middle-table"><p class="pl-1">2020-8-12</p></div>
+                <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ standardcode.group }}</p></div>
+                <div class="pt-2 border-l long-table"><p>{{ standardcode.group_name }}</p></div>
+                <div class="pt-2  border-l middle-table"><p class="pl-1">{{ standardcode.code_num }}</p></div>
+                <div class="pt-2  border-l middle-table"><p class="l-1">{{ standardcode.code_name }}</p></div>
+                <div class="pt-2  border-l middle-table"><p class="pl-1">{{ standardcode.sequence }}</p></div>
+                <div class="pt-2  border-l short-table"><p class="pl-1">{{ standardcode.able_use }}</p></div>
+                <div class="pt-2  border-l short-table"><p class="pl-1">{{ standardcode.writer }}</p></div>
+                <div class="pt-2  border-l middle-table"><p class="pl-1">{{ inputDate[index] }}</p></div>
                 <div class="pt-2  border-l short-table">
                     <button class="bg-rose-500 rounded-lg hover:bg-rose-600 active:bg-rose-700 focus:outline-none " style="width: 40px"><p class="mt-0.5 ml-0.5 text-white">삭제</p></button>
                 </div>
@@ -88,15 +88,28 @@
 
 </template>
 <script>
+import standardcode from '../assets/standardCode.json'
 export default {
   name: 'StandardCode',
   data(){
     return{
-      
+      standardcode : standardcode,
+      inputDate : [],
     }
   },
+  mounted() {
+    this.calInputDate(this.standardcode)
+  },
   methods:{
-   
+    calInputDate(inputdate){
+      var year, month, day
+      for(var i = 0;i<inputdate.length;i++){
+        year = inputdate[i].write_date.substr(0,4);
+        month = inputdate[i].write_date.substr(4,2);
+        day = inputdate[i].write_date.substr(6,2);
+        this.inputDate[i] = year+'-'+month+'-'+day;
+      }
+    }
   },
   components: {
   }
