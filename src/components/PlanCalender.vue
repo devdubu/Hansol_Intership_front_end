@@ -20,8 +20,8 @@ Mon 부터 시작하기
 
 <template class="relative">
   <div class="relative modal-position">
-    <PlanPerformanceDetailVue v-if="viewModal" @closeModal="showViewModal()" @showEditModal="showViewModalEdit(), showViewModal()"/>
-    <PlanPerformanceDetailEditVue v-if="editModal" @closeEditModal="showViewModalEdit()"/>
+    <PlanPerformanceDetailVue v-if="viewModal" @closeModal="showViewModal()" @showEditModal="showViewModalEdit(), showViewModal()" :oneDayInfo="sendDetailInfo"/>
+    <PlanPerformanceDetailEditVue v-if="editModal" @closeEditModal="showViewModalEdit()" :oneDayInfo="sendDetailInfo"/>
   </div>
     <div>    
          <!--검색 부분 -->
@@ -105,7 +105,7 @@ Mon 부터 시작하기
                         </div>
                       </div>
                       <div class="absolute bottom-3 right-0 mr-2 ">
-                        <button @click="showViewModal()" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                   <!--2주차 월요일-->
@@ -125,7 +125,7 @@ Mon 부터 시작하기
                         </div>
                         </div>
                       <div class="absolute bottom-3 right-0 mr-2 ">
-                        <button @click="showViewModalEdit()" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                 </div>
@@ -157,6 +157,7 @@ export default {
     return {
       holiday : '',
       viewModal: false,
+      sendDetailInfo: [],
       editModal: false,
       DayOfTheWeek: ['Mon', 'Tue', 'Web', 'Thu','Fri','Sat','Sun'],
       plan: plandata,
@@ -167,11 +168,18 @@ export default {
       DayWorkTime: [],
       DailyTask:[],
       approvalTime: 0,
+      viewDetailBtn: true,
 
     }
   },
     methods:{
-      showViewModal(){
+      showViewModal(index){
+        this.sendDetailInfo = [];
+        for(var i = 0;i<this.plan.length;i++){
+          if(this.Date[index] === this.plan[i].plan_day){
+            this.sendDetailInfo.push(this.plan[i])
+          }
+        }
         this.viewModal = !this.viewModal;
       },
       showViewModalEdit(){

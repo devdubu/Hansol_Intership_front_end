@@ -53,7 +53,6 @@ Mon 부터 시작하기
                         </select>
                       </div>
                     </div>
-                    
                 </div>
 
             </div>

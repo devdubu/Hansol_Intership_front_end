@@ -62,10 +62,10 @@
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
-                <div class="mr-4 bg-orange-500 w-40 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></div>
-                <div class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></div>
-                <div class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></div>
-                <div class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></div>
+                <button class="mr-4 bg-orange-500 w-40 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></button>
+                <button class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
+                <button class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
+                <button class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
             </div>
           </div>
           <!-- 상단 검색 부분 끝 -->
@@ -77,20 +77,21 @@
             <div class="bg-slate-600 h-16 rounded-tl-lg rounded-tr-lg" style="max-width:1230px">
               <div class="flex">
                 <div class="pt-2 border-r" style="width:180px;"><p class="mt-3">구분</p></div>
-                <div class="pt-2 main-interval border-r" ><p>Mon</p><p>6.24</p></div>
-                <div class="pt-2 main-interval border-r" ><p>Tue</p><p>6.25</p></div>
-                <div class="pt-2 main-interval border-r" ><p>Web</p><p>6.26</p></div>
-                <div class="pt-2 main-interval border-r"><p>Thu</p><p>6.27</p></div>
-                <div class="pt-2 main-interval border-r" ><p>Fri</p><p>6.28</p></div>
-                <div class="pt-2 main-interval border-r"><p>Sat</p><p>6.30</p></div>
-                <div class="pt-2 main-interval"><p>Sun</p><p>6.29</p></div>
+                <div class="pt-2 main-interval border-r" ><p>Mon <span><input type="checkbox"></span></p><p>{{viewDate[0]}}</p></div>
+                <div class="pt-2 main-interval border-r" ><p>Tue <span><input type="checkbox"></span></p><p>{{ viewDate[1] }}</p></div>
+                <div class="pt-2 main-interval border-r" ><p>Web <span><input type="checkbox"></span></p><p>{{ viewDate[2] }}</p></div>
+                <div class="pt-2 main-interval border-r"><p>Thu <span><input type="checkbox"></span></p><p>{{ viewDate[3] }}</p></div>
+                <div class="pt-2 main-interval border-r" ><p>Fri <span><input type="checkbox"></span></p><p>{{ viewDate[4] }}</p></div>
+                <div class="pt-2 main-interval border-r"><p>Sat <span><input type="checkbox"></span></p><p>{{ viewDate[5] }}</p></div>
+                <div class="pt-2 main-interval border-r"><p>Sun <span><input type="checkbox"></span></p><p>{{ viewDate[6] }}</p></div>
+                <div class="pt-2 all" style="width: 70px;"><p class="mt-3">All <span><input type="checkbox"></span></p></div>
               </div>
             </div>
 
             
            
             <!-- 서브 메뉴 -->
-            <div class="bg-slate-600 h-10 border-t" style="max-width:1230px">
+            <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" >
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
                         <div class=" pt-2" style="width:50%"><p>팀원</p></div>
@@ -120,62 +121,82 @@
                         <div class=" hour-interval"><p class="pt-1">시간</p></div>
                         <div class=" hour-interval border-l"><p class="pt-1">상태</p></div>
                     </div>
-                     <div class="flex sub-interval" >
+                    <div class="flex sub-interval" >
                         <div class=" hour-interval"><p class="pt-1">시간</p></div>
                         <div class=" hour-interval border-l"><p class="pt-1">상태</p></div>
                     </div>
+                    <div class="flex">
+                      <div class="border-l " style="width: 71px;"><p class="pt-2 pl-1">전체시간</p></div>
+                    </div>
                 </div>
             <!-- 실제 데이터 인풋 -->
-<div class="bg-slate-600 h-10 border-t" style="max-width:1230px">
+              <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" v-for="(member,index) in viewApprovalTable">
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
-                        <div class=" pt-2" style="width:50%"><p>윤형도</p></div>
-                        <div class=" pt-2 border-l" style="width:50%"><p>승인제외</p></div>
+                        <div class=" pt-2" style="width:50%"><p>{{ member[0].memberName }}</p></div>
+                        <div class=" pt-2 border-l" style="width:50%"><input type="checkbox"> </div>
                     </div>
                     <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[0].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[0].signStatus)}, confirmCheck(member[0].signStatus)" class="w-10 rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[0].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[1].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[1].signStatus)}, confirmCheck(member[1].signStatus)" class="w-10 rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[1].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[2].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[2].signStatus)}, confirmCheck(member[2].signStatus)" class="w-10 rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[2].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval "><p class="pt-1">8</p></div>
+                        <div class=" hour-interval "><p class="pt-1">{{ member[3].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[3].signStatus)}, confirmCheck(member[3].signStatus)" class="w-10  rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[3].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[4].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[4].signStatus)}, confirmCheck(member[4].signStatus)" class="w-10  rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[4].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[5].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[5].signStatus)}, confirmCheck(member[5].signStatus)" class="w-10  rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[5].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
                      <div class="flex sub-interval" >
-                        <div class=" hour-interval"><p class="pt-1">8</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[6].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div class="w-10 bg-green-500 rounded-xl state-interval"><p class="mt-1">확정</p></div>
+                            <div :class="{blind:statusFunc(member[6].signStatus)}, confirmCheck(member[6].signStatus)" class="w-10  rounded-xl state-interval">
+                              <p class="mt-1">{{ confirmText[member[6].signStatus] }}</p>
+                            </div>
                         </div>
                     </div>
+                    <div class="flex" >
+                      <div class="border-l" style="width: 71px;"><p class="pt-2 pl-1">{{ member[0].dayHour }}</p></div>
+                    </div>
                 </div>
-                </div>
+              </div>
             
 
             </div>
@@ -186,15 +207,84 @@
 
 </template>
 <script>
+import approval from '../assets/approvalData.json';
 export default {
   name: 'CompanyProject',
   data(){
     return{
-      
+      approval: approval,
+      Date: [],
+      viewDate: [],
+      teamMember: [],
+      viewApprovalTable: [],
+      conform: "green",
+      confirmText: ['','','확정','팀장','마감']
     }
   },
+  mounted() {
+    this.calDate(this.approval[0].perfDay);
+    this.printDate();
+    this.calTeamMember(this.approval);
+    this.viewApprovalTableFunc(this.approval);
+  },
   methods:{
-   
+   calDate(date){
+     for(var i = 0;i<7;i++){
+       this.Date[i] = date+i;
+     }
+     console.log(this.Date);
+   },
+    printDate(){
+     var date = [...this.Date];
+     var year, month, day;
+
+      for(var i = 0;i<7;i++){
+        date[i] = String(date[i]);
+        year = date[i].substr(0,4);
+        month = date[i].substr(4,2);
+        day = date[i].substr(6,2);
+
+        this.viewDate[i] = month+'.'+day;
+      }
+      console.log(this.viewDate)
+    },
+    calTeamMember(approval){
+     for(var i = 0;i<approval.length;i++){
+      if(this.Date[0] === approval[i].perfDay){
+        this.teamMember.push(approval[i].memberId)
+      }
+     }
+     console.log(this.teamMember);
+    },
+    viewApprovalTableFunc(approval){
+
+      for(var i = 0; i<this.teamMember.length;i++){
+        var arr = []
+        for(var j = 0; j< approval.length;j++){
+          if(this.teamMember[i] === approval[j].memberId){
+            arr.push(approval[j])
+          }
+        }
+        this.viewApprovalTable[i] = arr
+      }
+
+      console.log(this.viewApprovalTable)
+    },
+    statusFunc(status){
+      //색상이랑, p태그만 교체하면됨
+      if(status === 1){
+        return true
+      }else{
+        return false
+      }
+    },
+    confirmCheck(status){
+      return{
+        'bg-green-500': status === 2,
+        'bg-fuchsia-500':status === 3,
+        'bg-rose-500': status === 4
+      }
+    }
   },
   components: {
   }
@@ -215,39 +305,24 @@ export default {
     max-width: 1200px;
 }
 .main-interval{
-  width: 150px;
+  width: 140px;
   height: 65px;
 }
 .sub-interval{
-    width:150px;
+    width: 140px;
     height: 40px;
 }
 .hour-interval{
-    width: 75px;
+    width: 70px;
     height: 40px;
     padding-top: 3px;
-}
-.name-interval{
-  width: 100px;
 }
 .state-interval{
     margin-top: 20px;
     margin:auto;
 }
-.textover{
-  height: 20px;
-  width:500px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.add-button{
-  margin-right: 10px;
-  margin-top: 0px;
-}
-.btn-position{
-  margin-top: 6px;
-  margin-right: 6px;
+.blind{
+  display: none;
 }
 
 </style>

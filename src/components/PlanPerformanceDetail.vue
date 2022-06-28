@@ -21,37 +21,16 @@
       <!--상단 근로 시간 표시 부분-->
       <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-white bg 	">
-        <div class="ml-3 mr-3"><p>2022년 6월 21일</p></div>
+        <div class="ml-3 mr-3"><p>{{ selectDate }}</p></div>
         <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
-        <div class="text-black ml-3 mr-3">
-          <select name="" id="">
-            <option value="0800">08:00</option>
-            <option value="0830">08:30</option>
-            <option value="0900">09:00</option>
-            <option value="0930">09:30</option>
-            <option value="1000">10:00</option>
-          </select>
+        <div class="text-white ml-3 mr-3 text-lg">
+          <p class="">{{ DayHour }}</p>
         </div>
-        <div>~</div>
-        <!--끝나는 시간-->
-        <div class="text-black ml-3 mr-3">
-          <select>
-            <option value="1600">16:00</option>
-            <option value="1630">16:30</option>
-            <option value="1700">17:00</option>
-            <option value="1730">17:30</option>
-            <option value="1800">18:00</option>
-            <option value="1830">18:30</option>
-            <option value="1900">19:00</option>
-            <option value="1930">19:30</option>
-            <option value="2000">20:00</option>
-          </select>
-        </div>
-        <div class="mr-4"><p>총 <span class="text-rose-400">8</span>시간</p></div>
+        <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].day_hour }}</span>시간</p></div>
       </div>
-      <div class="flex mt-3 ml-3 text-white">
+      <div class="flex mt-2 ml-3 text-white">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
           <span class="text-rose-400">단, 휴일 및 휴일은 4시간당, 30분씩 휴게시간이 제외되어 다빈치에 반영됩니다.</span></p></div>
           <div class="grow"></div>
@@ -94,46 +73,18 @@
                 <div class="rounded-md bg-teal-500 w-6 h-6 mr-5 "> <font-awesome-icon icon="fa-solid fa-plus" /></div>
               </div>
               <!-- 데이터 반복 구간-->
-              <div class="border-2 modal-content rounded"  style="margin-bottom:10px">
+              <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="data in oneDayInfo">
                 <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>신한생명/콜센터통합_유상_2022</p></div>
-                  <div class="mt-3 ml-3"><p>프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</p></div>
+                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.group_name }}</p></div>
+                  <div class="mt-3 ml-3"><p>{{ data.code_name }}</p></div>
                   <div class="grow"></div>
                   <div @click="$emit('closeEditModal')" class="mr-4 mt-3 bg-rose-500 w-6 rounded"><font-awesome-icon icon="fa-solid fa-xmark" /></div>
                 </div>
                 <div class="flex">
-                  <div><p class="mt-3 ml-3">기타사항</p></div>
+                  <div><p class="mt-3 ml-3">{{ data.detail }}</p></div>
                   <div class="grow"></div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : 4</div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">9:00 ~ 18:00</div>
-                </div>
-              </div>
-
-               <div class="border-2 modal-content mt-2 rounded" style="margin-bottom:10px">
-                <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>신한생명/콜센터통합_유상_2022</p></div>
-                  <div class="mt-3 ml-3"><p>프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</p></div>
-                  <div class="grow"></div>
-                </div>
-                <div class="flex">
-                  <div><p class="mt-3 ml-3">기타사항</p></div>
-                  <div class="grow"></div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : 4</div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">9:00 ~ 18:00</div>
-                </div>
-              </div>
-
-               <div class="border-2 modal-content mt-2 rounded">
-                <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>신한생명/콜센터통합_유상_2022</p></div>
-                  <div class="mt-3 ml-3"><p>프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</p></div>
-                  <div class="grow"></div>
-                </div>
-                <div class="flex">
-                  <div><p class="mt-3 ml-3">기타사항</p></div>
-                  <div class="grow"></div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : 4</div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">9:00 ~ 18:00</div>
+                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.task_hour }}</div>
+                  <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{ data.started_hour }} ~ {{ data.ended_hour }}</div>
                 </div>
               </div>
               <!-- 데이터 반복 구간 끝-->
@@ -145,7 +96,7 @@
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
           <button @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
-          <button class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
+          <button @click="test()" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
           <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
@@ -167,11 +118,54 @@ library.add(faXmark, faPlus)
 
 export default {
   name: 'PlanPerformanceDetail',
+  props:{
+    oneDayInfo: Object,
+  },
+  mounted() {
+    this.outputDateTime();
+    this.partHour();
+  },
   data(){
     return{
+      selectDate: '',
+      DayHour : '',
     }
   },
   methods:{
+    test(){
+      console.log(this.oneDayInfo);
+    },
+    outputDateTime(){
+      var strdate = String(this.oneDayInfo[0].plan_day);
+      console.log(strdate);
+      this.selectDate = [strdate.slice(0,4),'년 ',strdate.slice(4,6),'월 ',strdate.slice(6,8),'일'].join('');
+
+      //총 시간을 구하는 방법
+      var starthour = Number(this.oneDayInfo[0].started_hour);
+      var dayWorkHour = Number(this.oneDayInfo[0].day_hour);
+      var endhour = starthour + (dayWorkHour*100) + 100;//총 시간 더한 후, 휴게 시간 더함
+
+      starthour = '0'+String(starthour);
+      endhour =  String(endhour);
+
+      console.log(starthour);
+      console.log(endhour);
+
+      this.DayHour = [starthour.slice(0,2),':',starthour.slice(2,4),' ~ ',endhour.slice(0,2),':',endhour.slice(2,4)].join('');
+      console.log(this.Date)
+      console.log(this.DayHour)
+    },
+    partHour(){
+      for(var i = 0;i<this.oneDayInfo.length;i++){
+        var starthour = this.oneDayInfo[i].started_hour;
+        var endhour =  this.oneDayInfo[i].ended_hour
+        starthour = [starthour.slice(0,2),':',starthour.slice(2,4)].join('');
+        endhour = [endhour.slice(0,2),':',endhour.slice(2,4)].join('');
+
+        this.oneDayInfo[i].started_hour = starthour;
+        this.oneDayInfo[i].ended_hour = endhour;
+      }
+    },
   },
   components: {
   }
