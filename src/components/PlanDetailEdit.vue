@@ -90,7 +90,7 @@
                   </div>
                   <div class="mt-3 ml-3 select-option">
                     <select name="" id="" class="rounded">
-                        <option value="">프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</option>
+                        <option value="hi">프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</option>
                         <option value="">프로젝트 계획/분석 - 기술 검토/착수/요구사항 수집/정의/명세/리뷰</option>
                         <option value="">프로젝트 설계 - 설계서/시험계획서</option>
                         <option value="">프로젝트 구현/개발 - 코딩/코드리뷰/시험/코드분석</option>
@@ -133,6 +133,8 @@
 
 </template>
 <script>
+import taskType from '../assets/task.json';
+import project from '../assets/project.json';
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 /* add some free styles */
@@ -147,15 +149,22 @@ export default {
   props:{
     oneDayInfo: Object,
   },
+  mounted() {
+    this.ClassifyTaskType()
+  },
   data(){
     return{
+      //받는 데이터
+      taskType: taskType,
+      project:project,
       //보내는 데이터
       sendTaskData:[
         {
           //받은 Json형태 그대로 만들기
         }
       ],
-      //보여주는 데어타
+      //보여주는 데이터
+      //시간
       default_value : 'selected',
       startTime:[
         {
@@ -217,6 +226,20 @@ export default {
           text: "20:00",
           value: "2000"
         }
+      ],// 대분류, 소 분류
+      mainGroup:[
+        {
+          group_main_id: '',
+          group_sub_id: '',
+          group_name : ''
+        }
+      ],
+      subGroup:[
+        {
+          group_sub_id: '',
+          code_id : '',
+          code_name: ''
+        }
       ],
       endTimePick: "1800",
       TaskBox: [1],
@@ -252,6 +275,26 @@ export default {
       }else{
         return false;
       }
+    },
+    ClassifyTaskType(){
+      console.log(this.taskType[0].group_id)
+      var MainIndex = 0;
+      var SubIndex = 0;
+      for(var i = 0;i<this.taskType.length;i++){
+        if(this.taskType[i].group_id === 'TR001'){
+          this.mainGroup[MainIndex].group_main_id = this.taskType[i].group_id;
+          this.mainGroup[MainIndex].group_sub_id = this.taskType[i].code_id;
+          this.mainGroup[MainIndex].group_name = this.taskType[i].code_nm;
+          MainIndex++;
+        }else{
+          this.subGroup[SubIndex].group_sub_id = this.taskType[i].group_id;
+          this.subGroup[SubIndex].code_id = this.taskType[i].code_id;
+          this.subGroup[SubIndex].code_name = this.taskType[i].code_nm;
+          SubIndex++;
+        }
+      }
+      console.log(this.mainGroup);
+      console.log(this.subGroup);
     }
 
   },
