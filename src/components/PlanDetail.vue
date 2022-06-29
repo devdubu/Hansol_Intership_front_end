@@ -70,7 +70,6 @@
               <div class="flex mb-2">
                 <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
                 <div class="grow"></div><!--여기다가 그거 확정 넣어야함-->
-                <div class="rounded-md bg-teal-500 w-6 h-6 mr-5 "> <font-awesome-icon icon="fa-solid fa-plus" /></div>
               </div>
               <!-- 데이터 반복 구간-->
               <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="(data,index) in oneDayInfo">
@@ -96,7 +95,6 @@
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
           <button @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
-          <button @click="test()" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
           <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
@@ -117,7 +115,7 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons'
 library.add(faXmark, faPlus)
 
 export default {
-  name: 'PlanPerformanceDetail',
+  name: 'PlanDetail',
   props:{
     oneDayInfo: Object,
     DayWorkTime: String,
@@ -136,7 +134,6 @@ export default {
       DayHour : '',
       taskHour: [],
       status:[]
-
     }
   },
   methods:{
