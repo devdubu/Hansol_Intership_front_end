@@ -15,7 +15,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -35,7 +34,6 @@
     "work_detail": "안녕하세요",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "1",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -55,7 +53,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "0",
-    "is_project": "1",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -75,7 +72,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "0",
-    "is_project": "2",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -95,7 +91,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "1",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -115,7 +110,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "1",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -135,7 +129,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "1",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -155,7 +148,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -175,7 +167,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -195,7 +186,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -215,7 +205,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "Y"
   },
@@ -235,7 +224,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "Y"
   },
@@ -255,7 +243,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -275,7 +262,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -295,7 +281,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -315,7 +300,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -335,7 +319,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "N"
   },
@@ -355,7 +338,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "1",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "Y"
   },
@@ -375,7 +357,6 @@
     "work_detail": "",
     "wfh_yn": "0",
     "enroll_yn": "2",
-    "is_project": "0",
     "member_id": "1",
     "is_Holiday": "Y"
   }

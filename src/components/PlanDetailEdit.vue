@@ -1,8 +1,7 @@
 <!--
-고려사항 :
-  1. 시간 음수로 못하게 막기
-  2. +를 누르면 칸이 새로 생성되게 하고, 순서 데이터에 2를 자동으로 넣기
-  3. X를 누르면 칸이 사라지게 하며, 순서 테이블이 초기회 되기
+
+시긴을 짜는 알고리즘 다시 생각해보기
+
 -->
 <template>
   <div class="bg-slate-700 relative">
@@ -22,18 +21,16 @@
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
-          <select v-model="startTimePick" name="" id="">
+          <select @change="onChangeStartHour($event)" v-model="StartWorkTime">
             <option v-for="start in startTime" :value="start.value">{{ start.text }}</option>
           </select>
         </div>
         <div>~</div>
         <!--끝나는 시간-->
         <div class="text-black ml-3 mr-3">
-          <select v-model="endTimePick">
-            <option v-for="end in endTime" :value="end.value">{{ end.text }}</option>
-          </select>
+          <p class="text-base text-white">{{ EndWorkTime }}</p>
         </div>
-        <div class="mr-4"><p>총 <span class="text-rose-400">8</span>시간</p></div>
+        <div class="mr-4"><p>총 <span class="text-rose-400">8</span>시간</p></div><!--데이터 실시간 변경-->
       </div>
       <div class="flex mt-3 ml-3 text-white">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
@@ -78,25 +75,23 @@
                 <button @click="addTaskBox" class="rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
               </div>
               <!-- 데이터 반복 구간-->
-              <div v-for="(task,index) in TaskBox" class="border-2 modal-content rounded"  style="margin-bottom:10px">
+              <div v-for="(task,index) in sendTaskData" class="border-2 modal-content rounded"  style="margin-bottom:10px">
                 <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 select-option">
-                    <select class="rounded">
-                        <option>신한생명/콜센터통합_유상_2022</option>
-                        <option>한전/전기사용계약정보 시나리오 기계음 송출_22</option>
-                        <option>KB국민은행/콜센토통합_유상_2022</option>
-                        <option>SK매직 헤드셋</option>
+
+                  <div class="mt-3 ml-3 select-option rounded" style="width: 300px;">
+                    <select v-model="task.group_sub_id" @change="onChangeSelectMain($event, index)" class="rounded text-black" style="width: 300px">
+                        <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
                     </select>
                   </div>
-                  <div class="mt-3 ml-3 select-option">
-                    <select name="" id="" class="rounded">
-                        <option value="hi">프로젝트 사전 준비 - 장비출고/VOC취합/현황조사</option>
-                        <option value="">프로젝트 계획/분석 - 기술 검토/착수/요구사항 수집/정의/명세/리뷰</option>
-                        <option value="">프로젝트 설계 - 설계서/시험계획서</option>
-                        <option value="">프로젝트 구현/개발 - 코딩/코드리뷰/시험/코드분석</option>
+
+                  <div class="mt-3 ml-3 select-option" style="width: 400px">
+                    <select v-model="task.code_id" @change="onChangeSelectSub($event, index)" class="rounded" style="width: 400px">
+                      <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
                     </select>
                   </div>
+
                   <div class="grow"></div>
+
                   <button v-if="deleteBox[index]" @click="removeTaskBox" class="mr-4 mt-3 bg-rose-500 w-6 rounded"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
                 </div>
                 <div class="flex">
@@ -104,11 +99,14 @@
                     <input style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
                   </div></div>
                   <div class="grow"></div>
-                  <div style="height:25px; width: 101px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
-                    <p class="pl-1">시간 :</p> 
-                    <input type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+                  <div  style="height:25px; width: 101px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
+                    <p class="pl-1">시간 :</p>
+                    <div>
+                      <input v-model="task.task_hour" @change="onChangeTaskTime($event,index)" type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                     </div>
-                  <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">9:00 ~ 18:00</div>
+                  </div>
+                  <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{TaskStartTimeView[index]}} ~
+                    {{ TaskEndTimeView[index] }}</div><!--시간 데이터 실시간 변경점-->
                 </div>
               </div>
                 <!-- 업무 반복 구현 끝-->
@@ -122,7 +120,7 @@
         </div>
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
-          <button @click="sendData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
+          <button @click="saveData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
           <button @click="sendData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
@@ -150,21 +148,22 @@ export default {
     oneDayInfo: Object,
   },
   mounted() {
+    this.SendData()
+    this.CalTime()
     this.ClassifyTaskType()
+    this.ClassifyProject()
+    this.MountSelect()
   },
   data(){
     return{
       //받는 데이터
       taskType: taskType,
       project:project,
+      //변경 데이터에 대한 오류 여부
+
       //보내는 데이터
-      sendTaskData:[
-        {
-          //받은 Json형태 그대로 만들기
-        }
-      ],
+      sendTaskData:[],
       //보여주는 데이터
-      //시간
       default_value : 'selected',
       startTime:[
         {
@@ -188,7 +187,6 @@ export default {
           value: "1000",
         }
       ],
-      startTimePick: "0900",
       endTime:[
         {
           text: "16:00",
@@ -226,39 +224,431 @@ export default {
           text: "20:00",
           value: "2000"
         }
-      ],// 대분류, 소 분류
-      mainGroup:[
-        {
-          group_main_id: '',
-          group_sub_id: '',
-          group_name : ''
-        }
       ],
-      subGroup:[
-        {
-          group_sub_id: '',
-          code_id : '',
-          code_name: ''
-        }
-      ],
-      endTimePick: "1800",
-      TaskBox: [1],
+      //끝나는 시간 데이터
+      StartWorkTime: "",
+      EndWorkTime: "",
+      TotalWorkTime: 0,
+      TaskStartTime: [],
+      TaskStartTimeView: [],
+      TaskEndTime: [],
+      TaskEndTimeView:[],
+
+      // 대분류, 소 분류 -> 따로 데이터를 받아오는 값
+      mainGroup:[],
+      subTask:[],
+      subTaskCopy:[],
+      subProejct:[],
+
+      //task를 생성했을 때 기본으로 제공해주는 값
+      defaultStartTime: "0900", //this.sendTaskDayInfo[index].group_main_id
+      defalutEndTimeData: "1800", //this.sendTaskDayInfo[index].group_main_id
+
+      defalutMainGroupData: "TR001", //this.sendTaskDayInfo[index].group_main_id
+      defaultSubGroupData: "ZDUM1", //this.sendTaskDayInfo[index].group_main_id
+      defaultCodeData : "Z001", //this.sendTaskDayInfo[index].group_main_id
+      defaultGroupName: "주업무",
+      defaultCodeName:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
+      defaultWorkDetail: this.defaultGroupName,
+      defaultWfh_yn: "0",
+      defaultEnroll_yn:"0",
+      defaultMember_id: "",
+      defaultIs_Holiday:"N",
+
+
+
+      //데이터 상자
+      TaskBox: [],
       deleteBox: [false],
     }
   },
+  computed:{
+    reverseMessage(startview) {
+      return [startview.slice(0,2),':',startview.slice(2,4)].join('');
+    },
+    calTime(){
+      // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
+      // task수행 시간을 받아오게 되면,
+      this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
+      this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
+
+
+      var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
+      var end = String(start + (this.TotalWorkTime*100)+100);
+
+
+
+      var taskstart = start, lunch=0;
+      this.TaskStartTime[0] = taskstart;
+
+      this.sendTaskData[index].task_hour = taskTime;
+
+      for(var i = 0;i<this.sendTaskData.length;i++){
+        var taskhour = (this.sendTaskData[i].task_hour*100)
+
+        taskstart += taskhour;
+        if(taskstart >= 1700){
+          taskstart += 100;
+          this.TaskEndTime[i] = taskstart;
+          break;
+        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+
+        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+            taskstart += 100;
+            this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
+            this.TaskStartTime[i+1] = taskstart;
+            lunch++;
+          }
+        }else{
+          this.TaskEndTime.push(end);
+        }
+
+      }
+      // 시간을 출력할 때 사용하는 로직
+      for(var i = 0; i<this.TaskStartTime.length;i++){
+        var startview, endview
+        if(this.TaskStartTime[i]/100 < 10){
+          startview = '0'+String(this.TaskStartTime[i]);
+        }else{
+          startview = String(this.TaskStartTime[i]);
+        }
+        if(this.TaskEndTime[i]/100 < 10){
+          endview = '0'+ String(this.TaskEndTime[i]);
+        }else{
+          endview = String(this.TaskEndTime[i]);
+        }
+        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+      }
+
+    }
+
+  },
   methods:{
+
+    /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
+    SendData(){
+      //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
+      for(var i = 0;i<this.oneDayInfo.length;i++){
+        this.deleteBox.push(true);//삭제 버튼 활성화
+        this.sendTaskData.push({
+          plan_id: this.oneDayInfo[i].plan_id,
+          seq: this.oneDayInfo[i].seq,
+          task_hour: this.oneDayInfo[i].task_hour,
+          plan_day: this.oneDayInfo[i].plan_day,
+          day_hour: this.oneDayInfo[i].day_hour,
+          started_hour: this.oneDayInfo[i].started_hour,
+          ended_hour: this.oneDayInfo[i].ended_hour,
+          group_main_id: this.oneDayInfo[i].group_main_id,
+          group_sub_id: this.oneDayInfo[i].group_sub_id,
+          code_id: this.oneDayInfo[i].code_id,
+          group_name: this.oneDayInfo[i].group_name,
+          code_name: this.oneDayInfo[i].code_name,
+          work_detail: this.oneDayInfo[i].work_detail,
+          wfh_yn: this.oneDayInfo[i].wfh_yn,
+          enroll_yn: this.oneDayInfo[i].enroll_yn,
+          member_id: this.oneDayInfo[i].member_id,
+          is_Holiday: this.oneDayInfo[i].is_Holiday
+        });
+      }
+      console.log(this.sendTaskData)
+
+
+    },
+    MountSelect() { // subTask 완성
+      //MainTask - 완성
+      //이거 혹시 sendTaskData가 여러개라면, 여러개를 뿌려줘야하는데
+      for(var j = 0;j<this.oneDayInfo.length;j++){
+        this.subTaskCopy[j] = [...this.subTask];
+      }
+
+
+      for(var i = 0;i<this.oneDayInfo.length; i++){
+        for(var j = 0; j<this.subTaskCopy[i].length; j++){
+
+          if(this.subTaskCopy[i][j].group_sub_id != this.oneDayInfo[i].group_sub_id){
+            this.subTaskCopy[i].splice(j,1)
+            j--;
+          }
+        }
+      }
+
+    },
+    ClassifyTaskType(){//완성
+      for(var i = 0;i<this.taskType.length;i++){
+        if(this.taskType[i].group_id === 'TR001'){
+          this.mainGroup.push({group_main_id: this.taskType[i].group_id, group_sub_id: this.taskType[i].code_id, group_name: this.taskType[i].code_nm});
+        }else{
+          this.subTask.push({group_sub_id: this.taskType[i].group_id, code_id: this.taskType[i].code_id, code_name: this.taskType[i].code_nm});
+        }
+      }
+    },
+    ClassifyProject(){
+      for(var i = 0;i<this.project.length;i++){
+        this.mainGroup.push({group_main_id: this.project[i].project_code, group_sub_id: 'TR002',group_name: this.project[i].project_nm});
+      }
+    },
+    CalTime(){
+      this.StartWorkTime = this.oneDayInfo[0].started_hour;
+      this.TotalWorkTime = this.oneDayInfo[0].day_hour;
+
+      var start = Number(this.StartWorkTime);
+      var end = String(start + (this.TotalWorkTime*100)+100);
+      this.EndWorkTime = [end.slice(0,2),':',end.slice(2,4)].join('');
+      // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
+      var taskstart = start, lunch=0;
+      this.TaskStartTime.push(taskstart);
+
+      for(var i = 0;i<this.oneDayInfo.length;i++){
+        var taskhour = (this.oneDayInfo[i].task_hour*100)
+
+        taskstart += taskhour;
+        if(taskstart == 1700){
+          taskstart += 100;
+          this.TaskEndTime.push(taskstart);
+          break;
+        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+
+        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+            taskstart += 100;
+            this.TaskEndTime.push(taskstart); // 끝나는 시간 넣기
+            this.TaskStartTime.push(taskstart);
+            lunch++;
+          }
+        }else{
+          this.TaskEndTime.push(end);
+        }
+      }
+      // 시간을 출력할 때 사용하는 로직
+      for(var i = 0; i<this.TaskStartTime.length;i++){
+        var startview, endview
+        if(this.TaskStartTime[i]/100 < 10){
+          startview = '0'+String(this.TaskStartTime[i]);
+        }else{
+          startview = String(this.TaskStartTime[i]);
+        }
+        if(this.TaskEndTime[i]/100 < 10){
+          endview = '0'+ String(this.TaskEndTime[i]);
+        }else{
+          endview = String(this.TaskEndTime[i]);
+        }
+        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+      }
+
+    },
+
+    /*---------------------------------------- change 이벤트 메서드 ---------------------------------*/
+
+    onChangeTaskTime(event,index){
+      var taskTime = event.target.value;
+      if(taskTime< 0){
+        alert("양수만 입력해주시길 바랍니다.")
+        this.sendTaskData[index].task_hour = 0
+      }else{
+        // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
+        // task수행 시간을 받아오게 되면,
+        this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
+        this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
+
+
+        var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
+        var end = String(start + (this.TotalWorkTime*100)+100);
+
+
+
+        var taskstart = start, lunch=0;
+        this.TaskStartTime[0] = taskstart;
+
+        this.sendTaskData[index].task_hour = taskTime;
+
+        for(var i = 0;i<this.sendTaskData.length;i++){
+          var taskhour = (this.sendTaskData[i].task_hour*100)
+
+          taskstart += taskhour;
+          if(taskstart >= 1700 && lunch == 0){
+            taskstart += 100;
+            this.TaskEndTime[i] = taskstart;
+            break;
+          }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+
+          if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+            if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+              taskstart += 100;
+              this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
+              this.TaskStartTime[i+1] = taskstart;
+              lunch++;
+            }
+          }else{
+            this.TaskEndTime.push(end);
+          }
+        }
+        // 시간을 출력할 때 사용하는 로직
+        for(var i = 0; i<this.TaskStartTime.length;i++){
+          var startview, endview
+          if(this.TaskStartTime[i]/100 < 10){
+            startview = '0'+String(this.TaskStartTime[i]);
+            this.sendTaskData[i].started_hour = startview;
+          }else{
+            startview = String(this.TaskStartTime[i]);
+            this.sendTaskData[i].started_hour = startview;
+          }
+          if(this.TaskEndTime[i]/100 < 10){
+            endview = '0'+ String(this.TaskEndTime[i]);
+            this.sendTaskData[i].ended_hour = endview
+          }else{
+            endview = String(this.TaskEndTime[i]);
+            this.sendTaskData[i].ended_hour = endview
+          }
+          this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+          this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+        }
+
+      }
+
+    },
+    // 시간 변경 시에 실시간으로 시간 변경 메서드
+    onChangeStartHour(event){
+      this.StartWorkTime = event.target.value;
+      var start = Number(this.StartWorkTime);
+
+      this.TaskStartTime[0] = start;
+
+      var end = String(start + (this.TotalWorkTime*100)+100);
+
+      this.EndWorkTime = [end.slice(0,2),':',end.slice(2,4)].join('');
+      this.sendTaskData[0].started_hour = String(start);
+      var taskstart = start,lunch=0
+
+      for(var i = 0;i<this.sendTaskData.length;i++){
+        var taskhour = (this.sendTaskData[i].task_hour*100)
+
+        taskstart += taskhour;
+        if(taskstart >= 1700 && lunch === 0){
+          taskstart += 100;
+          this.TaskEndTime[i] = taskstart;
+          break;
+        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+
+        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+            taskstart += 100;
+            this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
+            this.TaskStartTime[i+1] = taskstart;
+            lunch++;
+          }
+        }else{
+          this.TaskEndTime[i] = end;
+        }
+      }
+      console.log(this.TaskEndTime)
+      // 시간을 출력할 때 사용하는 로직
+      for(var i = 0; i<this.TaskStartTime.length;i++){
+        var startview, endview
+        if(this.TaskStartTime[i]/100 < 10){
+          startview = '0'+String(this.TaskStartTime[i]);
+          this.sendTaskData[i].started_hour = startview;
+        }else{
+          startview = String(this.TaskStartTime[i]);
+          this.sendTaskData[i].started_hour = startview;
+        }
+        if(this.TaskEndTime[i]/100 < 10){
+          endview = '0'+ String(this.TaskEndTime[i]);
+          this.sendTaskData[i].ended_hour = endview
+        }else{
+          endview = String(this.TaskEndTime[i]);
+          this.sendTaskData[i].ended_hour = endview
+        }
+        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+
+
+      }
+
+    },
+    //실적 업무 박스 추가시에 추가 되는 메서드
     addTaskBox(){
-      this.TaskBox.push(this.TaskBox.length+1)
-      console.log(this.TaskBox)
-      this.deleteBox.push(true);
+      var index = this.sendTaskData.length;
+      this.sendTaskData.push({
+        seq: index+1,//박스의 길이대로 순서 작성
+        task_hour: 0,
+        plan_day: this.oneDayInfo[0].plan_day,
+        day_hour: 0,
+        started_hour: this.sendTaskData[index-1].ended_hour,
+        ended_hour: this.sendTaskData[index-1].ended_hour,
+        group_main_id: this.defalutMainGroupData,
+        group_sub_id: this.defaultSubGroupData,
+        code_id: this.defaultCodeData,
+        group_name: this.defaultGroupName,
+        code_name: this.defaultCodeName,
+        work_detail: "",
+        wfh_yn: this.defaultWfh_yn,
+        enroll_yn: this.defaultEnroll_yn,
+        member_id: this.defaultMember_id,
+        is_Holiday: this.defaultIs_Holiday
+      });
+      this.TaskStartTime.push(Number(this.sendTaskData[index].started_hour));
+      this.TaskEndTime.push(Number(this.sendTaskData[index].ended_hour));
+
+      console.log(this.sendTaskData[index].ended_hour)
     },
     removeTaskBox(){
-      this.TaskBox.pop();
+      this.sendTaskData.pop();
       this.deleteBox.pop();
+      //삭제시에 보내는 데이터 senddata 삭제
     },
-    sendData(status){
-      var enroll = status;
+    onChangeSelectMain(event, index){
+      var sub = event.target.value
 
+      this.sendTaskData[index].group_sub_id = sub;
+
+      for(var i = 0;i<this.mainGroup.length;i++){
+        if(sub === this.mainGroup[i].group_sub_id){
+          this.sendTaskData[index].group_main_id = this.mainGroup[i].group_main_id;
+          this.sendTaskData[index].group_name = this.mainGroup[i].group_name;
+          break;
+        }
+      }
+      this.subTaskCopy[index] = [...this.subTask];
+
+
+      for(var i = 0; i < this.subTaskCopy[index].length; i++){
+        if(sub != this.subTaskCopy[index][i].group_sub_id){
+          this.subTaskCopy[index].splice(i,1);
+          i--;
+        }
+      }
+    },
+    onChangeSelectSub(event, index){
+
+      var code = event.target.value;
+
+      this.sendTaskData[index].code_id = code;
+
+      for(var i = 0;i<this.subTask.length;i++){
+        if(this.subTask[i].code_id === code){
+          this.sendTaskData[index].code_name = this.subTask[i].code_name;
+        }
+      }
+
+    },
+    // 데이터 보내는 메서드
+    saveData(status){
+      for(var i = 0; i<this.sendTaskData.length;i++){
+        this.sendTaskData[i].enroll_yn = status;
+      }
+
+    },
+
+    /*---------------------------------------- 경고 창 띄우는 메스드 -------------------------------------*/
+    saveAlertFunc(){
+      if(confirm('저장하시겠습니까?') == true){
+
+      }else{
+        return false;
+      }
     },
     //alert 창 모음
     closeAlertFunc(){
@@ -269,34 +659,6 @@ export default {
       }
       // alert('지금 닫으시면 저장이 되지 않습니다.');
     },
-    saveAlertFunc(){
-      if(confirm('저장하시겠습니까?') == true){
-
-      }else{
-        return false;
-      }
-    },
-    ClassifyTaskType(){
-      console.log(this.taskType[0].group_id)
-      var MainIndex = 0;
-      var SubIndex = 0;
-      for(var i = 0;i<this.taskType.length;i++){
-        if(this.taskType[i].group_id === 'TR001'){
-          this.mainGroup[MainIndex].group_main_id = this.taskType[i].group_id;
-          this.mainGroup[MainIndex].group_sub_id = this.taskType[i].code_id;
-          this.mainGroup[MainIndex].group_name = this.taskType[i].code_nm;
-          MainIndex++;
-        }else{
-          this.subGroup[SubIndex].group_sub_id = this.taskType[i].group_id;
-          this.subGroup[SubIndex].code_id = this.taskType[i].code_id;
-          this.subGroup[SubIndex].code_name = this.taskType[i].code_nm;
-          SubIndex++;
-        }
-      }
-      console.log(this.mainGroup);
-      console.log(this.subGroup);
-    }
-
   },
   components: {
   }

@@ -2,41 +2,41 @@
 {"task_id":1,"group_id":"TR001","code_id":"ZDUM1","code_nm":"주업무"}
 ,{"task_id":2,"group_id":"TR001","code_id":"ZDUM4","code_nm":"휴가"}
 ,{"task_id":3,"group_id":"TR001","code_id":"ZDUM5","code_nm":"출장"}
-,{"task_id":4,"group_id":"TR002","code_id":"P001","code_nm":"프로젝트 사전준비 - 장비출고\/VOC취합\/현황조사"}
-,{"task_id":5,"group_id":"TR002","code_id":"P002","code_nm":"프로젝트 계획\/분석 - 기술검토\/착수\/요구사항 수집\/정의\/명세\/리뷰"}
-,{"task_id":6,"group_id":"TR002","code_id":"P003","code_nm":"프로젝트 설계 - 설계서\/시험계획서"}
-,{"task_id":7,"group_id":"TR002","code_id":"P004","code_nm":"프로젝트 구현\/개발 - 코딩\/코드리뷰\/시험\/코드분석"}
-,{"task_id":8,"group_id":"TR002","code_id":"P005","code_nm":"프로젝트 테스트 - 단위\/통합 테스트"}
-,{"task_id":9,"group_id":"TR002","code_id":"P006","code_nm":"프로젝트 종료 - 산출물\/적용\/완료보고"}
+,{"task_id":4,"group_id":"TR002","code_id":"P001","code_nm":"프로젝트 사전준비 - 장비출고 VOC취합 현황조사"}
+,{"task_id":5,"group_id":"TR002","code_id":"P002","code_nm":"프로젝트 계획 분석 - 기술검토 착수 요구사항 수집 정의 명세 리뷰"}
+,{"task_id":6,"group_id":"TR002","code_id":"P003","code_nm":"프로젝트 설계 - 설계서 시험계획서"}
+,{"task_id":7,"group_id":"TR002","code_id":"P004","code_nm":"프로젝트 구현 개발 - 코딩 코드리뷰 시험 코드분석"}
+,{"task_id":8,"group_id":"TR002","code_id":"P005","code_nm":"프로젝트 테스트 - 단위 통합 테스트"}
+,{"task_id":9,"group_id":"TR002","code_id":"P006","code_nm":"프로젝트 종료 - 산출물 적용 완료보고"}
 ,{"task_id":10,"group_id":"TR002","code_id":"P007","code_nm":"프로젝트 안정화 - 모니터링 및 대응"}
-,{"task_id":11,"group_id":"TR002","code_id":"P008","code_nm":"프로젝트 기술지원 - HW 및 SW 납품\/설치\/패치"}
-,{"task_id":12,"group_id":"TR002","code_id":"P009","code_nm":"프로젝트 오픈 - 모니터링\/추가요구사항 반영\/산출물\/검수"}
+,{"task_id":11,"group_id":"TR002","code_id":"P008","code_nm":"프로젝트 기술지원 - HW 및 SW 납품 설치 패치"}
+,{"task_id":12,"group_id":"TR002","code_id":"P009","code_nm":"프로젝트 오픈 - 모니터링 추가요구사항 반영 산출물 검수"}
 ,{"task_id":13,"group_id":"TR002","code_id":"P010","code_nm":"선제안개발(선투입) - 조사, 분석, 제안서작성, 발표, 시연, Proto Type 제작"}
-,{"task_id":14,"group_id":"TR002","code_id":"P011","code_nm":"유지보수(유상) - 점검\/장애처리\/SR\/모니터링\/고객 기술교육\/계약\/손익 관리"}
-,{"task_id":15,"group_id":"TR002","code_id":"P012","code_nm":"유지보수(무상) - 점검\/장애처리\/SR\/모니터링\/고객 기술교육"}
-,{"task_id":16,"group_id":"TR002","code_id":"P013","code_nm":"R&D - 시장조사, 분석, 계획, 설계\/개발\/테스트\/이행"}
+,{"task_id":14,"group_id":"TR002","code_id":"P011","code_nm":"유지보수(유상) - 점검 장애처리 SR 모니터링 고객 기술교육 계약 손익 관리"}
+,{"task_id":15,"group_id":"TR002","code_id":"P012","code_nm":"유지보수(무상) - 점검 장애처리 SR 모니터링 고객 기술교육"}
+,{"task_id":16,"group_id":"TR002","code_id":"P013","code_nm":"R&D - 시장조사, 분석, 계획, 설계 개발 테스트 이행"}
 ,{"task_id":17,"group_id":"TR002","code_id":"P014","code_nm":"교육지원 - 사용자 및 운영자 교육"}
 ,{"task_id":18,"group_id":"TR002","code_id":"P015","code_nm":"기타 업무지원 - 영업,프로젝트 업무지원"}
 ,{"task_id":19,"group_id":"TR002","code_id":"P016","code_nm":"휴가"}
 ,{"task_id":20,"group_id":"TR002","code_id":"P017","code_nm":"출장"}
 ,{"task_id":21,"group_id":"TR002","code_id":"P018","code_nm":"(재택) 유상 유지보수"}
-,{"task_id":22,"group_id":"ZDUM1","code_id":"Z001","code_nm":"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계\/개발\/테스트\/이행"}
-,{"task_id":23,"group_id":"ZDUM1","code_id":"Z002","code_nm":"영업지원 - Presales\/컨설팅\/제안서\/기술자료\/제안발표\/BMT\/POC설치\/세미나"}
-,{"task_id":24,"group_id":"ZDUM1","code_id":"Z003","code_nm":"영업활동 - 솔루션 디자인\/견적\/제안서 작성\/계약진행\/고객회의"}
+,{"task_id":22,"group_id":"ZDUM1","code_id":"Z001","code_nm":"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계 개발 테스트 이행"}
+,{"task_id":23,"group_id":"ZDUM1","code_id":"Z002","code_nm":"영업지원 - Presales 컨설팅 제안서 기술자료 제안발표 BMT POC설치 세미나"}
+,{"task_id":24,"group_id":"ZDUM1","code_id":"Z003","code_nm":"영업활동 - 솔루션 디자인 견적 제안서 작성 계약진행 고객회의"}
 ,{"task_id":25,"group_id":"ZDUM1","code_id":"Z004","code_nm":"선제안개발(선투입) - 조사, 분석, 제안서작성, 발표, 시연, Proto Type 제작"}
 ,{"task_id":26,"group_id":"ZDUM1","code_id":"Z005","code_nm":"사업기획 - 사업 기획 및 발굴 활동"}
-,{"task_id":27,"group_id":"ZDUM1","code_id":"Z006","code_nm":"사내회의 - 파트\/팀\/전사 단위"}
-,{"task_id":28,"group_id":"ZDUM1","code_id":"Z007","code_nm":"혁신과제 - 혁신교육\/과제발굴\/회의\/챔피언데이\/발표"}
-,{"task_id":29,"group_id":"ZDUM1","code_id":"Z008","code_nm":"내부교육 - 신규직원교육\/사이버\/IT트렌드\/법정의무교육"}
-,{"task_id":30,"group_id":"ZDUM1","code_id":"Z009","code_nm":"외부교육 - 외부세미나\/위부위탁\/컨퍼런스"}
+,{"task_id":27,"group_id":"ZDUM1","code_id":"Z006","code_nm":"사내회의 - 파트 팀 전사 단위"}
+,{"task_id":28,"group_id":"ZDUM1","code_id":"Z007","code_nm":"혁신과제 - 혁신교육 과제발굴 회의 챔피언데이 발표"}
+,{"task_id":29,"group_id":"ZDUM1","code_id":"Z008","code_nm":"내부교육 - 신규직원교육 사이버 IT트렌드 법정의무교육"}
+,{"task_id":30,"group_id":"ZDUM1","code_id":"Z009","code_nm":"외부교육 - 외부세미나 위부위탁 컨퍼런스"}
 ,{"task_id":31,"group_id":"ZDUM1","code_id":"Z010","code_nm":"경영계획수립 - 경영계획 및 중기전략수립"}
-,{"task_id":32,"group_id":"ZDUM1","code_id":"Z011","code_nm":"사내행사 - 시무식\/워크샵\/H-Day 등"}
+,{"task_id":32,"group_id":"ZDUM1","code_id":"Z011","code_nm":"사내행사 - 시무식 워크샵 H-Day 등"}
 ,{"task_id":33,"group_id":"ZDUM1","code_id":"Z012","code_nm":"경영지원 - 전략,인사,재무,구매 지원 업무"}
 ,{"task_id":34,"group_id":"ZDUM1","code_id":"Z013","code_nm":"팀 업무지원 - 팀행사, 팀기획, 팀내 보고자료작성 및 보고"}
 ,{"task_id":35,"group_id":"ZDUM1","code_id":"Z014","code_nm":"타팀 업무지원 - 타부서 협업, 팀 제외 보고자료작성 및 보고"}
 ,{"task_id":36,"group_id":"ZDUM1","code_id":"Z015","code_nm":"기타 업무"}
-,{"task_id":37,"group_id":"ZDUM1","code_id":"Z016","code_nm":"품질\/보안 - 수행계획\/실행\/보고"}
-,{"task_id":38,"group_id":"ZDUM1","code_id":"Z017","code_nm":"프로젝트관리 - 사전\/진행\/종료 검토"}
+,{"task_id":37,"group_id":"ZDUM1","code_id":"Z016","code_nm":"품질 보안 - 수행계획 실행 보고"}
+,{"task_id":38,"group_id":"ZDUM1","code_id":"Z017","code_nm":"프로젝트관리 - 사전 진행 종료 검토"}
 ,{"task_id":39,"group_id":"ZDUM1","code_id":"Z018","code_nm":"휴게시간"}
 ,{"task_id":40,"group_id":"ZDUM4","code_id":"03","code_nm":"Refresh휴가"}
 ,{"task_id":41,"group_id":"ZDUM4","code_id":"04","code_nm":"부임휴가"}

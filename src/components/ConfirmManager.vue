@@ -77,7 +77,7 @@
             <div class="bg-slate-600 h-16 rounded-tl-lg rounded-tr-lg" style="max-width:1230px">
               <div class="flex">
                 <div class="pt-2 border-r" style="width:180px;"><p class="mt-3">구분</p></div>
-                <div class="pt-2 main-interval border-r" ><p>Mon <span><input type="checkbox"></span></p><p>{{viewDate[0]}}</p></div>
+                <div class="pt-2 main-interval border-r" ><p>Mon <span><input type="checkbox"></span></p><p>{{viewDate[0]}}</p></div><!--0~6번 째로 해당 주차의 status를 구분한다.-->
                 <div class="pt-2 main-interval border-r" ><p>Tue <span><input type="checkbox"></span></p><p>{{ viewDate[1] }}</p></div>
                 <div class="pt-2 main-interval border-r" ><p>Web <span><input type="checkbox"></span></p><p>{{ viewDate[2] }}</p></div>
                 <div class="pt-2 main-interval border-r"><p>Thu <span><input type="checkbox"></span></p><p>{{ viewDate[3] }}</p></div>
@@ -134,7 +134,7 @@
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
                         <div class=" pt-2" style="width:50%"><p>{{ member[0].memberName }}</p></div>
-                        <div class=" pt-2 border-l" style="width:50%"><input type="checkbox"> </div>
+                        <div class=" pt-2 border-l" style="width:50%"><input type="checkbox"> </div><!--멤버별 승인 제외 index로 구분한다.-->
                     </div>
                     <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[0].totalTime }}</p></div>
