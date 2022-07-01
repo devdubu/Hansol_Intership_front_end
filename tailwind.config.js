@@ -12,9 +12,8 @@ module.exports = {
       ".src/components/PlanCalender.vue",
       "./src/components/PerfCalender.vue",
       "./src/components/PlanDetail.vue",
-      './src/components/PlanDetailEdit.vue'
-
-    
+      './src/components/PlanDetailEdit.vue',
+      './src/components/RegisterPlan.vue',
   ],
   theme: {
     extend: {},

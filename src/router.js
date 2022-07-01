@@ -6,6 +6,7 @@ import StandardCode from './components/StandardCode.vue';
 import DeadlineCalender from './components/DeadlineCalender.vue'
 import PlanCalender from './components/PlanCalender.vue';
 import PerfCalender from './components/PerfCalender.vue';
+import RegisterPlan from "./components/RegisterPlan.vue";
 
 const routes = [
   {
@@ -36,6 +37,10 @@ const routes = [
   {
     path: "/deadline",
     component: DeadlineCalender,
+  },
+  {
+    path: "/registerplan",
+    component: RegisterPlan,
   }
 ];
 

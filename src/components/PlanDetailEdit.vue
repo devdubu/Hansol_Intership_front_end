@@ -1,7 +1,5 @@
 <!--
 
-시긴을 짜는 알고리즘 다시 생각해보기
-
 -->
 <template>
   <div class="bg-slate-700 relative">
@@ -21,7 +19,7 @@
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
-          <select @change="onChangeStartHour($event)" v-model="StartWorkTime">
+          <select @change="onChangeStartHour_v2($event)" v-model="StartWorkTime">
             <option v-for="start in startTime" :value="start.value">{{ start.text }}</option>
           </select>
         </div>
@@ -30,7 +28,7 @@
         <div class="text-black ml-3 mr-3">
           <p class="text-base text-white">{{ EndWorkTime }}</p>
         </div>
-        <div class="mr-4"><p>총 <span class="text-rose-400">8</span>시간</p></div><!--데이터 실시간 변경-->
+        <div class="mr-4"><p>총 <span class="text-rose-400">{{ totalDayWorkTime }}</span>시간</p></div><!--데이터 실시간 변경-->
       </div>
       <div class="flex mt-3 ml-3 text-white">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
@@ -102,11 +100,11 @@
                   <div  style="height:25px; width: 101px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
                     <p class="pl-1">시간 :</p>
                     <div>
-                      <input v-model="task.task_hour" @change="onChangeTaskTime($event,index)" type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+                      <input v-model="task.task_hour" @change="onChangeTaskHour_v2($event, index) " type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                     </div>
                   </div>
-                  <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{TaskStartTimeView[index]}} ~
-                    {{ TaskEndTimeView[index] }}</div><!--시간 데이터 실시간 변경점-->
+                  <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{renderTaskStartHour[index]}} ~
+                    {{ renderTaskEndHour[index] }}</div><!--시간 데이터 실시간 변경점-->
                 </div>
               </div>
                 <!-- 업무 반복 구현 끝-->
@@ -120,8 +118,8 @@
         </div>
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
-          <button @click="saveData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
-          <button @click="sendData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
+          <button @click="PostData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
+          <button @click="PostData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
 
@@ -148,8 +146,8 @@ export default {
     oneDayInfo: Object,
   },
   mounted() {
-    this.SendData()
-    this.CalTime()
+    this.SetData()
+    this.SetTaskHour_v2()
     this.ClassifyTaskType()
     this.ClassifyProject()
     this.MountSelect()
@@ -228,11 +226,8 @@ export default {
       //끝나는 시간 데이터
       StartWorkTime: "",
       EndWorkTime: "",
-      TotalWorkTime: 0,
-      TaskStartTime: [],
-      TaskStartTimeView: [],
-      TaskEndTime: [],
-      TaskEndTimeView:[],
+
+
 
       // 대분류, 소 분류 -> 따로 데이터를 받아오는 값
       mainGroup:[],
@@ -260,75 +255,24 @@ export default {
       //데이터 상자
       TaskBox: [],
       deleteBox: [false],
+
+
+      // =============== 시간에 대한 알고리즘 ================
+      planStartHour : "",
+      taskStartHour : [],
+      taskEndHour : [],
+      taskTime :[],
+      renderTaskStartHour:[],
+      renderTaskEndHour:[],
+      totalDayWorkTime: 0,
     }
   },
   computed:{
-    reverseMessage(startview) {
-      return [startview.slice(0,2),':',startview.slice(2,4)].join('');
-    },
-    calTime(){
-      // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
-      // task수행 시간을 받아오게 되면,
-      this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
-      this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
-
-
-      var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
-      var end = String(start + (this.TotalWorkTime*100)+100);
-
-
-
-      var taskstart = start, lunch=0;
-      this.TaskStartTime[0] = taskstart;
-
-      this.sendTaskData[index].task_hour = taskTime;
-
-      for(var i = 0;i<this.sendTaskData.length;i++){
-        var taskhour = (this.sendTaskData[i].task_hour*100)
-
-        taskstart += taskhour;
-        if(taskstart >= 1700){
-          taskstart += 100;
-          this.TaskEndTime[i] = taskstart;
-          break;
-        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
-
-        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
-          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
-            taskstart += 100;
-            this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
-            this.TaskStartTime[i+1] = taskstart;
-            lunch++;
-          }
-        }else{
-          this.TaskEndTime.push(end);
-        }
-
-      }
-      // 시간을 출력할 때 사용하는 로직
-      for(var i = 0; i<this.TaskStartTime.length;i++){
-        var startview, endview
-        if(this.TaskStartTime[i]/100 < 10){
-          startview = '0'+String(this.TaskStartTime[i]);
-        }else{
-          startview = String(this.TaskStartTime[i]);
-        }
-        if(this.TaskEndTime[i]/100 < 10){
-          endview = '0'+ String(this.TaskEndTime[i]);
-        }else{
-          endview = String(this.TaskEndTime[i]);
-        }
-        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
-        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
-      }
-
-    }
-
   },
   methods:{
 
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
-    SendData(){
+    SetData(){
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
       for(var i = 0;i<this.oneDayInfo.length;i++){
         this.deleteBox.push(true);//삭제 버튼 활성화
@@ -353,8 +297,6 @@ export default {
         });
       }
       console.log(this.sendTaskData)
-
-
     },
     MountSelect() { // subTask 완성
       //MainTask - 완성
@@ -389,185 +331,13 @@ export default {
         this.mainGroup.push({group_main_id: this.project[i].project_code, group_sub_id: 'TR002',group_name: this.project[i].project_nm});
       }
     },
-    CalTime(){
-      this.StartWorkTime = this.oneDayInfo[0].started_hour;
-      this.TotalWorkTime = this.oneDayInfo[0].day_hour;
 
-      var start = Number(this.StartWorkTime);
-      var end = String(start + (this.TotalWorkTime*100)+100);
-      this.EndWorkTime = [end.slice(0,2),':',end.slice(2,4)].join('');
-      // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
-      var taskstart = start, lunch=0;
-      this.TaskStartTime.push(taskstart);
-
-      for(var i = 0;i<this.oneDayInfo.length;i++){
-        var taskhour = (this.oneDayInfo[i].task_hour*100)
-
-        taskstart += taskhour;
-        if(taskstart == 1700){
-          taskstart += 100;
-          this.TaskEndTime.push(taskstart);
-          break;
-        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
-
-        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
-          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
-            taskstart += 100;
-            this.TaskEndTime.push(taskstart); // 끝나는 시간 넣기
-            this.TaskStartTime.push(taskstart);
-            lunch++;
-          }
-        }else{
-          this.TaskEndTime.push(end);
-        }
-      }
-      // 시간을 출력할 때 사용하는 로직
-      for(var i = 0; i<this.TaskStartTime.length;i++){
-        var startview, endview
-        if(this.TaskStartTime[i]/100 < 10){
-          startview = '0'+String(this.TaskStartTime[i]);
-        }else{
-          startview = String(this.TaskStartTime[i]);
-        }
-        if(this.TaskEndTime[i]/100 < 10){
-          endview = '0'+ String(this.TaskEndTime[i]);
-        }else{
-          endview = String(this.TaskEndTime[i]);
-        }
-        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
-        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
-      }
-
-    },
 
     /*---------------------------------------- change 이벤트 메서드 ---------------------------------*/
 
-    onChangeTaskTime(event,index){
-      var taskTime = event.target.value;
-      if(taskTime< 0){
-        alert("양수만 입력해주시길 바랍니다.")
-        this.sendTaskData[index].task_hour = 0
-      }else{
-        // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
-        // task수행 시간을 받아오게 되면,
-        this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
-        this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
-
-
-        var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
-        var end = String(start + (this.TotalWorkTime*100)+100);
-
-
-
-        var taskstart = start, lunch=0;
-        this.TaskStartTime[0] = taskstart;
-
-        this.sendTaskData[index].task_hour = taskTime;
-
-        for(var i = 0;i<this.sendTaskData.length;i++){
-          var taskhour = (this.sendTaskData[i].task_hour*100)
-
-          taskstart += taskhour;
-          if(taskstart >= 1700 && lunch == 0){
-            taskstart += 100;
-            this.TaskEndTime[i] = taskstart;
-            break;
-          }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
-
-          if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
-            if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
-              taskstart += 100;
-              this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
-              this.TaskStartTime[i+1] = taskstart;
-              lunch++;
-            }
-          }else{
-            this.TaskEndTime.push(end);
-          }
-        }
-        // 시간을 출력할 때 사용하는 로직
-        for(var i = 0; i<this.TaskStartTime.length;i++){
-          var startview, endview
-          if(this.TaskStartTime[i]/100 < 10){
-            startview = '0'+String(this.TaskStartTime[i]);
-            this.sendTaskData[i].started_hour = startview;
-          }else{
-            startview = String(this.TaskStartTime[i]);
-            this.sendTaskData[i].started_hour = startview;
-          }
-          if(this.TaskEndTime[i]/100 < 10){
-            endview = '0'+ String(this.TaskEndTime[i]);
-            this.sendTaskData[i].ended_hour = endview
-          }else{
-            endview = String(this.TaskEndTime[i]);
-            this.sendTaskData[i].ended_hour = endview
-          }
-          this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
-          this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
-        }
-
-      }
-
-    },
+    //
     // 시간 변경 시에 실시간으로 시간 변경 메서드
-    onChangeStartHour(event){
-      this.StartWorkTime = event.target.value;
-      var start = Number(this.StartWorkTime);
-
-      this.TaskStartTime[0] = start;
-
-      var end = String(start + (this.TotalWorkTime*100)+100);
-
-      this.EndWorkTime = [end.slice(0,2),':',end.slice(2,4)].join('');
-      this.sendTaskData[0].started_hour = String(start);
-      var taskstart = start,lunch=0
-
-      for(var i = 0;i<this.sendTaskData.length;i++){
-        var taskhour = (this.sendTaskData[i].task_hour*100)
-
-        taskstart += taskhour;
-        if(taskstart >= 1700 && lunch === 0){
-          taskstart += 100;
-          this.TaskEndTime[i] = taskstart;
-          break;
-        }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
-
-        if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
-          if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
-            taskstart += 100;
-            this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
-            this.TaskStartTime[i+1] = taskstart;
-            lunch++;
-          }
-        }else{
-          this.TaskEndTime[i] = end;
-        }
-      }
-      console.log(this.TaskEndTime)
-      // 시간을 출력할 때 사용하는 로직
-      for(var i = 0; i<this.TaskStartTime.length;i++){
-        var startview, endview
-        if(this.TaskStartTime[i]/100 < 10){
-          startview = '0'+String(this.TaskStartTime[i]);
-          this.sendTaskData[i].started_hour = startview;
-        }else{
-          startview = String(this.TaskStartTime[i]);
-          this.sendTaskData[i].started_hour = startview;
-        }
-        if(this.TaskEndTime[i]/100 < 10){
-          endview = '0'+ String(this.TaskEndTime[i]);
-          this.sendTaskData[i].ended_hour = endview
-        }else{
-          endview = String(this.TaskEndTime[i]);
-          this.sendTaskData[i].ended_hour = endview
-        }
-        this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
-        this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
-
-
-      }
-
-    },
+    //
     //실적 업무 박스 추가시에 추가 되는 메서드
     addTaskBox(){
       var index = this.sendTaskData.length;
@@ -659,9 +429,236 @@ export default {
       }
       // alert('지금 닫으시면 저장이 되지 않습니다.');
     },
+    //==================================== 시간 계산에 대한 알고리즘 2 ======================================
+    //처음 렌더링 될 때 사용되는 메서드
+    SetTime_v2(){
+    },
+    SetTaskHour_v2(){
+      for(var i = 0;i<this.sendTaskData.length;i++){
+        this.taskStartHour.push(Number(this.sendTaskData[i].started_hour))
+        this.taskEndHour.push(Number(this.sendTaskData[i].ended_hour))
+        this.taskTime.push(this.sendTaskData[i].task_hour)
+      }
+      this.totalDayWorkTime = this.sendTaskData[0].day_hour;
+      this.RenderTime_v2()
+
+    },
+    onChangeStartHour_v2(e){
+      var daystart = e.target.value;
+      daystart = Number(daystart);
+      this.taskStartHour[0] = daystart;
+
+      this.calTime_v2();
+    },
+    onChangeTaskHour_v2(e,index){
+
+      this.taskTime[index] = Number(e.target.value);
+      var sumTime = 0
+      for(var i = 0;i<this.taskTime.length;i++){
+         sumTime += this.taskTime[i]
+      }
+      this.totalDayWorkTime = sumTime
+
+      this.calTime_v2();
+
+    },//시간 계산을 해주는 메서드 -> 시간 계산이 필요할 때 활용하면 된다.
+    calTime_v2(){
+      //12시 이전에 계획이 끝나는 경우
+      var time = 0;
+      //12시 이후에 계획이 끝나는 경우
+      var lunch = 0;
+      var lunchTime = 100;
+      for(var i = 0;i<this.taskTime.length;i++){
+        time = this.taskStartHour[i]+(this.taskTime[i]*100);
+        if(lunch == 0 && time > 1200){
+          time += lunchTime;
+          this.taskEndHour[i] = time
+          lunch++;
+        }else if(time === 1200 && lunch === 0){
+          this.taskEndHour[i] = time;
+          time += lunchTime;
+          lunch++;
+        }else{//12시 이전이거나 혹은 12시 이후 일때
+          this.taskEndHour[i] = time;
+        }
+        if(i < this.taskTime.length-1){
+          this.taskStartHour[i+1] = time;
+        }
+
+      }
+      console.log(this.taskStartHour);
+      console.log(this.taskEndHour);
+      this.RenderTime_v2();
+    },
+    RenderTime_v2(){
+      for(var i = 0;i<this.taskStartHour.length;i++){
+        var start = this.taskStartHour[i]
+        var end = this.taskEndHour[i]
+
+        if(start/100 < 10){
+          start = '0'+String(start);
+        }else {
+          start = String(start);
+        }
+        if(end/100 < 10){
+          end = '0'+String(end)
+        }else{
+          end = String(end);
+        }
+        this.renderTaskStartHour[i] = [start.slice(0,2),':',start.slice(2,4)].join('');
+        this.renderTaskEndHour[i] = [end.slice(0,2),':',end.slice(2,4)].join('');
+      }
+
+      var start =  this.taskStartHour[0]
+      this.StartWorkTime = '0'+String(start)
+      console.log(start)
+      var index = this.taskStartHour.length-1
+      var EndDay = String(this.taskEndHour[index])
+      this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
+
+    },
+    //================================ 데이터 보내기 ===================================
+    PostData(status){
+      for(var i = 0;i<this.oneDayInfo.length;i++){
+        var stringTaskStartHour = this.taskStartHour[i]
+        var stringTaskEndHour = this.taskEndHour[i]
+        if(stringTaskStartHour/100 < 10){
+          stringTaskStartHour = '0'+String(stringTaskStartHour);
+        }else {
+          stringTaskStartHour = String(stringTaskStartHour);
+        }
+        if(stringTaskEndHour/100 < 10){
+          stringTaskEndHour = '0'+String(stringTaskEndHour)
+        }else{
+          stringTaskEndHour = String(stringTaskEndHour);
+        }
+
+        this.sendTaskData[i].task_hour =  this.taskTime[i];
+        this.sendTaskData[i].day_hour = this.totalDayWorkTime;
+        this.sendTaskData[i].started_hour = stringTaskStartHour;
+        this.sendTaskData[i].ended_hour = stringTaskEndHour;
+        this.sendTaskData[i].enroll_yn = status;
+      }
+      console.log(this.sendTaskData)
+    }
+    // onChangeTaskTime(event,index){
+      //   var taskTime = event.target.value;
+      //   if(taskTime< 0){
+      //     alert("양수만 입력해주시길 바랍니다.")
+      //     this.sendTaskData[index].task_hour = 0
+      //   }else{
+      //     // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
+      //     // task수행 시간을 받아오게 되면,
+      //     this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
+      //     this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
+      //
+      //
+      //     var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
+      //     var end = String(start + (this.TotalWorkTime*100)+100);
+      //
+      //
+      //
+      //     var taskstart = start, lunch=0;
+      //     this.TaskStartTime[0] = taskstart;
+      //
+      //     this.sendTaskData[index].task_hour = taskTime;
+      //
+      //     for(var i = 0;i<this.sendTaskData.length;i++){
+      //       var taskhour = (this.sendTaskData[i].task_hour*100)
+      //
+      //       taskstart += taskhour;
+      //       if(taskstart >= 1700 && lunch == 0){
+      //         taskstart += 100;
+      //         this.TaskEndTime[i] = taskstart;
+      //         break;
+      //       }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+      //
+      //       if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+      //         if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+      //           taskstart += 100;
+      //           this.TaskEndTime[i] = taskstart; // 끝나는 시간 넣기
+      //           this.TaskStartTime[i+1] = taskstart;
+      //           lunch++;
+      //         }
+      //       }else{
+      //         this.TaskEndTime.push(end);
+      //       }
+      //     }
+      //     // 시간을 출력할 때 사용하는 로직
+      //     for(var i = 0; i<this.TaskStartTime.length;i++){
+      //       var startview, endview
+      //       if(this.TaskStartTime[i]/100 < 10){
+      //         startview = '0'+String(this.TaskStartTime[i]);
+      //         this.sendTaskData[i].started_hour = startview;
+      //       }else{
+      //         startview = String(this.TaskStartTime[i]);
+      //         this.sendTaskData[i].started_hour = startview;
+      //       }
+      //       if(this.TaskEndTime[i]/100 < 10){
+      //         endview = '0'+ String(this.TaskEndTime[i]);
+      //         this.sendTaskData[i].ended_hour = endview
+      //       }else{
+      //         endview = String(this.TaskEndTime[i]);
+      //         this.sendTaskData[i].ended_hour = endview
+      //       }
+      //       this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+      //       this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+      //     }
+      //
+      //   }
+      //
+      // },
+    // CalTime(){
+    //   this.StartWorkTime = this.oneDayInfo[0].started_hour;
+    //   this.TotalWorkTime = this.oneDayInfo[0].day_hour;
+    //
+    //   var start = Number(this.StartWorkTime);
+    //   var end = String(start + (this.TotalWorkTime*100)+100);
+    //   this.EndWorkTime = [end.slice(0,2),':',end.slice(2,4)].join('');
+    //   // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
+    //   var taskstart = start, lunch=0;
+    //   this.TaskStartTime.push(taskstart);
+    //
+    //   for(var i = 0;i<this.oneDayInfo.length;i++){
+    //     var taskhour = (this.oneDayInfo[i].task_hour*100)
+    //
+    //     taskstart += taskhour;
+    //     if(taskstart == 1700){
+    //       taskstart += 100;
+    //       this.TaskEndTime.push(taskstart);
+    //       break;
+    //     }//특수한 경우는 따로 뺌,, -> 한 task의 8시간 일때
+    //
+    //     if(taskstart < end){ //task더한 값이 end 보다 작을 때만 돌기
+    //       if(taskstart == 1200 || (taskstart > 1200 && lunch === 0) || (taskstart+=100) <= end){ //
+    //         taskstart += 100;
+    //         this.TaskEndTime.push(taskstart); // 끝나는 시간 넣기
+    //         this.TaskStartTime.push(taskstart);
+    //         lunch++;
+    //       }
+    //     }else{
+    //       this.TaskEndTime.push(end);
+    //     }
+    //   }
+    //   // 시간을 출력할 때 사용하는 로직
+    //   for(var i = 0; i<this.TaskStartTime.length;i++){
+    //     var startview, endview
+    //     if(this.TaskStartTime[i]/100 < 10){
+    //       startview = '0'+String(this.TaskStartTime[i]);
+    //     }else{
+    //       startview = String(this.TaskStartTime[i]);
+    //     }
+    //     if(this.TaskEndTime[i]/100 < 10){
+    //       endview = '0'+ String(this.TaskEndTime[i]);
+    //     }else{
+    //       endview = String(this.TaskEndTime[i]);
+    //     }
+    //     this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
+    //     this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
+    //   }
+    //
+    // },
   },
-  components: {
-  }
 }
 </script>
 
