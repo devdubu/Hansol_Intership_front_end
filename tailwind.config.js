@@ -14,6 +14,7 @@ module.exports = {
       "./src/components/PlanDetail.vue",
       './src/components/PlanDetailEdit.vue',
       './src/components/RegisterPlan.vue',
+      './src/components/RegisterPlanDetail.vue'
   ],
   theme: {
     extend: {},

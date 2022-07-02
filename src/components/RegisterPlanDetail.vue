@@ -19,8 +19,8 @@
     </div>
     <div class="flex mt-4" style="width: 1270px">
       <div class="grow"></div>
-      <button @click="removeTaskBox" style="width: 25px; height: 25px" class="text-lg pr-0.3 bg-rose-500 rounded mr-3 hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
-      <button @click="addTaskBox" style="width: 25px; height: 25px" class="text-lg rounded bg-teal-500 pr-0.3 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
+      <button v-if="deleteBox[index]" @click="removeTaskBox" class="mr-4 mt-3 bg-rose-500 w-6 rounded"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+      <button @click="addTaskBox" class="rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
     </div>
     <!-- 컨텐츠 부분 -->
     <div class="ml-5 mt-5 text-white" style="width: 1294px">
@@ -46,45 +46,45 @@
               <p>재택근무<span><input type="checkbox"></span></p>
             </div>
           </div>
-            <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
-              <div class="flex">
-                <div class="mr-3 text-black">
-                  <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event, index)" style="width: 300px">
-                    <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
-                  </select>
-                </div>
-                <div class="text-black">
-                  <select v-model="Task.code_id" @change="onChangeSelectSub($event, index)" style="width: 450px">
-                    <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
-                  </select>
-                </div>
+          <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
+            <div class="flex">
+              <div class="mr-3 text-black">
+                <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event, index)" style="width: 300px">
+                  <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
+                </select>
               </div>
-              <div style="width: 400px" class="text-black mt-3">
-                <input style="width: 400px" type="input">
+              <div class="text-black">
+                <select v-model="Task.code_id" @change="onChangeSelectSub($event, index)" style="width: 450px">
+                  <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
+                </select>
               </div>
             </div>
+            <div style="width: 400px" class="text-black mt-3">
+              <input style="width: 400px" type="input">
+            </div>
+          </div>
 
-            <div class="grow"></div>
-            <div class="mr-4 mt-2">
-              <div class="flex mt-5">
-                <div>
-                  <p>시간 :</p>
-                </div>
-                <div class="pb-1">
-                  <input @change="onChangeTaskHour_v2($event,index)" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
-                </div>
+          <div class="grow"></div>
+          <div class="mr-4 mt-2">
+            <div class="flex mt-5">
+              <div>
+                <p>시간 :</p>
               </div>
-              <div class="mt-4 mr-4 ">
-                <p>{{ renderTaskStartHour[index] }} ~ {{ renderTaskEndHour[index] }}</p>
+              <div class="pb-1">
+                <input @change="onChangeTaskHour_v2($event,index)" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
               </div>
             </div>
+            <div class="mt-4 mr-4 ">
+              <p>{{ renderTaskStartHour[index] }} ~ {{ renderTaskEndHour[index] }}</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="flex mt-4">
         <div class="grow"></div>
         <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">날짜별 세부 계획</button></router-link>
-        <button @click="SaveData" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+        <button style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
         <div class="grow"></div>
       </div>
 
@@ -100,7 +100,7 @@ import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
 
 export default {
-  name: 'RegisterPlan',
+  name: 'RegisterPlanDetail',
   mounted() {
 
     this.ClassifyTaskType();
@@ -110,10 +110,8 @@ export default {
   },
   data() {
     return {
-      //받는 데이터
       taskType: registerTask,
       project: registerProject,
-      startDate: 20220704,
 
       //보내는 데이터
       sendData: [],
@@ -231,7 +229,6 @@ export default {
             Week: "7월 1주차 ~ 7월 2주차",
             seq: 1,
             task_hour: 8,
-            day_hour: 8,
             started_hour: "0900",
             ended_hour: "1200",
             group_main_id: "TR001",
@@ -240,7 +237,6 @@ export default {
             group_name: "주업무",
             code_name: "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
             work_detail: "주업무",
-            enroll_yn : "0",
           }
       );
       console.log(this.viewData);
@@ -362,59 +358,6 @@ export default {
       this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
 
     },
-    removeTaskBox(){
-      if(this.viewData.length > 1){
-        this.viewData.pop();
-      }else{
-        alert('삭제할 수 없습니다.');
-      }
-    },
-    SaveData(){
-      for(var i = 0;i<this.viewData.length;i++){
-        var stringTaskStartHour = this.taskStartHour[i]
-        var stringTaskEndHour = this.taskEndHour[i]
-        if(stringTaskStartHour/100 < 10){
-          stringTaskStartHour = '0'+String(stringTaskStartHour);
-        }else {
-          stringTaskStartHour = String(stringTaskStartHour);
-        }
-        if(stringTaskEndHour/100 < 10){
-          stringTaskEndHour = '0'+String(stringTaskEndHour)
-        }else {
-          stringTaskEndHour = String(stringTaskEndHour);
-        }
-        this.viewData[i].task_hour = this.taskTime[i];
-        this.viewData[i].day_hour = this.totalDayWorkTime;
-        this.viewData[i].started_hour = stringTaskStartHour;
-        this.viewData[i].ended_hour = stringTaskEndHour;
-      }
-      var index = 0;
-      for(var i = 0;i<14;i++){
-        for(var j = 0; j<this.viewData.length;j++){
-          this.sendData[index] = {
-            plan_day: this.startDate+i,
-            seq: this.viewData[j].seq,
-            day_hour: this.viewData[j].day_hour,
-            start_hour: this.viewData[j].started_hour,
-            ended_hour: this.viewData[j].ended_hour,
-            group_main_id: this.viewData[j].group_main_id,
-            group_sub_id: this.viewData[j].group_sub_id,
-            code_id : this.viewData[j].code_id,
-            group_name: this.viewData[j].group_name,
-            code_name: this.viewData[j].code_name,
-            work_detail : this.viewData[j].work_detail,
-            wfh_yn: "0",
-            enroll_yn: '0',
-            is_Holiday :"N"
-          }
-          if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].is_Holiday = "Y";
-          }
-          index++;
-        }
-      }
-      console.log(this.sendData)
-    }
   }
 }
 </script>

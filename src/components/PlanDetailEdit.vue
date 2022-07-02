@@ -164,64 +164,22 @@ export default {
       //보여주는 데이터
       default_value : 'selected',
       startTime:[
-        {
-          text: "8:00",
-          value:"0800"
-        },
-        {
-          text: "8:30",
-          value: "0830"
-        },
-        {
-          text: "9:00",
-          value: "0900",
-        },
-        {
-          text: "9:30",
-          value: "0930",
-        },
-        {
-          text: "10:00",
-          value: "1000",
-        }
+        {text: "8:00", value:"0800"},
+        { text: "8:30", value: "0830"},
+        {text: "9:00", value: "0900"},
+        {text: "9:30", value: "0930"},
+        {text: "10:00", value: "1000"}
       ],
       endTime:[
-        {
-          text: "16:00",
-          value:"1600"
-        },
-        {
-          text: "16:30",
-          value: "1630"
-        },
-        {
-          text: "17:00",
-          value: "1700",
-        },
-        {
-          text: "17:30",
-          value: "0930",
-        },
-        {
-          text: "18:00",
-          value: "1800",
-        },
-        {
-          text: "18:30",
-          value: "1830",
-        },
-        {
-          text: "19:00",
-          value: "1900",
-        },
-        {
-          text: "19:30",
-          value: "1930"
-        },
-        {
-          text: "20:00",
-          value: "2000"
-        }
+        {text: "16:00", value:"1600"},
+        {text: "16:30", value: "1630"},
+        {text: "17:00", value: "1700"},
+        {text: "17:30", value: "0930"},
+        {text: "18:00", value: "1800"},
+        {text: "18:30", value: "1830"},
+        {text: "19:00", value: "1900"},
+        {text: "19:30", value: "1930"},
+        {text: "20:00", value: "2000"}
       ],
       //끝나는 시간 데이터
       StartWorkTime: "",
@@ -315,7 +273,6 @@ export default {
           }
         }
       }
-
     },
     ClassifyTaskType(){//완성
       for(var i = 0;i<this.taskType.length;i++){
@@ -359,9 +316,10 @@ export default {
         member_id: this.defaultMember_id,
         is_Holiday: this.defaultIs_Holiday
       });
-      this.TaskStartTime.push(Number(this.sendTaskData[index].started_hour));
-      this.TaskEndTime.push(Number(this.sendTaskData[index].ended_hour));
+      this.taskStartHour.push(Number(this.sendTaskData[index].started_hour));
+      this.taskEndHour.push(Number(this.sendTaskData[index].ended_hour));
 
+      this.addSelectMain(index)
       console.log(this.sendTaskData[index].ended_hour)
     },
     removeTaskBox(){
@@ -369,6 +327,25 @@ export default {
       this.deleteBox.pop();
       //삭제시에 보내는 데이터 senddata 삭제
     },
+    addSelectMain(index){
+      for(var i = 0;i<this.mainGroup.length;i++){
+        if(sub === this.mainGroup[i].group_sub_id){
+          this.sendTaskData[index].group_main_id = this.mainGroup[i].group_main_id;
+          this.sendTaskData[index].group_name = this.mainGroup[i].group_name;
+          break;
+        }
+      }
+      this.subTaskCopy[index] = [...this.subTask];
+
+
+      for(var i = 0; i < this.subTaskCopy[index].length; i++){
+        if(sub != this.subTaskCopy[index][i].group_sub_id){
+          this.subTaskCopy[index].splice(i,1);
+          i--;
+        }
+      }
+    },
+
     onChangeSelectMain(event, index){
       var sub = event.target.value
 
@@ -519,7 +496,7 @@ export default {
     },
     //================================ 데이터 보내기 ===================================
     PostData(status){
-      for(var i = 0;i<this.oneDayInfo.length;i++){
+      for(var i = 0;i<this.sendTaskData.length;i++){
         var stringTaskStartHour = this.taskStartHour[i]
         var stringTaskEndHour = this.taskEndHour[i]
         if(stringTaskStartHour/100 < 10){

@@ -7,6 +7,7 @@ import DeadlineCalender from './components/DeadlineCalender.vue'
 import PlanCalender from './components/PlanCalender.vue';
 import PerfCalender from './components/PerfCalender.vue';
 import RegisterPlan from "./components/RegisterPlan.vue";
+import RegisterPlanDetail from "./components/RegisterPlanDetail.vue"
 
 const routes = [
   {
@@ -41,6 +42,10 @@ const routes = [
   {
     path: "/registerplan",
     component: RegisterPlan,
+  },
+  {
+    path: "/registerplandetail",
+    component: RegisterPlanDetail,
   }
 ];
 
