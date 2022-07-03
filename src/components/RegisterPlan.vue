@@ -359,7 +359,7 @@ export default {
       console.log(start)
       var index = this.taskStartHour.length-1
       var EndDay = String(this.taskEndHour[index])
-      this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
+      this.EndWorkTime = this.Date[i]
 
     },
     removeTaskBox(){
