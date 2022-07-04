@@ -52,73 +52,80 @@
           <!-- 컨텐츠 부분 -->
           <div class="ml-5 mt-5 ">
             <!--상단 요일 표시-->
-            <div class="flex flex-row " style="width:1200px;">
-                <div class="calendar-interval-day-check">
-                    <p class="bg-slate-500 text-white rounded-tl-lg" @click="checkDay(40)" ><button> 전체 월 선택</button> </p>
-                    <div class="bg-gray-100 box-border calendar-interval-day-check calendar-interval-day border-2" :class="{checkDay:thema[0] }" @click="checkDay(0)"><button class="mt-5">1주차</button></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day-check calendar-interval-day border-2" :class="{checkDay:thema[8] }" @click="checkDay(8)"><button class="mt-5">2주차</button></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day-check calendar-interval-day border-2" :class="{checkDay:thema[16] }" @click="checkDay(16)"><button class="mt-5">3주차</button></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day-check calendar-interval-day border-2" :class="{checkDay:thema[24] }" @click="checkDay(24)"><button class="mt-5">4주차</button></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day-check calendar-interval-day border-2  rounded-bl-lg" :class="{checkDay:thema[32] }" @click="checkDay(32)"><button class="mt-5">5주차</button></div>
-                </div>
-                <div class="calendar-interval">
-                    <p class="bg-slate-500 text-white calendar-interval-day-check">Mon</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[1] }" @click="checkDay(1)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[9] }" @click="checkDay(9)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[17] }" @click="checkDay(17)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[25] }" @click="checkDay(25)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[33] }" @click="checkDay(33)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval">
-                    <p class="bg-slate-500 text-white calendar-interval-day-check">Tue</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[2] }" @click="checkDay(2)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[10] }" @click="checkDay(10)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[18] }" @click="checkDay(18)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[26] }" @click="checkDay(26)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[34] }" @click="checkDay(34)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval ">
-                    <p class="bg-slate-500 text-white	calendar-interval-day-check">Web</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[3] }" @click="checkDay(3)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[11] }" @click="checkDay(11)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[19] }" @click="checkDay(19)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[27] }" @click="checkDay(27)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[35] }" @click="checkDay(35)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval">
-                    <p class="bg-slate-500 text-white	calendar-interval-day-check">Thu</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[4] }" @click="checkDay(4)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[12] }" @click="checkDay(12)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[20] }" @click="checkDay(20)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[28] }" @click="checkDay(28)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[36] }" @click="checkDay(36)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval ">
-                    <p class="bg-slate-500 text-white	calendar-interval-day-check">Fri</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[5] }" @click="checkDay(5)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[13] }" @click="checkDay(13)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[21] }" @click="checkDay(21)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[29] }" @click="checkDay(29)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[37] }" @click="checkDay(37)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval ">
-                    <p class="bg-slate-500 text-white	calendar-interval-day-check">Sat</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[6] }" @click="checkDay(6)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[14] }" @click="checkDay(14)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[22] }" @click="checkDay(22)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[30] }" @click="checkDay(30)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[38] }" @click="checkDay(38)" style="height: 100px"></div>
-                </div>
-                <div class="calendar-interval ">
-                    <p class="bg-slate-500 text-white	rounded-tr-lg calendar-interval-day-check">Sun</p>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[7] }" @click="checkDay(7)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[15] }" @click="checkDay(15)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[23] }" @click="checkDay(23)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2" :class="{checkDay:thema[31] }" @click="checkDay(31)" style="height: 100px"></div>
-                    <div class="bg-gray-100 box-border calendar-interval-day calendar-interval-day-check border-2 rounded-br-lg" :class="{checkDay:thema[39] }" @click="checkDay(40)" style="height: 100px"></div>
-                </div>
+            <div class="flex" style="width:1400px;">
+                  <div class="bg-slate-500 text-white rounded-tl-lg border-slate-600 border-r-2" style="width: 110px;">
+                    <button>전체 월 선택</button>
+                  </div>
+                  <div class="bg-slate-500 text-white day-menu border-slate-600 border-r-2">
+                    <button>Mon</button>
+                  </div>
+                  <div class="bg-slate-500 text-white border-slate-600 day-menu border-r-2">
+                    <button>Tue</button>
+                  </div>
+                  <div class="bg-slate-500 text-white border-slate-600 day-menu border-r-2">
+                    <button>Web</button>
+                  </div>
+                  <div class="bg-slate-500 text-white border-slate-600 day-menu border-r-2">
+                    <button>Thu</button>
+                  </div>
+                  <div class="bg-slate-500 text-white border-slate-600 day-menu border-r-2">
+                    <button>Fri</button>
+                  </div>
+                  <div class="bg-slate-500 text-white border-slate-600 day-menu border-r-2">
+                    <button>Sat</button>
+                  </div>
+                  <div class="bg-slate-500 text-white rounded-tr-lg border-slate-600 day-menu">
+                    <button>Sun</button>
+                  </div>
             </div>
-        </div>
+            <!-- 날짜에 대한 데이터 -->
+            <div class="flex" style="width:1400px;">
+              <div class="bg-zinc-200	 text-white border-r-2 calendar border-slate-600" style="width: 110px;">
+              </div>
+              <div class="bg-zinc-200 text-white  day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+              <div class="bg-zinc-200 text-white day-menu border-r-2 calendar border-slate-600 flex">
+                <div class="date bg-zinc-500">
+                  <p class="pt-1">1</p>
+                </div>
+                <div class="mt-3 ml-20"><input class="check-box-size" type="checkbox"></div>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
     
@@ -127,106 +134,81 @@
 
 
 <script>
+import deadline from '../assets/deadlineData.json';
 export default {
     name: 'DeadlineCalender',
     data(){
         return{
-
-            thema: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
-            false, false, false, false, false, false, false, false, false, false]
+          deadline:deadline,
+          year : 0,
+          month: 0,
+          calendarData : [],
         }
     },
-    methods:{
-        checkDay(i){
-            if(i === 40){
-                if(this.thema[0]===false){
-                    for(var j = 0; j<40;j++){
-                        this.thema[j] = true;
-                    }
-                }else if(this.thema[0] === true){
-                    for(var j = 0; j<40; j++){
-                        this.thema[j] = false;
-                    }
-                }
-                
-            }else{
-                switch(i){
-                    case 0:
-                        if(this.thema[i] === false){
-                            for(var j = i; j<8; j++){
-                                this.thema[j] = true;
-                                console.log(j)
-                            }
-                        }else{
-                            for(var j = i; j<8;j++){
-                                this.thema[j] = false;
-                            }
-                        }
-                        break;
-                    case 8:
-                        if(this.thema[i] === false){
-                            for(var j = i; j<16; j++){
-                                this.thema[j] = true;
-                                console.log(j)
-                            }
-                        }else{
-                            for(var j = i; j<16;j++){
-                                this.thema[j] = false;
-                            }
-                        }
-                        break;
-                    case 16:
-                        if(this.thema[i] === false){
-                            for(var j = i; j<24;j++){
-                                this.thema[j] = true;
-                            }
-                        }else{
-                            for(var j = i; j<24;j++){
-                                this.thema[j] = false;
-                            }
-                        }
-                        break;
-                    case 24:
-                        if(this.thema[i] === false){
-                            for(var j = i; j<32;j++){
-                                this.thema[j] = true;
-                            }
-                        }else{
-                            for(var j = i; j<32;j++){
-                                this.thema[j] = false;
-                            }
-                        }
-                        break;
-                    case 32:
-                        if(this.thema[i] === false){
-                            for(var j = i; j<40;j++){
-                                this.thema[j] = true;
-                            }
-                        }else{
-                            for(var j = i; j<40;j++){
-                                this.thema[j] = false;
-                            }
-                        }
-                        break;
-                    default:
-                        this.thema[i] = !this.thema[i]
-                }
-            }
+    mounted() {
+      this.SetCalender()
+    },
+  methods:{
+      SetCalender(){
+        // 1 > 일요일, 2 > 월요일, 3 > 화요일 --->
+        //if => 1이면, +7로 설정 후에 단체로 -2를 한다.
+
+        var calender = [...this.deadline]
+        for(var i = 0;i<calender.length;i++){
+          if(calender[i].dayOfTheWeek === 1){
+            calender[i].dayOfTheWeek += 7;
+          }
         }
+        for(var i = 0;i<calender.length;i++){
+          calender[i].dayOfTheWeek -= 2;
+        }
+        console.log(calender);
+        var startDate = calender[0].dayOfTheWeek;
+        var startMonth = 0
+        for(var i = 0;i<6;i++){
+          var week = []
+          for(var j = 0; j<7;j++){
+            if(startDate === j && startMonth === 0){
+              week.push()
+            }
+          }
+        }
+
+
+
+        for(var i = 0;i<60;i++){
+          if(i >= startDate && i < calender.length){
+            this.calendarData.push(calender[i])
+          }else{
+            this.calendarData.push({
+              perfDay: 0,
+              calDayOfData : 0,
+              signStatus: 0
+            })
+          }
+        }
+      console.log(this.calendarData)
+
+      },
 
     }
 }
 </script>
 <style>
-
-.calendar-interval-day{
-    height: 100px;
+.day-menu{
+  width: 160px;
 }
-.calendar-interval-day-check{
-    width: 154px;
+.date{
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
 }
-.checkDay{
-    background-color: rgb(244 63 94);
+.calendar{
+  height: 120px;
+}
+.check-box-size{
+  width: 30px;
+  height: 30px;
 }
 </style>

@@ -1,0 +1,157 @@
+[
+  {
+    "perfDay" : 20220701,
+    "dayOfTheWeek" : 6,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220702,
+    "dayOfTheWeek" : 7,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220703,
+    "dayOfTheWeek" : 1,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220704,
+    "dayOfTheWeek" : 2,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220705,
+    "dayOfTheWeek" : 3,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220706,
+    "dayOfTheWeek" : 4,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220707,
+    "dayOfTheWeek" : 5,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220708,
+    "dayOfTheWeek" : 6,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220709,
+    "dayOfTheWeek" : 7,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220710,
+    "dayOfTheWeek" : 1,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220711,
+    "dayOfTheWeek" : 2,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220712,
+    "dayOfTheWeek" : 3,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220713,
+    "dayOfTheWeek" : 4,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220714,
+    "dayOfTheWeek" : 5,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220715,
+    "dayOfTheWeek" : 6,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220716,
+    "dayOfTheWeek" : 7,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220717,
+    "dayOfTheWeek" : 1,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220718,
+    "dayOfTheWeek" : 2,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220719,
+    "dayOfTheWeek" : 3,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220720,
+    "dayOfTheWeek" : 4,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220721,
+    "dayOfTheWeek" : 5,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220722,
+    "dayOfTheWeek" : 6,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220723,
+    "dayOfTheWeek" : 7,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220724,
+    "dayOfTheWeek" : 1,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220725,
+    "dayOfTheWeek" : 2,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220726,
+    "dayOfTheWeek" : 3,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220727,
+    "dayOfTheWeek" : 4,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220728,
+    "dayOfTheWeek" : 5,
+    "signStatus" : "0"
+  },
+  {
+    "perfDay" : 20220729,
+    "dayOfTheWeek" : 6,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220730,
+    "dayOfTheWeek" : 7,
+    "signStatus" : "4"
+  },
+  {
+    "perfDay" : 20220731,
+    "dayOfTheWeek" : 1,
+    "signStatus" : "4"
+  }
+]

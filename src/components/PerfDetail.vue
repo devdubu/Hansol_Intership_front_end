@@ -20,7 +20,9 @@
 
       <!--상단 근로 시간 표시 부분-->
       <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
-      <div class="flex text-white bg 	">
+
+      <div class="flex text-white bg">
+        <div class="ml-3">{{perfDay}}</div>
         <div class="ml-3 mr-3"><p>{{ selectDate }}</p></div>
         <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
@@ -70,7 +72,6 @@
               <div class="flex mb-2">
                 <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
                 <div class="grow"></div><!--여기다가 그거 확정 넣어야함-->
-                <div class="rounded-md bg-teal-500 w-6 h-6 mr-5 "> <font-awesome-icon icon="fa-solid fa-plus" /></div>
               </div>
               <!-- 데이터 반복 구간-->
               <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="(data,index) in oneDayInfo">
@@ -96,7 +97,6 @@
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
           <button @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
-          <button @click="test()" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
           <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
@@ -117,15 +117,15 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons'
 library.add(faXmark, faPlus)
 
 export default {
-  name: 'PlanPerformanceDetail',
+  name: 'PerfDetail',
   props:{
     oneDayInfo: Object,
     DayWorkTime: String,
   },
   mounted() {
-    this.test();
     this.partHour();
     this.DistinguishDetailStatus()
+    this.calDay();
   },
   // status ->  1 -  저장, 2 - 확정, 3 - 팀장, 4 - 마감
   // enroll ->  1 - 저장, 2 - 확정
@@ -135,13 +135,15 @@ export default {
       selectDate: '',
       DayHour : '',
       taskHour: [],
-      status:[]
-
+      status:[],
+      perfDay: '',
     }
   },
   methods:{
-    test(){
-      console.log(this.oneDayInfo);
+    calDay(){
+      var perfDay = String(this.oneDayInfo[0].perf_day)
+      this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
+      console.log(this.perfDay)
     },
     partHour(){
       this.TaskNum = this.oneDayInfo.length;

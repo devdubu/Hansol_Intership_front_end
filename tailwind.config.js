@@ -8,13 +8,16 @@ module.exports = {
     "./src/components/NonEnterPerformance.vue",
     "./src/components/StandardCode.vue",
     "./src/components/DeadlineCalender.vue",
-    "./src/components/PlanPerformanceDetail.vue",
       ".src/components/PlanCalender.vue",
       "./src/components/PerfCalender.vue",
       "./src/components/PlanDetail.vue",
       './src/components/PlanDetailEdit.vue',
       './src/components/RegisterPlan.vue',
-      './src/components/RegisterPlanDetail.vue'
+      './src/components/RegisterPlanDetail.vue',
+      './src/components/PerfCalender.vue',
+      './src/components/PerfDetail.vue',
+      './src/components/PerfDetailEdit.vue'
+
   ],
   theme: {
     extend: {},

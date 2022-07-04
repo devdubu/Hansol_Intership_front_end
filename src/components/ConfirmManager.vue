@@ -324,7 +324,14 @@ export default {
       const checkoutMember = this.checkOutMember;
 
       this.sendData.memberids = member.filter(x=>!checkoutMember.includes(x))
-      console.log(this.sendData)
+
+      this.axios.post('/test', this.sendData)
+          .then((res)=>{
+            console.log(res.data)
+          })
+          .catch((error)=>{
+            console.error(error)
+          })
     },
     CancelApprovalFunc(){
 

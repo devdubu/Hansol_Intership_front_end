@@ -21,93 +21,98 @@
 -->
 <template>
   <!--검색 부분 -->
-  <div style="height: 700px; overflow: scroll" class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white">
+  <div style="height: 700px;" class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white main-scroll-bar">
     <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
-        <p>계획 정보 : 06월 3주 ~ 07월 1주 (2022.6.20 ~ 2022.7.3)</p>
+        <p>계획 정보 : {{ week }}</p>
       </div>
       <div class="grow"></div>
-      <div class="mt-5 mr-3"><p>평일 80.0시간</p></div>
+      <div class="mt-5 mr-3"><p>평일 {{ totalWeekWorkTime }}시간</p></div>
     </div>
-    <div class="flex mt-4">
+    <div style="width: 1250px" class="flex mt-4" >
       <div class="grow"></div>
-      <button style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
-      <div class="grow"></div>
+      <button style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded mr-2">등록</button>
+      <button @click="SaveData()" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
     </div>
     <!--데이터 반복 시작 부분-->
-    <div v-for="(date, dateIndex) in viewData" style="height: 300px; overflow: scroll">
-      <div class="flex mt-4" style="width: 1270px">
-        <div>
-          <p class="text-xl">{{ Viewdate[dateIndex] }}</p>
+    <div v-for="(date, dateIndex) in viewData" >
+      <div v-if="is_Holiday[dateIndex]" class="scroll-bar" style="height: 300px;">
+        <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-slate-800 rounded-t-lg" style="width: 1235px">
+          <div class=" border-b-2">
+            <p class="mb-1 ml-5 text-xl ">{{ Viewdate[dateIndex] }} <span class="bg-gray-500 pr-1 pl-1 rounded">{{ ViewDay[dateIndex] }}</span>
+              <span class="text-teal-500" v-if="dateIndex < 7"> - 1주차</span>
+              <span class="text-lime-500" v-if="dateIndex >= 7"> - 2주차</span>
+            </p>
+          </div>
+          <div class="border-b-2 grow"></div>
+          <div class="border-b-2 mr-4">
+            <button @click="removeTaskBox(dateIndex)" style="width: 25px; height: 25px" class="text-lg pr-0.3 bg-rose-500 rounded mr-3 hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+            <button @click="addTaskBox(dateIndex)" style="width: 25px; height: 25px" class="text-lg rounded bg-teal-500 pr-0.3 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
+          </div>
         </div>
-        <div class="grow"></div>
-        <button @click="removeTaskBox()" style="width: 25px; height: 25px" class="text-lg pr-0.3 bg-rose-500 rounded mr-3 hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
-        <button @click="addTaskBox(dateIndex)" style="width: 25px; height: 25px" class="text-lg rounded bg-teal-500 pr-0.3 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
-      </div>
-      <!-- 컨텐츠 부분 -->
-      <div class="ml-5 mt-5 text-white" style="width: 1294px; height: 200px; overflow:scroll">
-        <!-- 표 만들기 -->
+        <!-- 컨텐츠 부분 -->
+        <div class="pl-5 ml-4 pt-5 text-white sub-scroll-bar bg-slate-800 rounded-b-lg" style="width: 1235px; height: 200px;">
+          <!-- 표 만들기 -->
 
-        <div v-for="(Task,index) in viewData[dateIndex]" class="bg-slate-600 mr-16 rounded-xl mb-4" style="height: 120px">
+          <div v-for="(Task,index) in viewData[dateIndex]" class="bg-slate-600 mr-4 rounded-xl mb-4" style="height: 120px">
 
-          <div class="flex">
-            <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
-              <p class="mr-3">{{ Task.Week }}</p>
-              <div class="flex mt-2 ml-8">
-                <div class="text-black mr-1">
-                  <select @change="onChangeStartHour_v2($event, dateIndex)" v-model="StartWorkTime[dateIndex]">
-                    <option  v-for="start in startTime" :value="start.value">{{ start.text}}</option>
-                  </select>
+            <div class="flex">
+              <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
+                <div class="flex mt-2 ml-8">
+                  <div class="text-black mr-1">
+                    <select @change="onChangeStartHour_v2($event, dateIndex)" v-model="StartWorkTime[dateIndex]">
+                      <option  v-for="start in startTime" :value="start.value">{{ start.text}}</option>
+                    </select>
+                  </div>
+                  <span>~</span>
+                  <div class="ml-1">
+                    {{ EndWorkTime[dateIndex] }}
+                  </div>
                 </div>
-                <span>~</span>
-                <div class="ml-1">
-                  {{ EndWorkTime[dateIndex] }}
-                </div>
-              </div>
-              <div class="mt-2 mr-4">
-                <p>재택근무<span><input type="checkbox"></span></p>
-              </div>
-            </div>
-            <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
-              <div class="flex">
-                <div class="mr-3 text-black">
-                  <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event, index)" style="width: 300px">
-                    <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
-                  </select>
-                </div>
-                <div class="text-black">
-                  <select v-model="Task.code_id" @change="onChangeSelectSub($event, index)" style="width: 450px">
-                    <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
-                  </select>
+                <div class="mt-2 mr-4">
+                  <p>재택근무<span><input type="checkbox"></span></p>
                 </div>
               </div>
-              <div style="width: 400px" class="text-black mt-3">
-                <input style="width: 400px" type="input">
+              <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
+                <div class="flex">
+                  <div class="mr-3 text-black">
+                    <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event,dateIndex, index)" style="width: 300px">
+                      <option v-for="main in mainGroup[dateIndex]" :value="main.group_sub_id">{{ main.group_name }}</option>
+                    </select>
+                  </div>
+                  <div class="text-black">
+                    <select v-model="Task.code_id" @change="onChangeSelectSub($event,dateIndex, index)" style="width: 450px">
+                      <option v-for="subtask in subTaskCopy[dateIndex][index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="width: 400px" class="text-black mt-3">
+                  <input v-model="detailTask" style="width: 400px" type="input">
+                </div>
               </div>
-            </div>
 
-            <div class="grow"></div>
-            <div class="mr-4 mt-2">
-              <div class="flex mt-5">
-                <div>
-                  <p>시간 :</p>
+              <div class="grow"></div>
+              <div class="mr-4 mt-2">
+                <div class="flex mt-5">
+                  <div>
+                    <p>시간 :</p>
+                  </div>
+                  <div class="pb-1">
+                    <input @change="onChangeTaskHour_v2($event,index,dateIndex)" min="0" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                  </div>
                 </div>
-                <div class="pb-1">
-                  <input @change="onChangeTaskHour_v2($event,index,dateIndex)" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                <div class="mt-4 mr-4">
+                  <p>{{ renderTaskStartHour[dateIndex][index] }} ~ {{ renderTaskEndHour[dateIndex][index] }}</p>
                 </div>
-              </div>
-              <div class="mt-4 mr-4 ">
-                <p>{{ renderTaskStartHour[dateIndex][index] }} ~ {{ renderTaskEndHour[dateIndex][index] }}</p>
               </div>
             </div>
           </div>
+          <!--반복 종료 구간-->
+
         </div>
-        <!--반복 종료 구간-->
 
       </div>
-
     </div>
-
   </div>
 
 </template>
@@ -121,7 +126,6 @@ export default {
   mounted() {
     this.MountDataSet()
     this.ClassifyTaskType();
-    this.ClassifyProject();
     this.MountSelect();
     this.SetTaskHour_v2();
   },
@@ -131,18 +135,20 @@ export default {
       taskType: registerTask,
       project: registerProject,
       startDate : 20220704,
+      week: '06월 3주 ~07월 1주',
 
       //보내는 데이터
       sendData: [],
 
       //화면에 뿌려주는 변수
       viewData: [[]],
-
-
+      is_Holiday : [true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+      detailTask: [],
 
 
       //날짜에 대한 변수
       Viewdate:[],
+      ViewDay:['월','화','수','목','금','토','일','월','화','수','목','금','토','일'],
 
 
       //시간에 대한 변수
@@ -157,6 +163,7 @@ export default {
       renderTaskStartHour:[],
       renderTaskEndHour:[],
       totalDayWorkTime: [],
+      totalWeekWorkTime: 0,
 
       startTime: [
         {text: "8:00", value: "0800"},
@@ -184,7 +191,7 @@ export default {
       // 대분류, 소 분류 -> 따로 데이터를 받아오는 값
       mainGroup: [],
       subTask: [],
-      subTaskCopy: [],
+      subTaskCopy: [[[]]],
       subProejct: [],
     }
   },
@@ -209,6 +216,9 @@ export default {
           enroll_yn : "0",
           is_Holiday : "N"
         }];
+        if(i === 5 || i === 6 || i === 12 || i === 13){
+          arr[0].is_Holiday = "Y"
+        }
         this.viewData[i] = arr;
       }
 
@@ -222,38 +232,49 @@ export default {
         date[i] = this.startDate+i;
         strdate = String(date[i])
         this.Viewdate[i] = [strdate.slice(0,4),'.',strdate.slice(4,6),'.',strdate.slice(6,8)].join('');
+
+        if(this.viewData[i][0].is_Holiday === 'Y'){
+          this.is_Holiday[i] = false;
+        }
       }
-      console.log(this.ViewDate)
-
-
-
-      console.log(this.viewData) // 날짜마다 2차원 배열로 정리해서 데이터에 담음
     },
     MountSelect() { // subTask 완성
       //MainTask - 완성
-      //이거 혹시 sendTaskData가 여러개라면, 여러개를 뿌려줘야하는데
+      //1차원 - indexDate, 2차원 - 특정 날짜의 seq, 3차원 - 해당 sub의 갯수
+      var arr = [...this.subTask];
+      var arr1 = []
+
       for(var j = 0;j<this.viewData.length;j++){
-        this.subTaskCopy[j] = [...this.subTask];
+        arr1[j] = arr
+      }
+      for(var i = 0;i<14;i++){
+        this.subTaskCopy[i] = arr1;
       }
       console.log(this.subTaskCopy)
 
 
-      for(var i = 0;i<this.viewData.length; i++){
-        for(var j = 0; j<this.subTaskCopy[i].length; j++){
+      for(var k = 0;k<14;k++){
+        for(var i = 0;i<this.viewData[k].length; i++){
+          for(var j = 0; j<this.subTaskCopy[k][i].length; j++){
 
-          if(this.subTaskCopy[i][j].group_sub_id != this.viewData[i].group_sub_id){
-            this.subTaskCopy[i].splice(j,1)
-            j--;
+            if(this.subTaskCopy[k][i][j].group_sub_id != this.viewData[k][i].group_sub_id){
+              this.subTaskCopy[k][i].splice(j,1)
+              j--;
+            }
           }
         }
       }
+
       console.log(this.subTaskCopy)
     },
 
-    ClassifyTaskType() {//완성
+    ClassifyTaskType() {
+      //
+      var MainArr = []
+
       for (var i = 0; i < this.taskType.length; i++) {
         if (this.taskType[i].group_id === 'TR001') {
-          this.mainGroup.push({
+          MainArr.push({
             group_main_id: this.taskType[i].group_id,
             group_sub_id: this.taskType[i].code_id,
             group_name: this.taskType[i].code_nm
@@ -266,28 +287,47 @@ export default {
           });
         }
       }
-    },
-    ClassifyProject() {
       for (var i = 0; i < this.project.length; i++) {
-        this.mainGroup.push({
+        MainArr.push({
           group_main_id: this.project[i].project_code,
           group_sub_id: 'TR002',
           group_name: this.project[i].project_nm
         });
       }
+      for(var i = 0;i<14;i++){
+        this.mainGroup.push(MainArr)
+      }
+
+      for(var i = 0;i<14;i++){
+        this.mainGroup.push(MainArr);
+      }
     },
+    // ClassifyProject() {
+    //   var MainArr = []
+    //   for (var i = 0; i < this.project.length; i++) {
+    //     MainArr.push({
+    //       group_main_id: this.project[i].project_code,
+    //       group_sub_id: 'TR002',
+    //       group_name: this.project[i].project_nm
+    //     });
+    //   }
+    //   for(var i = 0;i<14;i++){
+    //     this.mainGroup.push(MainArr)
+    //   }
+    // },
+    //------------------------- 미 완성 ---------------------------
     addTaskBox(dateIndex) {
-      var len = this.viewDate[dateIndex].length;
+      var len = this.viewData[dateIndex].length;
 
       this.viewData[dateIndex].push(
           {
             "plan_id": 0,
-            "seq": len-1,
+            "seq": len+1,
             "task_hour": 0,
-            "plan_day": this.viewDate[dateIndex][0].plan_day,
+            "plan_day": this.viewData[dateIndex][0].plan_day,
             "day_hour": this.viewData[dateIndex][0].plan_day,
-            "started_hour": "0900",
-            "ended_hour": "1200",
+            "started_hour": this.viewData[dateIndex][len-1].ended_hour,
+            "ended_hour": this.viewData[dateIndex][len-1].ended_hour,
             "group_main_id": "TR001",
             "group_sub_id":"ZDUM1",
             "code_id": "Z001",
@@ -302,37 +342,40 @@ export default {
       );
       console.log(this.viewData[dateIndex])
     },
-    onChangeSelectMain(event, index) {
+    removeTaskBox(dateIndex){
+      this.viewData[dateIndex].pop();
+    },
+    onChangeSelectMain(event, dateIndex, index) {
       var sub = event.target.value
 
-      this.viewData[index].group_sub_id = sub;
+      this.viewData[dateIndex][index].group_sub_id = sub; // -> 이 부분의 오류
 
-      for (var i = 0; i < this.mainGroup.length; i++) {
-        if (sub === this.mainGroup[i].group_sub_id) {
-          this.viewData[index].group_main_id = this.mainGroup[i].group_main_id;
-          this.viewData[index].group_name = this.mainGroup[i].group_name;
+      for (var i = 0; i < this.mainGroup[dateIndex].length; i++) {
+        if (sub === this.mainGroup[dateIndex][i].group_sub_id) {
+          this.viewData[dateIndex][index].group_main_id = this.mainGroup[dateIndex][i].group_main_id;
+          this.viewData[dateIndex][index].group_name = this.mainGroup[dateIndex][i].group_name;
           break;
         }
       }
-      this.subTaskCopy[index] = [...this.subTask];
+      this.subTaskCopy[dateIndex][index] = [...this.subTask];
 
 
-      for (var i = 0; i < this.subTaskCopy[index].length; i++) {
-        if (sub != this.subTaskCopy[index][i].group_sub_id) {
-          this.subTaskCopy[index].splice(i, 1);
+      for (var i = 0; i < this.subTaskCopy[dateIndex][index].length; i++) {
+        if (sub != this.subTaskCopy[dateIndex][index][i].group_sub_id) {
+          this.subTaskCopy[dateIndex][index].splice(i, 1);
           i--;
         }
       }
     },
-    onChangeSelectSub(event, index) {
+    onChangeSelectSub(event, dateIndex, index) {
 
       var code = event.target.value;
 
-      this.viewData[index].code_id = code;
+      this.viewData[dateIndex][index].code_id = code;
 
       for (var i = 0; i < this.subTask.length; i++) {
-        if (this.subTask[i].code_id === code) {
-          this.viewData[index].code_name = this.subTask[i].code_name;
+        if (this.subTask[dateIndex][i].code_id === code) {
+          this.viewData[dateIndex][index].code_name = this.subTask[dateIndex][i].code_name;
         }
       }
     },
@@ -354,7 +397,11 @@ export default {
         this.StartWorkTime[i] = this.viewData[i][0].started_hour;
       }
 
-
+      for(var i = 0;i<this.totalDayWorkTime.length;i++){
+        if(this.is_Holiday[i]){
+          this.totalWeekWorkTime += this.totalDayWorkTime[i];
+        }
+      }
       this.RenderTime_all()
     },
 
@@ -449,16 +496,78 @@ export default {
         this.renderTaskEndHour[dateIndex][i] = [end.slice(0,2),':',end.slice(2,4)].join('');
       }
 
-
       var start =  this.taskStartHour[dateIndex][0]
-      this.taskStartHour[dateIndex][0] = '0'+String(start)
+      this.StartWorkTime[dateIndex] = '0'+String(start)
 
-      console.log(this.taskStartHour[dateIndex][0])
+
+      console.log(this.StartWorkTime[dateIndex][0])
 
       var index = this.taskStartHour[dateIndex].length-1
       var EndDay = String(this.taskEndHour[dateIndex][index])
       this.EndWorkTime[dateIndex] = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
 
+    },
+    //---------------------------------------경고창 모음집--------------------------------------
+    alertTaskTime(e){
+      var time = e.target.value;
+      if(time <= 0){
+        alert('음수는 입력할 수 없습니다.')
+      }
+    },
+    SaveData(){
+      alert: for(var i = 0;i<14;i++){
+        for(var j = 0;j<this.viewData[i].length;j++){
+          if(this.viewData[i][j].task_hour === 0){
+            var warn_day = String(this.viewData[i][j].plan_day)
+            warn_day = [warn_day.slice(0,4),'.',warn_day.slice(4,6),'.',warn_day.slice(6,8)].join('')
+            alert(warn_day+'일의 시간을 입력해주세요')
+            break alert;
+          }
+          var stringTaskStartHour = this.taskStartHour[i][j];
+          var stringTaskEndHour = this.taskEndHour[i][j];
+
+          if(stringTaskStartHour/100 <10){
+            stringTaskStartHour = '0'+String(stringTaskStartHour);
+          }else{
+            stringTaskStartHour = String(stringTaskStartHour);
+          }
+          if(stringTaskEndHour/100 < 10){
+            stringTaskEndHour = '0'+String(stringTaskEndHour);
+          }else{
+            stringTaskEndHour = '0'+String(stringTaskEndHour);
+          }
+          this.viewData[i][j].day_hour = this.totalDayWorkTime[i];
+          this.viewData[i][j].started_hour = stringTaskStartHour;
+          this.viewData[i][j].ended_hour = stringTaskEndHour;
+        }
+      }
+
+      var index = 0;
+      for(var i = 0;i<14;i++){
+        for(var j = 0; j<this.viewData[i].length;j++){
+          this.sendData[index] = {
+            plan_day: this.startDate+i,
+            seq: this.viewData[i][j].seq,
+            day_hour: this.viewData[i][j].day_hour,
+            start_hour: this.viewData[i][j].started_hour,
+            ended_hour: this.viewData[i][j].ended_hour,
+            group_main_id: this.viewData[i][j].group_main_id,
+            group_sub_id: this.viewData[i][j].group_sub_id,
+            code_id : this.viewData[i][j].code_id,
+            group_name: this.viewData[i][j].group_name,
+            code_name: this.viewData[i][j].code_name,
+            work_detail : this.viewData[i][j].work_detail,
+            wfh_yn: "0",
+            enroll_yn: '0',
+            is_Holiday :"N"
+          }
+          if(i === 5 || i === 6 || i === 12 || i === 13){
+            this.sendData[index].is_Holiday = "Y";
+          }
+          index++;
+        }
+      }
+      console.log(this.sendData)
     },
   }
 }
@@ -474,19 +583,31 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-.interval{
-  width: 100px;
+.main-scroll-bar{
+  overflow-y: scroll;
 }
-.name-interval{
-  width: 100px;
+.main-scroll-bar::-webkit-scrollbar{
+  width: 10px;
+  border-radius: 5px;
 }
-.table-size{
-  height: 40px;
+.main-scroll-bar::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: rgb(100 116 139);
 }
-.textover{
+.scroll-bar{
   overflow: hidden;
-  text-overflow: ellipsis;
 }
-
+.sub-scroll-bar{
+  overflow-y: scroll;
+}
+.sub-scroll-bar::-webkit-scrollbar{
+  width: 10px;
+  border-radius: 5px;
+  background-color: rgb(30 41 59);
+}
+.sub-scroll-bar::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: rgb(100 116 139);
+}
 
 </style>

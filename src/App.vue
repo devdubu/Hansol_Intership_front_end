@@ -34,7 +34,6 @@
                 <label @click="smallMenuToggle('plan')" class="text-base">계획</label>
                   <ul v-if="LM_planToggle" class="ml-5 text-sm">
                     <router-link to="/plan"><li>계획관리</li></router-link>
-                    <router-link to="/plan"><li>계획 현황</li></router-link>
                   </ul>
               </div>
 
@@ -42,7 +41,6 @@
                 <label @click="smallMenuToggle('performance')" class="text-base">실적</label>
                 <ul v-if="LM_performanceToggle" class="ml-5 text-sm">
                   <router-link to="/performance"><li>실적관리</li></router-link>
-                  <router-link to="/performance"><li>실적현황</li></router-link>
                 </ul>
               </div>
 
@@ -96,7 +94,6 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
-import PlanPerformanceDetail from './components/PlanPerformanceDetail.vue'
 
 /* add each imported icon to the library */
 library.add( faXmark, faPlus)
@@ -176,7 +173,7 @@ export default {
       }
     }
   },
-  components: { PlanPerformanceDetail:PlanPerformanceDetail,
+  components: {
   }
 }
 </script>

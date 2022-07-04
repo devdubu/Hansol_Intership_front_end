@@ -71,7 +71,7 @@
                   <p>시간 :</p>
                 </div>
                 <div class="pb-1">
-                  <input @change="onChangeTaskHour_v2($event,index)" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                  <input @change="onChangeTaskHour_v2($event,index)" min="0" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
                 </div>
               </div>
               <div class="mt-4 mr-4 ">
@@ -359,7 +359,7 @@ export default {
       console.log(start)
       var index = this.taskStartHour.length-1
       var EndDay = String(this.taskEndHour[index])
-      this.EndWorkTime = this.Date[i]
+      this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('')
 
     },
     removeTaskBox(){
