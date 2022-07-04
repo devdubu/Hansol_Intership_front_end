@@ -79,7 +79,7 @@
                   </div>
             </div>
             <!-- 날짜에 대한 데이터 -->
-            <div class="flex" style="width:1400px;">
+            <div  class="flex" style="width:1400px;">
               <div class="bg-zinc-200	 text-white border-r-2 calendar border-slate-600" style="width: 110px;">
               </div>
               <div class="bg-zinc-200 text-white  day-menu border-r-2 calendar border-slate-600 flex">
@@ -143,55 +143,55 @@ export default {
           year : 0,
           month: 0,
           calendarData : [],
+          viewCalenderDate: [],
         }
     },
     mounted() {
       this.SetCalender()
     },
-  methods:{
-      SetCalender(){
-        // 1 > 일요일, 2 > 월요일, 3 > 화요일 --->
-        //if => 1이면, +7로 설정 후에 단체로 -2를 한다.
+  methods: {
+    SetCalender() {
+      // 1 > 일요일, 2 > 월요일, 3 > 화요일 --->
+      //if => 1이면, +7로 설정 후에 단체로 -2를 한다.
+      var calenderCopy = []
+      var calender = [...this.deadline]
+      for (var i = 0; i < calender.length; i++) {
+        if (calender[i].dayOfTheWeek === 1) {
+          calender[i].dayOfTheWeek += 7;
+        }
+      }
+      for (var i = 0; i < calender.length; i++) {
+        calender[i].dayOfTheWeek -= 2;
+      }
+      console.log(calender);
 
-        var calender = [...this.deadline]
-        for(var i = 0;i<calender.length;i++){
-          if(calender[i].dayOfTheWeek === 1){
-            calender[i].dayOfTheWeek += 7;
+
+      var startDate = calender[0].dayOfTheWeek;
+      var DeadLineMonth = []
+
+
+      for (var i = 0; i < 6; i++) {
+        var week = []
+
+        for (var j = 0; j < 7; j++) {
+          var removed = 0;
+          if (calender.length > 0 && calender[0].dayOfTheWeek === j) {
+            week.push(String(calender[0].perfDay))
+            removed = calender.splice(0, 1);
+            console.log(removed)
+          } else {
+            week.push('0')
           }
+          console.log(calender)
         }
-        for(var i = 0;i<calender.length;i++){
-          calender[i].dayOfTheWeek -= 2;
-        }
-        console.log(calender);
-        var startDate = calender[0].dayOfTheWeek;
-        var startMonth = 0
-        for(var i = 0;i<6;i++){
-          var week = []
-          for(var j = 0; j<7;j++){
-            if(startDate === j && startMonth === 0){
-              week.push()
-            }
-          }
-        }
+        DeadLineMonth[i] = week;
+      }
 
+      console.log(DeadLineMonth)
 
-
-        for(var i = 0;i<60;i++){
-          if(i >= startDate && i < calender.length){
-            this.calendarData.push(calender[i])
-          }else{
-            this.calendarData.push({
-              perfDay: 0,
-              calDayOfData : 0,
-              signStatus: 0
-            })
-          }
-        }
-      console.log(this.calendarData)
-
-      },
-
-    }
+      this.calendarData = DeadLineMonth;
+    },
+  }
 }
 </script>
 <style>
