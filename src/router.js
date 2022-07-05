@@ -30,7 +30,7 @@ const routes = [
   }
   ,
   {
-    path: "/nonenter",
+    path: "/non-enter",
     component: NonEnterPerformance,
   },
   {

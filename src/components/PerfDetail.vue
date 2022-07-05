@@ -79,7 +79,9 @@
                   <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.group_name }}</p></div>
                   <div class="mt-3 ml-3"><p>{{ data.code_name }}</p></div>
                   <div class="grow"></div>
-                  <div v-if="status[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-0.5">확정</p></div>
+                  <div v-if="confirm[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-0.5">확정</p></div>
+                  <div v-if="approve[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-fuchsia-500 rounded-xl"><p class="mt-0.5">팀장</p></div>
+                  <div v-if="ended[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-rose-500 rounded-xl"><p class="mt-0.5">마감</p></div>
                 </div>
                 <div class="flex">
                   <div><p class="mt-3 ml-3">{{ data.detail }}</p></div>
@@ -135,7 +137,9 @@ export default {
       selectDate: '',
       DayHour : '',
       taskHour: [],
-      status:[],
+      confirm: [],
+      approve: [],
+      ended: [],
       perfDay: '',
     }
   },
@@ -157,11 +161,24 @@ export default {
     DistinguishDetailStatus(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++) {
-        if (this.oneDayInfo[i].enroll_yn === '2') {
-          this.status[i] = true;
-        } else {
-          this.status[i] = false;
+        if (this.oneDayInfo[i].sign_status === '2') {
+          this.confirm[i] = true;
+          this.approve[i] = false;
+        } else if(this.oneDayInfo[i].sign_status === '3') {
+          this.confirm[i] = false;
+          this.approve[i] = true;
+        }else{
+          this.confirm[i] = false;
+          this.approve[i] = true;
         }
+        if(this.oneDayInfo[i].is_Deadline === '1'){
+          this.confirm[i] = false;
+          this.approve[i] = false;
+          this.ended[i] = true;
+        }else{
+          this.ended[i] = false;
+        }
+
       }
       console.log(this.status)
     }

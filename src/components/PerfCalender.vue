@@ -136,17 +136,17 @@ Mon 부터 시작하기
                     <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index+7]" >{{task}}</p>
                   </div>
                 </div>
-                  <div v-if="confirm[index]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                  <div v-if="confirm[index+7]" class="absolute bottom-3 ml-2 ">
+                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
                   </div>
-                  <div v-if="approve[index]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
+                  <div v-if="approve[index+7]" class="absolute bottom-3 ml-2 ">
+                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
                   </div>
-                  <div v-if="ended[index]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
+                  <div v-if="ended[index+7]" class="absolute bottom-3 ml-2 ">
+                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
                   </div>
                   <div class="absolute bottom-3 right-0 mr-2 ">
-                    <button v-if="HolidayCheck[index]" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                    <button v-if="HolidayCheck[index+7]" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                   </div>
                 <div v-if="viewDetailBtn" class="absolute bottom-3 right-0 mr-2 ">
                   <button v-if="HolidayCheck[index+7]" @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
@@ -378,7 +378,8 @@ export default {
           this.confirm[i] = true;
         }else if(this.DayOfData[i].sign_status === '3'){
           this.approve[i] = true;
-        }else if(this.DayOfData[i].sign_status === '4'){
+        }
+        if(this.DayOfData[i].is_Deadline === '1'){
           this.ended[i] = true;
         }
       }

@@ -18,7 +18,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "1"
   },
   {
     "perf_id": 1,
@@ -39,7 +40,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "1"
   },
   {
     "perf_id": 2,
@@ -60,7 +62,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 3,
@@ -81,7 +84,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 4,
@@ -102,7 +106,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 5,
@@ -123,7 +128,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 6,
@@ -144,7 +150,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 6,
@@ -165,7 +172,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 7,
@@ -186,7 +194,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 8,
@@ -207,7 +216,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 9,
@@ -228,7 +238,8 @@
     "member_id": "1",
     "is_Holiday": "Y",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 10,
@@ -249,7 +260,8 @@
     "member_id": "1",
     "is_Holiday": "Y",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 11,
@@ -270,7 +282,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 12,
@@ -291,7 +304,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 13,
@@ -312,7 +326,9 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 14,
@@ -333,7 +349,9 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 15,
@@ -354,7 +372,8 @@
     "member_id": "1",
     "is_Holiday": "N",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 16,
@@ -375,7 +394,8 @@
     "member_id": "1",
     "is_Holiday": "Y",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   },
   {
     "perf_id": 17,
@@ -396,6 +416,7 @@
     "member_id": "1",
     "is_Holiday": "Y",
     "break_time": -1,
-    "overtime_detail": "야근"
+    "overtime_detail": "야근",
+    "is_Deadline": "0"
   }
 ]

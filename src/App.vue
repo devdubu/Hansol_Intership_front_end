@@ -62,7 +62,7 @@
             <div @click="smallMenuToggle('approve')" class="text-lg bg-green-300 w-44 pl-3">승인관리</div>
               <ul v-if="LM_approveToggle" class="ml-10 text-sm">
                 <router-link to="/confirm"><li>실적 팀장 승인</li></router-link>
-                <router-link to="/nonenter"><li>미입력자 관리</li></router-link>
+                <router-link to="/non-enter" ><li>미입력자 관리</li></router-link>
                 <router-link to="/deadline"><li>마감 관리</li></router-link>
               </ul>
           </div>
@@ -108,6 +108,8 @@ export default {
       LM_projectToggle: true,
       LM_approveToggle:true,
       LM_managerToggle:true,
+      preUrl: '',
+      pageIndex: 0,
       
     }
   },
@@ -171,7 +173,7 @@ export default {
           console.log('규격 외의 것이 들어옴');
 
       }
-    }
+    },
   },
   components: {
   }

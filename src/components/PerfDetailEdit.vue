@@ -225,6 +225,7 @@ export default {
       defaultIs_Holiday:"N",
       defaultBreak_time: -1,
       defaultOvertime_detail: "",
+      defaultIs_Deadline : "0",
 
 
 
@@ -272,6 +273,7 @@ export default {
           is_Holiday: this.oneDayInfo[i].is_Holiday,
           break_time: this.oneDayInfo[i].break_time,
           overtime_detail: this.oneDayInfo[i].break_time,
+          is_Deadline: this.oneDayInfo[i].is_Deadline
         });
       }
       var perfDay = String(this.oneDayInfo[0].perf_day)
@@ -343,6 +345,7 @@ export default {
         is_Holiday: this.defaultIs_Holiday,
         break_time: this.defaultBreak_time,
         overtime_detail: this.defaultOvertime_detail,
+        is_Deadline: this.defaultIs_Deadline,
       });
       this.taskStartHour.push(Number(this.sendTaskData[index].started_hour));
       this.taskEndHour.push(Number(this.sendTaskData[index].ended_hour));

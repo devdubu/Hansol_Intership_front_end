@@ -3,10 +3,11 @@
     "perfDay" : 20220704,
     "memberId": 1,
     "memberName" : "김아무개",
-    "signStatus": 4,
+    "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "1"
   },
   {
     "perfDay" : 20220704,
@@ -15,7 +16,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "1"
   },
   {
     "perfDay" : 20220705,
@@ -24,7 +26,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "1"
   },
   {
     "perfDay" : 20220705,
@@ -33,7 +36,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220706,
@@ -42,16 +46,18 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220706,
     "memberId": 2,
     "memberName" : "박아무개",
-    "signStatus": 4,
+    "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220707,
@@ -60,7 +66,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220707,
@@ -69,7 +76,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220708,
@@ -78,7 +86,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220708,
@@ -87,7 +96,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220709,
@@ -96,16 +106,18 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220709,
     "memberId": 2,
     "memberName" : "박아무개",
-    "signStatus": 4,
+    "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N"
+    "is_Holiday": "N",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220710,
@@ -114,7 +126,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "Y"
+    "is_Holiday": "Y",
+    "is_Deadline": "0"
   },
   {
     "perfDay" : 20220710,
@@ -123,6 +136,7 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "Y"
+    "is_Holiday": "Y",
+    "is_Deadline": "0"
   }
 ]
