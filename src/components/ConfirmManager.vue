@@ -221,7 +221,6 @@
               </div>
             </div>
           </div>
-        <div><p class="text-white">{{checkDate}}</p></div>
       </div>
 
 </template>
@@ -246,6 +245,7 @@ export default {
       checkOutMember:[],
       checkDate: [],
       checkDeadline:[],
+      checkStatus: [],
 
       //보내주는 데이터 셋
       CopyApprovalDate: [],
@@ -296,6 +296,7 @@ export default {
      for(var i = 0;i<7;i++){
        this.Date[i] = startdate+i;
        this.SendDate.push({
+         index: i,
          date: String(this.Date[i]),
          is_Deadline: Deadline[i]
        })
@@ -350,15 +351,18 @@ export default {
     },
     //deadline 추출하기
     extractionDeadline(){
+      var index = 0
       for(var i = 0;i<this.CopyApprovalDate.length;i++){
         if(this.CopyApprovalDate[0].memberId === this.CopyApprovalDate[i].memberId){
           this.checkDeadline.push({
+            id: index,
             perfDay: String(this.CopyApprovalDate[i].perfDay),
-            is_Deadline:this.CopyApprovalDate[i].is_Deadline
+            is_Deadline:this.CopyApprovalDate[i].is_Deadline,
           });
+          index++
         }
       }
-      console.log(this.checkDeadline)
+      console.log(this.checkDeadline[2].id)
     },
     blindStatus(deadline){
       if(deadline === '1'){
@@ -367,37 +371,57 @@ export default {
         return true
       }
     },
-    SetCheckData(){
-
-    },
     //--------------------------------------------------- 데이터를 수집하는 함수 --------------------------------
     SendApprovalData(){
       this.sendData.days = this.checkDate;
       const member = this.sendData.memberids;
       const checkoutMember = this.checkOutMember;
-
       this.sendData.memberids = member.filter(x=>!checkoutMember.includes(x))
 
 
-      // memberid를 비교해서 결과물을 추출해본다.
+      for(var i = 0;i<this.checkDate.length;i++){
+        if(this.checkDate[i].is_Deadline === '1'){
+          alert([this.checkDate[i].date.slice(0,4),'년 ',this.checkDate[i].date.slice(4,6),'월 ',this.checkDate[i].date.slice(6,8),'일'].join('')+'은 마감일 이므로 승인이 불가능합니다.')
+          return
+        }
+      }
+
+      var totalMember = this.sendData.memberids.length;
 
 
+      for(var j = 0;j<totalMember;j++){
+        var memberData = []
+        for(var i = 0;i<this.CopyApprovalDate.length;i++){
+          if(this.sendData.memberids[j] === this.CopyApprovalDate[i].memberId){
+            memberData.push({
+              memberId: this.CopyApprovalDate[i].memberId,
+              signStatus: this.CopyApprovalDate[i].signStatus
+            })
+          }
+        }
+        this.checkStatus.push(memberData);
+      }
+      console.log(this.checkStatus)
 
-      for(var i = 0;i<this.checkDeadline.length;i++){
-        for(var j = 0; j<this.sendData.days.length;j++){
-          for(var k = 0;k<this.sendData.memberids.length;k++){
-            if(this.checkDeadline[i].perfDay === this.sendData.days[j] && this.checkStatus[i].memberId === this.sendData.memberids[k]){
-              if(this.checkDeadline[i].is_Deadline === '1'){
-                alert("이미 마감되어 승인이 불가능 합니다.")
-                return
-              }else{
-                alert('이미 처리된 승인입니다.')
-                return
-              }
-            }
+      var checkIndex = [];
+      for(var i = 0;i<totalMember;i++){
+        for(var j = 0;j<this.checkDate.length;j++){
+          console.log(this.checkDate[j].index)
+
+          if(this.checkStatus[i][this.checkDate[j].index].signStatus === 1){
+            alert('확정되지 않는 실적입니다.')
+            return;
+          }else if(this.checkStatus[i][this.checkDate[j].index].signStatus === 3){
+            alert('이미 처리된 실적입니다.')
+            return;
           }
         }
       }
+
+      console.log(this.checkStatus)
+      // memberid를 비교해서 결과물을 추출해본다.
+
+
       console.log(this.sendData)
 
 
