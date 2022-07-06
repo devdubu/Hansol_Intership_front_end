@@ -562,7 +562,7 @@ export default {
       }
       console.log(this.sendTaskData)
       // 실적 수정 데이터
-      await axios.post('//api/performances/edit',{
+      await axios.post('/api/performances/edit',{
         params:{
           day: this.oneDayInfo[0].perfDay,
         }

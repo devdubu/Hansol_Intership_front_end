@@ -457,9 +457,21 @@ export default {
 
       console.log(this.sendData)
 
-      await axios.post('/api/approvals',{
+      await axios.post('/api/approvals', this.sendData)
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            if(this.responseCode === 1000){
+              alert('승인 처리가 완료 되었습니다.')
+            }else{
+              alert(this.backMessage)
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          });
 
-      })
+      await this.GetApprove();
 
       //마감, signStatus, memberId, perfDay
 

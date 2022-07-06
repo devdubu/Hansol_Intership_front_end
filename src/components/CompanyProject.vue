@@ -110,10 +110,16 @@
 </template>
 <script>
 import project from '../assets/projData.json';
+import axios from "axios";
 export default {
   name: 'CompanyProject',
   data(){
     return{
+      //axios로 인해서 받은 데이터
+      getProj : [],
+      responseCode: 0,
+      backMessage: '',
+
       proj : project,
       proj_start : [],
       proj_end : [],
@@ -123,7 +129,23 @@ export default {
     this.writeDate(project);
   },
   methods:{
-   writeDate(proj){
+    //axios get 요청
+    async GetProject(){
+      await axios.get('/api/projects')
+          .then((res)=>{
+            this.getProj = res.data.result;
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+
+            if(this.responseCode != 1000){
+              alert(this.backMessage);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    },
+    writeDate(proj){
      var year = '', month = '', day = '';
      for(var i = 0; i<proj.length;i++){
        year = proj[i].project_start.substr(0,4);
@@ -137,7 +159,8 @@ export default {
        day = proj[i].project_ended.substr(6,2);
        this.proj_end[i] = year+'-'+month+'-'+day;
      }
-   }
+   },
+
   },
   components: {
   }

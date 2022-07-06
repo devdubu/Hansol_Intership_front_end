@@ -201,10 +201,17 @@
 
 <script>
 import deadline from '../assets/deadlineData.json';
+import axios from "axios";
+import router from "../router";
 export default {
     name: 'DeadlineCalender',
     data(){
         return{
+          //axios로 인해서 받은 데이터
+          getDead : [],
+          responseCode: 0,
+          backMessage: '',
+
           deadline: deadline,
 
           setCalenderTime : 0,
@@ -237,6 +244,31 @@ export default {
       this.setWeekAndAllSelect()
     },
   methods: {
+      async getNowDeadline(){
+        const date = new Date();
+
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+
+        await axios.get('/api/deadline',{
+          params:{
+            year: year,
+            month: month,
+          }
+        })
+            .then((res)=>{
+              this.responseCode = res.data.code;
+              this.backMessage = res.data.message;
+              this.getDead = res.data.result;
+              if(this.responseCode != 1000){
+                alert(this.backMessage)
+                this.$router.push('/')
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
     SetCalender() {
       // 1 > 일요일, 2 > 월요일, 3 > 화요일 --->
       //if => 1이면, +7로 설정 후에 단체로 -2를 한다.

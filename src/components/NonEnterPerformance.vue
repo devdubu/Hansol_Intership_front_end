@@ -105,15 +105,45 @@
 </template>
 <script>
 import noenter from '../assets/nonEnterData.json';
+import axios from "axios";
 export default {
   name: 'NonEnterPerformance',
   data(){
     return{
+      //axios로 인해서 받은 데이터
+      getNoEnter : [],
+      responseCode: 0,
+      backMessage: '',
+
       noEnter : noenter,
     }
   },
   methods:{
-   
+   async getNoEnter(){
+
+     const date = new Date();
+
+     const year = date.getFullYear();
+     const month = date.getMonth() + 1;
+
+     await axios.get('/api/performances/noenters',{
+       params:{
+         year: year,
+         month : month,
+       }
+     })
+         .then((res)=>{
+           this.getNoEnter = res.data.result;
+           this.responseCode = res.data.code;
+           this.backMessage = res.data.message;
+
+           if(this.responseCode != 1000){
+             alert(this.backMessage);
+             this.$router.push('/');
+           }
+
+         })
+   }
   },
   components: {
   }
