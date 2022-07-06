@@ -18,6 +18,7 @@ module.exports = {
       './src/components/PerfDetail.vue',
       './src/components/PerfDetailEdit.vue',
       './src/components/ViewPlanDetail.vue',
+      './src/components/LoginForm.vue',
 
   ],
   theme: {

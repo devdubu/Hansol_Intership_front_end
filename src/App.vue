@@ -7,38 +7,29 @@
         <img class="mt-2 ml-3 w-40" src="../public/hansol-timereport-logo.png">
       </div>
       <div class="grow bg-emerald-400 flex divide-x divide-dash ">
-        <div class="flex-none w-10 mt-1">
-          <button>버튼</button>
-        </div>
         <div class="grow"></div>
         <div class="flex-none w-40 mt-1">
-          <label>로그인</label>
-        </div>
-        <div class="flex-none w-40 mt-1">
-          <button>dark mode</button>
-        </div>
-        <div class="flex-none w-40 mt-1">
-          <label>Logout</label>
+          <button>Logout</button>
         </div>
       </div>
     </div>
     <!--내용 부분-->
     <div class="flex" style="height: 800px">
       <div class="flex-none w-44 bg-green-400 text-left ">
-        <div class="mt-4">
+        <div v-if="is_employee"  class="mt-4">
           <div class="text-lg bg-green-300 w-44 pl-3" @click="smallMenuToggle('manour')">맨아워관리</div>
           <!--맨아워관리 폴더-->
           
             <ul v-if="LM_manoutToggle" class="text-left ml-8">
               <div>
-                <label @click="smallMenuToggle('plan')" class="text-base">계획</label>
+                <div><p @click="smallMenuToggle('plan')" class="text-base">계획</p></div>
                   <ul v-if="LM_planToggle" class="ml-5 text-sm">
                     <router-link to="/plan"><li>계획관리</li></router-link>
                   </ul>
               </div>
 
               <div>
-                <label @click="smallMenuToggle('performance')" class="text-base">실적</label>
+                <div><p @click="smallMenuToggle('performance')" class="text-base">실적</p></div>
                 <ul v-if="LM_performanceToggle" class="ml-5 text-sm">
                   <router-link to="/performance"><li>실적관리</li></router-link>
                 </ul>
@@ -49,7 +40,7 @@
         <!--맨아워관리 폴더-->
 
         <!--프로젝트 관리 폴더-->
-          <div>
+          <div v-if="is_employee">
             <div @click="smallMenuToggle('project')" class="text-lg bg-green-300 w-44 pl-3">프로젝트 관리</div>
             <ul v-if="LM_projectToggle" class="ml-8 text-sm">
               <a href="/project"><li>내 프로젝트</li></a>
@@ -58,18 +49,18 @@
         <!--프로젝트 관리 폴더-->
 
         <!--승인 관리 폴더-->
-          <div>
+          <div v-if="is_leader">
             <div @click="smallMenuToggle('approve')" class="text-lg bg-green-300 w-44 pl-3">승인관리</div>
               <ul v-if="LM_approveToggle" class="ml-10 text-sm">
                 <router-link to="/confirm"><li>실적 팀장 승인</li></router-link>
-                <router-link to="/non-enter" ><li>미입력자 관리</li></router-link>
-                <router-link to="/deadline"><li>마감 관리</li></router-link>
+                <router-link to="/non-enter"><li>미입력자 관리</li></router-link>
+                <router-link to="/deadline" v-if="is_manager"><li>마감 관리</li></router-link>
               </ul>
           </div>
           
           <!--승인 관리 폴더-->
           <!--관리자 폴더-->
-          <div>
+          <div v-if="is_manager">
             <div @click="smallMenuToggle('manager')" class="text-lg bg-green-300 w-44 pl-3">관리자</div>
             <ul v-if="LM_managerToggle" class="ml-10 text-sm">
               <router-link to="/standard"><li>공통 코드 관리</li></router-link>
@@ -80,6 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
+          <LoginFrom @grade="grade" v-if="is_logined"></LoginFrom>
           <router-view></router-view>
       </div>
     </div>
@@ -94,16 +86,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
-
+import LoginFrom from './components/LoginForm.vue';
 /* add each imported icon to the library */
 library.add( faXmark, faPlus)
-import axios from 'axios'
 export default {
   name: 'App',
-  async cretaed(){
-    const { data } = await axios.get('/api/hello');
-    console.log(data)
-  },
   data(){
     return{
       LM_manoutToggle : true,
@@ -114,7 +101,11 @@ export default {
       LM_managerToggle:true,
       preUrl: '',
       pageIndex: 0,
-      
+      grade: '',
+      is_logined: true,
+      is_employee : false,
+      is_leader : false,
+      is_manager : false,
     }
   },
   methods:{
@@ -180,6 +171,7 @@ export default {
     },
   },
   components: {
+    LoginFrom:LoginFrom,
   }
 }
 </script>
