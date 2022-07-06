@@ -14,8 +14,7 @@
         <label for="Password">Password</label>    
       </div>
       <div class="checkbox-container">
-        <input type="checkbox" v-model="rememberMe">
-        <div class="text-checkbox">Remember me</div>
+
       </div> 
       <div class="button-area">
         <button class="btn btn-primary pull-right" @click="login()" >Login</button>
@@ -28,13 +27,14 @@
 import axios from "axios";
 export default {
   name: "LoginForm",
-  template: "#login-form",
   data() {
     return {
       rememberMe: false,
       username: "",
       password: "",
       userData: [],
+      responseCode: 0,
+      backMessage: '',
     };
   },
   beforeMount() {
@@ -45,25 +45,29 @@ export default {
     }, init);
   },
   methods: {
-    isRememberMe() {
-      return this.rememberMe === true;
-    },
-    async login() {
-      //we should handle errors in a more scalabe way, but this works for now
 
-      alert(this.username + " " + this.password + " " + this.rememberMe);
+    async login() {
+      //로그인 성공
 
       await axios
         .post("api/members/login", {
-          body: {
-            username: this.username,
-            password: this.password
-          }
+          memberCode: this.username,
+          pwd: this.password
+
         })
         .then(response => {
-          alert(response);
-          this.userData = response.data
-          console.log(this.userData)
+          this.userData = response.data.result;
+          this.responseCode = response.data.code;
+          this.backMessage = response.data.message;
+
+          if(this.responseCode === 1000){
+            alert("로그인에 성공하였습니다.")
+            console.log(this.userData)
+            this.$emit("grade", this.userData);
+          }else{
+            alert(this.backMessage)
+            return;
+          }
         //   this.$emit("grade",this.userData)
           //user, manager, admin
         })
@@ -72,9 +76,7 @@ export default {
         });
 
     },
-    register() {
-      alert("Coming soon ...");
-    }
+
   }
 };
 </script>

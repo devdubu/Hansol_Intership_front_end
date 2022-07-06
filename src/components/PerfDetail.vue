@@ -110,7 +110,7 @@
 </template>
 <script>
 import { library } from '@fortawesome/fontawesome-svg-core'
-
+import axios from "axios";
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
@@ -134,6 +134,11 @@ export default {
   // enroll ->  1 - 저장, 2 - 확정
   data(){
     return{
+      //axios 통신 변수
+      responseCode: 0,
+      backMessage: '',
+
+
       TaskNum : 0,
       selectDate: '',
       DayHour : '',
@@ -188,10 +193,33 @@ export default {
         this.showEditBtn = false;
       }
     },
-    ConfirmData(){
+    async ConfirmData(){
+
       const perfConfirmDay = this.oneDayInfo[0].perf_day
       console.log(perfConfirmDay)
+
+      //axios 통신
+      await axios.post('/api/performances/confirm',{
+        params:{
+            day: perfConfirmDay
+        }
+      })
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            if(this.responseCode === 1000){
+              alert('확정 처리 되었습니다.');
+              this.$router.push('/performance');
+            }else{
+              alert(this.backMessage)
+              this.$router.push('/performance');
+            }
+          })
+          .catch((res)=>{
+            console.log(res)
+          })
     }
+
   },
   components: {
   }

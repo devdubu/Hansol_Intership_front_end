@@ -151,7 +151,7 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons'
 
 /* add each imported icon to the library */
 library.add(faXmark, faPlus)
-
+import axios from "axios";
 export default {
   name: 'PerfDetailEdit',
   props:{
@@ -166,6 +166,10 @@ export default {
   },
   data(){
     return{
+      //axios로 인해서 받은 데이터
+      responseCode: 0,
+      backMessage: '',
+
       //받는 데이터
       taskType: taskType,
       project:project,
@@ -530,7 +534,8 @@ export default {
 
     },
     //================================ 데이터 보내기 ===================================
-    PostData(status){
+    //axios
+    async PostData(status){
       if(this.overtime === true && this.overtimeDetail === ''){
         alert('초과 근로 사유를 입력해주세요')
       }
@@ -556,6 +561,26 @@ export default {
         this.sendTaskData[i].overtime_detail = this.overtimeDetail;
       }
       console.log(this.sendTaskData)
+      // 실적 수정 데이터
+      await axios.post('//api/performances/edit',{
+        params:{
+          day: this.oneDayInfo[0].perfDay,
+        }
+      })
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            if(this.responseCode === 1000 && status == '1'){
+              alert("저장이 완료되었습니다.")
+              this.$router.push('/performance');
+            }else if(this.responseCode === 1000 && status == '2'){
+              alert('확정 처리가 되었습니다.')
+              this.$router.push('/performance');
+            }
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
     }
     // onChangeTaskTime(event,index){
       //   var taskTime = event.target.value;

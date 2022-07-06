@@ -225,11 +225,18 @@
 
 </template>
 <script>
+import axios from "axios";
 import approval from '../assets/approvalData.json';
 export default {
   name: 'CompanyProject',
   data(){
     return{
+      //axios로 인해서 받은 데이터
+      getApproval : [],
+      responseCode: 0,
+      backMessage: '',
+
+      nowdate: 0,
       //원본 데이터 파일
       approval: approval,
       //화면이 보여주는 영역
@@ -268,7 +275,39 @@ export default {
   },
   methods:{
     //------------------------------------------- 마운트 되기 전에 실행되야하는 함수 --------------------------------
+    async GetApprove(){
 
+      const date = new Date();
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      if(month < 10){
+        this.nowdate = (year*10000)+(month*100)+day;
+      }else{
+        this.nowdate = (year*1000)+(month*100)+day;
+      }
+      await axios.get('/api/approval',{
+        params:{
+          day: this.nowdate,
+        }
+      })
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            this.getApproval = res.data.result;
+            if(this.responseCode != 1000){
+              alert('로그인 후 이용해주세요')
+              this.$router.push('/');
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+
+
+    },
     SetCopyData(){
       for(var i = 0;i<this.approval.length;i++){
         this.CopyApprovalDate.push({
@@ -369,7 +408,7 @@ export default {
       }
     },
     //--------------------------------------------------- 데이터를 수집하는 함수 --------------------------------
-    SendApprovalData(){
+    async SendApprovalData(){
       this.sendData.days = this.checkDate;
       const member = this.sendData.memberids;
       const checkoutMember = this.checkOutMember;
@@ -418,6 +457,9 @@ export default {
 
       console.log(this.sendData)
 
+      await axios.post('/api/approvals',{
+
+      })
 
       //마감, signStatus, memberId, perfDay
 

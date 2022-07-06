@@ -185,8 +185,12 @@ import perfdata from '../assets/perfData.json';
 
 
 */
+import axios from "axios";
 export default {
   name: 'PerfCalender',
+  async created(){
+
+  },
   mounted(){
     // this.calDate(this.perf[0].perf_day)
     // this.viewDay(this.Date)
@@ -203,6 +207,10 @@ export default {
   },
   data: function () {
     return {
+      //axios로 인해서 받은 데이터
+      getPerf : [],
+      responseCode: 0,
+      backMessage: '',
       //
       twoWeek: 14,
       //Detail button 유무
@@ -244,7 +252,22 @@ export default {
     }
   },
   methods:{
-
+    // spring 서버와 통신 부분
+    async GetServer(){
+      await axios.get('/api/performance')
+          .then((response)=>{
+            this.getPerf = response.data.result;
+            this.responseCode = response.data.code;
+            this.backMessage = response.data.message;
+            if(this.responseCode != 1000){
+              alert("로그인 후에 이용해주세요")
+              this.$router.push('/');
+            }
+          })
+          .catch((response)=>{
+            console.log(response);
+          })
+    },
     showViewModal(index){
       var tasknum = 0;
 
