@@ -1,22 +1,6 @@
 <!--
-추가 사항
-  1. 데이터 바인딩을 통해서 반복문 돌리기, ajax 사용하기
-  2. 최대 height를 지정하고 overflow: scroll 적용하기(때에 따라서 무한 스크롤로 돌려보기)
-
-개선 사항
-  1. 위에 확정 표기 지우고 다시 재정비하기
-  2. 추가 버튼 boarder 삭제하기
-
-  viewData가 2차원 배열의 형태로 돌아가게 된다면,
-  그에 대한 영향으로 시간에 대한 변수들은 모드 2차원 배열의 형태로 변경되어야한다.
-  1차원 배열 -> 2차원 배열
-  숫자 -> 1차원 배열로 전향됨
-
-
-   ------------
-   남은 작업,
-   add Box, select, close box 작업, sendata작업
-   ajax작업
+  change에 대한 부분을 고려하지 않고, 단순히 뿌려주기만 하면 그만인 작업이기 때문에
+  code_name, group_name만을 사용해서 화면에 띄워주기만 하면 됨
 
 -->
 <template>
@@ -27,12 +11,10 @@
         <p>계획 정보 : {{ week }}</p>
       </div>
       <div class="grow"></div>
-      <div class="mt-5 mr-3"><p>평일 {{ totalWeekWorkTime }}시간</p></div>
+      <div class="mt-5 mr-3"><p class="text-l">평일 <span class="text-rose-500">{{ totalWeekWorkTime }}</span>시간</p></div>
     </div>
     <div style="width: 1250px" class="flex mt-4" >
       <div class="grow"></div>
-      <button style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded mr-2">등록</button>
-      <button @click="SaveData()" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
     </div>
     <!--데이터 반복 시작 부분-->
     <div v-for="(date, dateIndex) in viewData" >
@@ -45,9 +27,7 @@
             </p>
           </div>
           <div class="border-b-2 grow"></div>
-          <div class="border-b-2 mr-4">
-            <button @click="removeTaskBox(dateIndex)" style="width: 25px; height: 25px" class="text-lg pr-0.3 bg-rose-500 rounded mr-3 hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
-            <button @click="addTaskBox(dateIndex)" style="width: 25px; height: 25px" class="text-lg rounded bg-teal-500 pr-0.3 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
+          <div class="border-b-2 mr-">
           </div>
         </div>
         <!-- 컨텐츠 부분 -->
@@ -59,35 +39,29 @@
             <div class="flex">
               <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
                 <div class="flex mt-2 ml-8">
-                  <div class="text-black mr-1">
-                    <select @change="onChangeStartHour_v2($event, dateIndex)" v-model="StartWorkTime[dateIndex]">
-                      <option  v-for="start in startTime" :value="start.value">{{ start.text}}</option>
-                    </select>
+                  <div class=" mr-1">
+                    <p class="text-xl">{{[StartWorkTime[dateIndex].slice(0,2),':',StartWorkTime[dateIndex].slice(2,4)].join('')}}</p>
                   </div>
-                  <span>~</span>
+                  <span class="text-xl">~</span>
                   <div class="ml-1">
-                    {{ EndWorkTime[dateIndex] }}
+                    <p class="text-xl">{{ EndWorkTime[dateIndex] }}</p>
                   </div>
                 </div>
-                <div class="mt-2 mr-4">
-                  <p>재택근무<span><input type="checkbox"></span></p>
+                <div style="width:300px;" class="mt-2 ml-10">
+                  <div style="width:105px;" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>                
                 </div>
               </div>
               <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
                 <div class="flex">
-                  <div class="mr-3 text-black">
-                    <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event,dateIndex, index)" style="width: 300px">
-                      <option v-for="main in mainGroup[dateIndex]" :value="main.group_sub_id">{{ main.group_name }}</option>
-                    </select>
+                  <div  class="mr-3">
+                    <p style="width: 100px">{{Task.group_name}}</p>
                   </div>
-                  <div class="text-black">
-                    <select v-model="Task.code_id" @change="onChangeSelectSub($event,dateIndex, index)" style="width: 450px">
-                      <option v-for="subtask in subTaskCopy[dateIndex][index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
-                    </select>
+                  <div style="width: 600px;" class="">
+                    <p style="width: 800px;">{{Task.code_name}}</p>
                   </div>
                 </div>
-                <div style="width: 400px" class="text-black mt-3">
-                  <input v-model="detailTask" style="width: 400px" type="input">
+                <div style="width: 400px" class="mt-3">
+                  <p>{{Task.work_detail}}</p>
                 </div>
               </div>
 
@@ -98,7 +72,7 @@
                     <p>시간 :</p>
                   </div>
                   <div class="pb-1">
-                    <input @change="onChangeTaskHour_v2($event,index,dateIndex)" min="0" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                    <p>{{Task.task_hour}}</p>
                   </div>
                 </div>
                 <div class="mt-4 mr-4">
@@ -122,11 +96,9 @@ import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
 
 export default {
-  name: 'RegisterPlanDetail',
+  name: 'ViewPlanDetail',
   mounted() {
     this.MountDataSet()
-    this.ClassifyTaskType();
-    this.MountSelect();
     this.SetTaskHour_v2();
   },
   data() {
@@ -238,68 +210,6 @@ export default {
         }
       }
     },
-    MountSelect() { // subTask 완성
-      //MainTask - 완성
-      //1차원 - indexDate, 2차원 - 특정 날짜의 seq, 3차원 - 해당 sub의 갯수
-      var arr = [...this.subTask];
-      var arr1 = []
-
-      for(var j = 0;j<this.viewData.length;j++){
-        arr1[j] = arr
-      }
-      for(var i = 0;i<14;i++){
-        this.subTaskCopy[i] = arr1;
-      }
-
-
-      for(var k = 0;k<14;k++){
-        for(var i = 0;i<this.viewData[k].length; i++){
-          for(var j = 0; j<this.subTaskCopy[k][i].length; j++){
-
-            if(this.subTaskCopy[k][i][j].group_sub_id != this.viewData[k][i].group_sub_id){
-              this.subTaskCopy[k][i].splice(j,1)
-              j--;
-            }
-          }
-        }
-      }
-
-    },
-
-    ClassifyTaskType() {
-      //
-      var MainArr = []
-
-      for (var i = 0; i < this.taskType.length; i++) {
-        if (this.taskType[i].group_id === 'TR001') {
-          MainArr.push({
-            group_main_id: this.taskType[i].group_id,
-            group_sub_id: this.taskType[i].code_id,
-            group_name: this.taskType[i].code_nm
-          });
-        } else {
-          this.subTask.push({
-            group_sub_id: this.taskType[i].group_id,
-            code_id: this.taskType[i].code_id,
-            code_name: this.taskType[i].code_nm
-          });
-        }
-      }
-      for (var i = 0; i < this.project.length; i++) {
-        MainArr.push({
-          group_main_id: this.project[i].project_code,
-          group_sub_id: 'TR002',
-          group_name: this.project[i].project_nm
-        });
-      }
-      for(var i = 0;i<14;i++){
-        this.mainGroup.push(MainArr)
-      }
-
-      for(var i = 0;i<14;i++){
-        this.mainGroup.push(MainArr);
-      }
-    },
     // ClassifyProject() {
     //   var MainArr = []
     //   for (var i = 0; i < this.project.length; i++) {
@@ -313,69 +223,7 @@ export default {
     //     this.mainGroup.push(MainArr)
     //   }
     // },
-    //------------------------- 미 완성 ---------------------------
-    addTaskBox(dateIndex) {
-      var len = this.viewData[dateIndex].length;
-
-      this.viewData[dateIndex].push(
-          {
-            "plan_id": 0,
-            "seq": len+1,
-            "task_hour": 0,
-            "plan_day": this.viewData[dateIndex][0].plan_day,
-            "day_hour": this.viewData[dateIndex][0].plan_day,
-            "started_hour": this.viewData[dateIndex][len-1].ended_hour,
-            "ended_hour": this.viewData[dateIndex][len-1].ended_hour,
-            "group_main_id": "TR001",
-            "group_sub_id":"ZDUM1",
-            "code_id": "Z001",
-            "group_name": "주업무",
-            "code_name": "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
-            "work_detail": "",
-            "wfh_yn": "0",
-            "enroll_yn": "1",
-            "member_id": "1",
-            "is_Holiday": "N"
-          }
-      );
-    },
-    removeTaskBox(dateIndex){
-      this.viewData[dateIndex].pop();
-    },
-    onChangeSelectMain(event, dateIndex, index) {
-      var sub = event.target.value
-
-      this.viewData[dateIndex][index].group_sub_id = sub; // -> 이 부분의 오류
-
-      for (var i = 0; i < this.mainGroup[dateIndex].length; i++) {
-        if (sub === this.mainGroup[dateIndex][i].group_sub_id) {
-          this.viewData[dateIndex][index].group_main_id = this.mainGroup[dateIndex][i].group_main_id;
-          this.viewData[dateIndex][index].group_name = this.mainGroup[dateIndex][i].group_name;
-          break;
-        }
-      }
-      this.subTaskCopy[dateIndex][index] = [...this.subTask];
-
-
-      for (var i = 0; i < this.subTaskCopy[dateIndex][index].length; i++) {
-        if (sub != this.subTaskCopy[dateIndex][index][i].group_sub_id) {
-          this.subTaskCopy[dateIndex][index].splice(i, 1);
-          i--;
-        }
-      }
-    },
-    onChangeSelectSub(event, dateIndex, index) {
-
-      var code = event.target.value;
-
-      this.viewData[dateIndex][index].code_id = code;
-
-      for (var i = 0; i < this.subTask.length; i++) {
-        if (this.subTask[dateIndex][i].code_id === code) {
-          this.viewData[dateIndex][index].code_name = this.subTask[dateIndex][i].code_name;
-        }
-      }
-    },
+    
     //2차원 배열로 셋팅해야함
     SetTaskHour_v2(){
       for(var j = 0; j<14;j++){
@@ -400,53 +248,6 @@ export default {
         }
       }
       this.RenderTime_all()
-    },
-
-
-    onChangeStartHour_v2(e, dateIndex){
-      var daystart = e.target.value;
-      daystart = Number(daystart);
-      this.taskStartHour[dateIndex][0] = daystart;
-
-      this.calTime_v2(dateIndex);
-    },
-    onChangeTaskHour_v2(e, index,dateIndex){
-
-      this.taskTime[dateIndex][index] = Number(e.target.value);
-      var sumTime = 0
-      for(var i = 0;i<this.taskTime[dateIndex].length;i++){
-        sumTime += this.taskTime[dateIndex][i]
-      }
-      this.totalDayWorkTime = sumTime
-
-      this.calTime_v2(dateIndex);
-
-    },//시간 계산을 해주는 메서드 -> 시간 계산이 필요할 때 활용하면 된다.
-    calTime_v2(dateIndex){
-      //12시 이전에 계획이 끝나는 경우
-      var time = 0;
-      //12시 이후에 계획이 끝나는 경우
-      var lunch = 0;
-      var lunchTime = 100;
-      for(var i = 0;i<this.taskTime[dateIndex].length;i++){
-        time = this.taskStartHour[dateIndex][i]+(this.taskTime[dateIndex][i]*100);
-        if(lunch == 0 && time > 1200){
-          time += lunchTime;
-          this.taskEndHour[dateIndex][i] = time
-          lunch++;
-        }else if(time === 1200 && lunch === 0){
-          this.taskEndHour[dateIndex][i] = time;
-          time += lunchTime;
-          lunch++;
-        }else{//12시 이전이거나 혹은 12시 이후 일때
-          this.taskEndHour[dateIndex][i] = time;
-        }
-        if(i < this.taskTime[dateIndex].length-1){
-          this.taskStartHour[dateIndex][i+1] = time;
-        }
-
-      }
-      this.RenderTime_v2(dateIndex);
     },
     RenderTime_all(){
 
@@ -473,7 +274,6 @@ export default {
         this.renderTaskStartHour[i] = start_arr;
         this.renderTaskEndHour[i] = end_arr;
         this.EndWorkTime[i] = end_arr[end_arr.length-1]
-
       }
     },
     RenderTime_v2(dateIndex){
@@ -499,6 +299,7 @@ export default {
       this.StartWorkTime[dateIndex] = '0'+String(start)
 
 
+      console.log(this.StartWorkTime[dateIndex][0])
 
       var index = this.taskStartHour[dateIndex].length-1
       var EndDay = String(this.taskEndHour[dateIndex][index])

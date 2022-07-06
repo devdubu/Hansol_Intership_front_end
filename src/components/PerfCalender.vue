@@ -256,7 +256,6 @@ export default {
       }
       this.viewModal = !this.viewModal;
       this.sendDayWorkTime = this.DayWorkTime[index];
-      console.log(this.sendDayWorkTime)
     },
     showViewModalEdit(){
       this.editModal = !this.editModal;
@@ -384,11 +383,9 @@ export default {
         }
       }
 
-      console.log(this.approve);
-      console.log(this.ended);
     },
     sendData(){
-
+      //날짜 검색 부분에 데이터 전송  
     }
 
 

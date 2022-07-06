@@ -98,7 +98,7 @@
         </div>
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
-          <button @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
+          <button v-if="showEditBtn" @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
           <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
@@ -128,6 +128,7 @@ export default {
     this.partHour();
     this.DistinguishDetailStatus()
     this.calDay();
+    this.IsDeadline();
   },
   // status ->  1 -  저장, 2 - 확정, 3 - 팀장, 4 - 마감
   // enroll ->  1 - 저장, 2 - 확정
@@ -141,13 +142,14 @@ export default {
       approve: [],
       ended: [],
       perfDay: '',
+      showEditBtn: true,
+
     }
   },
   methods:{
     calDay(){
       var perfDay = String(this.oneDayInfo[0].perf_day)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
-      console.log(this.perfDay)
     },
     partHour(){
       this.TaskNum = this.oneDayInfo.length;
@@ -180,7 +182,15 @@ export default {
         }
 
       }
-      console.log(this.status)
+    },
+    IsDeadline(){
+      if(this.oneDayInfo[0].is_Deadline === '1'){
+        this.showEditBtn = false;
+      }
+    },
+    ConfirmData(){
+      const perfConfirmDay = this.oneDayInfo[0].perf_day
+      console.log(perfConfirmDay)
     }
   },
   components: {
@@ -191,8 +201,8 @@ export default {
 <style>
 
 .modal{
-  width: 1000px;
-  height: 450px;
+  width: 1200px;
+  height: 500px;
   left: 300px;
   top: 100px;
   z-index: 1;
@@ -203,13 +213,13 @@ export default {
   height: 50px;
 }
 .modal-total-time{
-  width: 95%;
+  width: 1150px;
   height: 80px;
   margin: auto;
 }
 .modal-content{
   margin: auto;
-  width: 96%;
+  width: 1150px;
   height: 100px;
 }
 

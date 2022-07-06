@@ -63,10 +63,10 @@
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
-                <button class="mr-4 bg-orange-500 w-40 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></button>
-                <button class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
-                <button class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
-                <button @click="SendApprovalData" class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
+                <button style="width: 200px; height: 40px;" class="mr-4 bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></button>
+                <button style="width: 100px; height: 40px;" class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
+                <button style="width: 50px; height: 40px;" class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
+                <button style="width: 50px; height: 40px;" @click="SendApprovalData" class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
             </div>
           </div>
           <!-- 상단 검색 부분 끝 -->
@@ -301,7 +301,6 @@ export default {
          is_Deadline: Deadline[i]
        })
      }
-    console.log(this.SendDate)
 
       var date = [...this.Date];
 
@@ -321,7 +320,6 @@ export default {
       }
      }
      this.sendData.memberids = this.teamMember
-      console.log(this.teamMember)
     },//화면에 멤버 리스트가 뽑히는 부분
     viewApprovalTableFunc(approval){
       for(var i = 0; i<this.teamMember.length;i++){
@@ -362,7 +360,6 @@ export default {
           index++
         }
       }
-      console.log(this.checkDeadline[2].id)
     },
     blindStatus(deadline){
       if(deadline === '1'){
@@ -401,12 +398,10 @@ export default {
         }
         this.checkStatus.push(memberData);
       }
-      console.log(this.checkStatus)
 
       var checkIndex = [];
       for(var i = 0;i<totalMember;i++){
         for(var j = 0;j<this.checkDate.length;j++){
-          console.log(this.checkDate[j].index)
 
           if(this.checkStatus[i][this.checkDate[j].index].signStatus === 1){
             alert('확정되지 않는 실적입니다.')
@@ -418,7 +413,6 @@ export default {
         }
       }
 
-      console.log(this.checkStatus)
       // memberid를 비교해서 결과물을 추출해본다.
 
 

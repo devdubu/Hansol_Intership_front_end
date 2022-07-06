@@ -53,10 +53,10 @@
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
-                <router-link to="/registerplan"><button class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
-                <button class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">템플릿</p></button>
-                <button class="mr-4 bg-gray-500 w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">상세보기</p></button>
-                <button class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획수정</p></button>
+                <router-link to="/registerplan"><button style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
+                <button style="width: 80px;" class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">템플릿</p></button>
+                <router-link to="/viewplandetail"><button style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">상세보기</p></button></router-link>
+                <button style="width: 80px;" class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획수정</p></button>
             </div>
           </div>
 
@@ -146,13 +146,15 @@ import plandata from '../assets/planData.json';
 
 
 */
+import axios from 'axios';
 export default {
     name: 'PlanCalender',
-  mounted(){
+  async mounted(){
     // this.calDate(this.plan[0].plan_day)
     // this.viewDay(this.Date)
     // this.calDayWorkTime(this.plan)
 
+    this.GetData()
     this.calDate_v2(this.plan[0].plan_day, this.Date)
     this.calDayOfData()
     this.calDayWorkTime_v2()
@@ -163,6 +165,7 @@ export default {
   },
   data: function () {
     return {
+      showGetData: [],
       //
       twoWeek: 14,
       //Detail button 유무
@@ -195,7 +198,19 @@ export default {
     }
   },
     methods:{
+      //AXIOS 로 데이터를 받아와서 vue데이터로 받아오는 방법
+      async GetData(){
+        try{
+          const data = await axios.get("/api")
+          this.showGetData = data.data;
+          console.log(data)
+        }catch{
+          console.log('실패');
+        }
+        console.log(this.showGetData)
+      },
       showViewModal(index){
+        
         var tasknum = 0;
 
         for(var i = 0;i<this.plan.length;i++){
@@ -206,7 +221,6 @@ export default {
         }
         this.viewModal = !this.viewModal;
         this.sendDayWorkTime = this.DayWorkTime[index];
-        console.log(this.sendDayWorkTime)
       },
       showViewModalEdit(){
         this.editModal = !this.editModal;
@@ -295,7 +309,6 @@ export default {
            this.status[i] = true;
          }
         }
-        console.log(this.status)
       }
 
 

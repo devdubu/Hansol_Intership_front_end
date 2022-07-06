@@ -8,6 +8,7 @@ import PlanCalender from './components/PlanCalender.vue';
 import PerfCalender from './components/PerfCalender.vue';
 import RegisterPlan from "./components/RegisterPlan.vue";
 import RegisterPlanDetail from "./components/RegisterPlanDetail.vue";
+import ViewPlanDetail from "./components/ViewPlanDetail.vue";
 import {createApp} from "vue";
 
 
@@ -48,6 +49,10 @@ const routes = [
   {
     path: "/registerplandetail",
     component: RegisterPlanDetail,
+  },
+  {
+    path: "/viewplandetail",
+    component: ViewPlanDetail
   }
 ];
 

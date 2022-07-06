@@ -97,7 +97,7 @@
                     <input style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
                   </div></div>
                   <div class="grow"></div>
-                  <div  style="height:25px; width: 101px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
+                  <div  style="height:25px; width: 105px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
                     <p class="pl-1">시간 :</p>
                     <div>
                       <input v-model="task.task_hour" @change="onChangeTaskHour_v2($event, index) " type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
@@ -108,13 +108,13 @@
                 </div>
               </div>
                 <!-- 업무 반복 구현 끝-->
-              <div v-if="overtime" class="ml-5 mt-10 pt-5 flex border-t-2" style="width: 945px;">
+              <div v-if="overtime" class="ml-5 mt-10 pt-5 flex border-t-2" style="width: 1150px;">
                 <div>
-                  <div  class="" style="width: 100px">
+                  <div  class="" style="width: 120px">
                     <p>초과 근로 사유</p>
                   </div>
-                  <div class="mt-1 text-black" style="width: 400px">
-                    <input v-model="overtimeDetail" type="text" style="width: 400px" class="rounded">
+                  <div class="mt-1 text-black" style="width: 600px">
+                    <input v-model="overtimeDetail" type="text" style="width: 600px" class="rounded">
                   </div>
 
                 </div>
@@ -278,10 +278,7 @@ export default {
       }
       var perfDay = String(this.oneDayInfo[0].perf_day)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
-      console.log(this.perfDay)
 
-
-      console.log(this.sendTaskData)
     },
     MountSelect() { // subTask 완성
       //MainTask - 완성
@@ -351,7 +348,7 @@ export default {
       this.taskEndHour.push(Number(this.sendTaskData[index].ended_hour));
 
       this.addSelectMain(index)
-      console.log(this.sendTaskData[index].ended_hour)
+
 
 
     },
@@ -361,6 +358,8 @@ export default {
       //삭제시에 보내는 데이터 senddata 삭제
     },
     addSelectMain(index){
+      var sub = this.sendTaskData[index].group_sub_id
+
       for(var i = 0;i<this.mainGroup.length;i++){
         if(sub === this.mainGroup[i].group_sub_id){
           this.sendTaskData[index].group_main_id = this.mainGroup[i].group_main_id;
@@ -500,8 +499,7 @@ export default {
         }
 
       }
-      console.log(this.taskStartHour);
-      console.log(this.taskEndHour);
+
       this.RenderTime_v2();
     },
     RenderTime_v2(){
@@ -525,7 +523,7 @@ export default {
 
       var start =  this.taskStartHour[0]
       this.StartWorkTime = '0'+String(start)
-      console.log(start)
+
       var index = this.taskStartHour.length-1
       var EndDay = String(this.taskEndHour[index])
       this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
@@ -535,7 +533,6 @@ export default {
     PostData(status){
       if(this.overtime === true && this.overtimeDetail === ''){
         alert('초과 근로 사유를 입력해주세요')
-        return console.log('취소됨')
       }
       for(var i = 0;i<this.sendTaskData.length;i++){
         var stringTaskStartHour = this.taskStartHour[i]
@@ -684,25 +681,29 @@ export default {
 <style>
 
 .modal{
-  width: 1000px;
-  height: 450px;
+  width: 1200px;
+  height: 500px;
   left: 300px;
   top: 100px;
   z-index: 1;
-  overflow: scroll;
+  overflow-y: auto;
 }
+.modal::-webkit-scrollbar{
+  display: none;
+}
+
 .modal-title{
   width: 100%;
   height: 50px;
 }
 .modal-total-time{
-  width: 95%;
+  width: 1150px;
   height: 80px;
   margin: auto;
 }
 .modal-content{
   margin: auto;
-  width: 96%;
+  width: 1150px;
   height: 100px;
 }
 .select-option{

@@ -184,7 +184,7 @@ export default {
       for(var j = 0;j<this.viewData.length;j++){
         this.subTaskCopy[j] = [...this.subTask];
       }
-      console.log(this.subTaskCopy)
+      
 
 
       for(var i = 0;i<this.viewData.length; i++){
@@ -196,7 +196,7 @@ export default {
           }
         }
       }
-      console.log(this.subTaskCopy)
+      
     },
 
     ClassifyTaskType() {//완성
@@ -243,7 +243,7 @@ export default {
             enroll_yn : "0",
           }
       );
-      console.log(this.viewData);
+     
     },
     onChangeSelectMain(event, index) {
       var sub = event.target.value
@@ -287,7 +287,7 @@ export default {
       }
       this.totalDayWorkTime = this.viewData[0].day_hour;
       this.RenderTime_v2()
-      console.log(this.taskStartHour)
+      
     },
     onChangeStartHour_v2(e){
       var daystart = e.target.value;
@@ -331,8 +331,7 @@ export default {
         }
 
       }
-      console.log(this.taskStartHour);
-      console.log(this.taskEndHour);
+
       this.RenderTime_v2();
     },
     RenderTime_v2(){
@@ -356,7 +355,7 @@ export default {
 
       var start =  this.taskStartHour[0]
       this.StartWorkTime = '0'+String(start)
-      console.log(start)
+
       var index = this.taskStartHour.length-1
       var EndDay = String(this.taskEndHour[index])
       this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('')

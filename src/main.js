@@ -16,7 +16,8 @@ import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faUserSecret)
-axios.defaults.baseURL = 'http://localhost:3000'
+
+axios.defaults.baseURL = 'http://localhost:8080'
 const app = createApp(App)
 app.config.globalProperties.axios=axios;
 

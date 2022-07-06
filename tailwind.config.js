@@ -16,7 +16,8 @@ module.exports = {
       './src/components/RegisterPlanDetail.vue',
       './src/components/PerfCalender.vue',
       './src/components/PerfDetail.vue',
-      './src/components/PerfDetailEdit.vue'
+      './src/components/PerfDetailEdit.vue',
+      './src/components/ViewPlanDetail.vue',
 
   ],
   theme: {

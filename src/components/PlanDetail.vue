@@ -13,7 +13,7 @@
   <div class="bg-slate-700 relative">
     <div class="modal bg-slate-600 rounded-lg absolute">
       <div class="modal-title bg-green-500 rounded-t-lg text-white flex">
-        <div><p class="ml-3 mt-3">실적</p></div>
+        <div><p class="ml-3 mt-3">계획</p></div>
         <div class="grow"></div>
         <button @click="$emit('closeModal')" class="mr-7 mt-1"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
       </div>
@@ -94,8 +94,8 @@
         </div>
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
-          <button @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
-          <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
+          <button v-if="showEditBtn" @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
+          <button @click="ConfirmData()" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
 
@@ -121,9 +121,9 @@ export default {
     DayWorkTime: String,
   },
   mounted() {
-    this.test();
     this.partHour();
-    this.DistinguishDetailStatus()
+    this.DistinguishDetailStatus();
+    this.NowDate();
   },
   // status ->  1 -  저장, 2 - 확정, 3 - 팀장, 4 - 마감
   // enroll ->  1 - 저장, 2 - 확정
@@ -133,13 +133,12 @@ export default {
       selectDate: '',
       DayHour : '',
       taskHour: [],
-      status:[]
+      status:[],
+      nowdate: 0,
+      showEditBtn: true,
     }
   },
   methods:{
-    test(){
-      console.log(this.oneDayInfo);
-    },
     partHour(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++){
@@ -158,9 +157,31 @@ export default {
           this.status[i] = false;
         }
       }
-      console.log(this.status)
+    },
+    NowDate(){
+      const date = new Date();
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      if(month < 10){
+        this.nowdate = (year*10000)+(month*100)+day;
+      }else{
+        this.nowdate = (year*1000)+(month*100)+day;
+      }
+      if(this.oneDayInfo[0].plan_day < this.nowdate){
+        this.showEditBtn = false;
+      }
+
+    },
+    ConfirmData(){
+        
+        const sendData = this.oneDayInfo[0].plan_day
+        console.log(sendData)
     }
   },
+  
   components: {
   }
 }
@@ -169,25 +190,25 @@ export default {
 <style>
 
 .modal{
-  width: 1000px;
-  height: 450px;
+  width: 1200px;
+  height: 500px;
   left: 300px;
   top: 100px;
   z-index: 1;
-  overflow: scroll;
+  overflow: auto;
 }
 .modal-title{
   width: 100%;
   height: 50px;
 }
 .modal-total-time{
-  width: 95%;
+  width: 1150px;
   height: 80px;
   margin: auto;
 }
 .modal-content{
   margin: auto;
-  width: 96%;
+  width:1150px;
   height: 100px;
 }
 

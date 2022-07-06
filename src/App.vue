@@ -97,9 +97,13 @@ import {faPlus} from '@fortawesome/free-solid-svg-icons'
 
 /* add each imported icon to the library */
 library.add( faXmark, faPlus)
-
+import axios from 'axios'
 export default {
   name: 'App',
+  async cretaed(){
+    const { data } = await axios.get('/api/hello');
+    console.log(data)
+  },
   data(){
     return{
       LM_manoutToggle : true,
