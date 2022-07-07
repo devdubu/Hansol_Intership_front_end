@@ -21,10 +21,14 @@
       </div>
     </form>
   </div>
+
+  
+
 </template>
 
 <script>
-import axios from 'redaxios';
+import axios from 'axios';
+
 export default {
   name: "LoginForm",
   data() {
@@ -35,6 +39,8 @@ export default {
       userData: [],
       responseCode: 0,
       backMessage: '',
+
+     
     };
   },
   beforeMount() {
@@ -44,8 +50,8 @@ export default {
       init = 300;
     }, init);
   },
+  
   methods: {
-
     async login() {
       //로그인 성공
       await axios
@@ -61,8 +67,12 @@ export default {
           if(this.responseCode === 1000){
             alert("로그인에 성공하였습니다.")
             // this.$session.set('grade', 'memberGrade')
-            console.log(response.headers)
-            this.$emit("Login", this.userData)
+            localStorage.setItem('memberNm', this.userData.memberNm)
+            localStorage.setItem('grade', this.userData.grade)
+
+            console.log(this.userData)
+            this.$emit('Grade')
+            this.$router.push('/performance')
             // this.$session.start()
             // this.$session.set('user', response.headers)
           }else{
@@ -75,6 +85,8 @@ export default {
         .catch(err => {
           alert(err);
         });
+
+
 
     },
 
@@ -127,7 +139,7 @@ input {
 
 input[type="text"],
 input[type="password"] {
-  width: 100%;
+  width: 80%;
   height: 40px;
   border-bottom: 1px solid #aaaaaa;
 }
@@ -203,6 +215,7 @@ input:placeholder-shown + label {
   border-radius: 4px;
   overflow: hidden;
   position: relative;
+  margin:auto
 }
 
 .login-left {
@@ -236,7 +249,7 @@ input:placeholder-shown + label {
   position: absolute;
   top: 0;
   right: 0;
-  width: 400px;
+  width: 450px;
   -webkit-transform: translateX(400px) translateZ(0);
   transform: translateX(400px) translateZ(0);
   transition: all 770ms cubic-bezier(0.51, 0.04, 0.12, 0.99);
@@ -310,6 +323,7 @@ input[type="checkbox"]:checked:after {
 .button-area {
   display: flex;
   justify-content: space-between;
+  margin-left: 40px;
   margin-top: 30px;
 }
 

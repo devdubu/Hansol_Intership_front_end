@@ -236,12 +236,15 @@ export default {
     },
     beforeMount() {
     },
-  mounted() {
+  async mounted() {
+    
+    await this.getNowDeadline();
+    
     this.SetCalender()
 
     this.SetCalenderData()
-      this.SetCalenderInfo()
-      this.setWeekAndAllSelect()
+    this.SetCalenderInfo()
+    this.setWeekAndAllSelect()
     },
   methods: {
       async getNowDeadline(){

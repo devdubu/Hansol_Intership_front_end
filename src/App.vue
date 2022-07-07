@@ -9,7 +9,7 @@
       <div class="grow bg-emerald-400 flex divide-x divide-dash ">
         <div class="grow"></div>
         <div class="flex-none w-40 mt-1">
-          <button>Logout</button>
+          <button @click="Logout()">Logout</button>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <router-view @Login="Login" :grade="grade" :memberNM="memberNM"></router-view>
+          <router-view @Grade='Grade'/>
       </div>
     </div>
   </div>
@@ -85,11 +85,14 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
-import LoginFrom from './components/LoginForm.vue';
+
 /* add each imported icon to the library */
 library.add( faXmark, faPlus)
+
+
 export default {
   name: 'App',
+  emits:['Grade'],
   data(){
     return{
       LM_manoutToggle : true,
@@ -108,29 +111,44 @@ export default {
       is_manager : false,
     }
   },
+  mounted(){
+    this.Grade()
+  },
   methods:{
-    Login(user){
-      console.log('성공?')
-      this.grade = user.grade;
-      this.memberNm = user.memberNm;
+    Grade(){
+      this.grade = localStorage.getItem('grade')
       switch(this.grade){
         case 'ADMIN':
           this.is_manager = true;
           this.is_leader = true;
           this.is_employee = true;
-          this.is_logined - false;
+          this.is_logined - true;
           break;
         case 'MANAGER':
+          this.is_manager = false;
           this.is_leader = true;
           this.is_employee = true;
-          this.is_logined = false;
+          this.is_logined = true;
           break;
         case 'USER':
-          this.is_employee=true;
-          this.is_logined = false;
+          this.is_manager = false;
+          this.is_leader = false;
+          this.is_employee = true;
+          this.is_logined = true;
           break;
+        default:
+          this.is_manager = false;
+          this.is_leader = false;
+          this.is_employee = false;
+          this.is_logined = false;
       }
-      console.log(user.grade)
+
+    },
+    Logout(){
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      this.Grade()
+      this.$router.push('/login')
     },
     smallMenuToggle(menuName){
       switch(menuName){
@@ -194,7 +212,6 @@ export default {
     },
   },
   components: {
-    LoginFrom:LoginFrom,
   }
 }
 </script>

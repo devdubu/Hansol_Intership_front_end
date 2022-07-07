@@ -288,7 +288,7 @@ export default {
       }else{
         this.nowdate = (year*1000)+(month*100)+day;
       }
-      await axios.get('/api/approval',{
+      await axios.get('/api/approvals',{
         params:{
           day: this.nowdate,
         }
