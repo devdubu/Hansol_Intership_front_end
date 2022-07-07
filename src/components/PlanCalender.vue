@@ -290,9 +290,12 @@ export default {
       },
       //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
       DistinguishHoliday(){
+        console.log(this.DayOfData)
         for(var i = 0;i<this.twoWeek;i++){
           if(this.DayOfData[i].isHoliday === 'Y'){
             this.HolidayCheck[i] = false;
+          }else{
+            this.HolidayCheck[i] = true;
           }
         }
       },

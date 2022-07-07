@@ -232,13 +232,12 @@ export default {
   data(){
     return{
       //axios로 인해서 받은 데이터
-      getApproval : [],
       responseCode: 0,
       backMessage: '',
 
       nowdate: 0,
       //원본 데이터 파일
-      approval: approval,
+      approval: [],
       //화면이 보여주는 영역
 
       Date: [],
@@ -266,7 +265,8 @@ export default {
 
     }
   },
-  mounted() {
+  async mounted() {
+    await this.GetApprove();
     this.SetCopyData()
     this.calDate(this.CopyApprovalDate[0].perfDay);
     this.extractionDeadline();
@@ -296,7 +296,7 @@ export default {
           .then((res)=>{
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
-            this.getApproval = res.data.result;
+            this.approval = res.data.result;
             if(this.responseCode != 1000){
               alert('로그인 후 이용해주세요')
               this.$router.push('/');
