@@ -71,8 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <LoginFrom @grade="grade" v-if="is_logined"></LoginFrom>
-          <router-view></router-view>
+          <router-view @Login="Login" :grade="grade" :memberNM="memberNM"></router-view>
       </div>
     </div>
   </div>
@@ -101,6 +100,7 @@ export default {
       LM_managerToggle:true,
       preUrl: '',
       pageIndex: 0,
+      memberNm : '',
       grade: '',
       is_logined: true,
       is_employee : false,
@@ -109,6 +109,29 @@ export default {
     }
   },
   methods:{
+    Login(user){
+      console.log('성공?')
+      this.grade = user.grade;
+      this.memberNm = user.memberNm;
+      switch(this.grade){
+        case 'ADMIN':
+          this.is_manager = true;
+          this.is_leader = true;
+          this.is_employee = true;
+          this.is_logined - false;
+          break;
+        case 'MANAGER':
+          this.is_leader = true;
+          this.is_employee = true;
+          this.is_logined = false;
+          break;
+        case 'USER':
+          this.is_employee=true;
+          this.is_logined = false;
+          break;
+      }
+      console.log(user.grade)
+    },
     smallMenuToggle(menuName){
       switch(menuName){
         case 'manour':

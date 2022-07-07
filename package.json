@@ -17,8 +17,13 @@
     "axios": "^0.27.2",
     "loadenv": "^2.2.0",
     "lodash": "^4.17.21",
+    "redaxios": "^0.5.0",
+    "store": "^2.0.12",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.16"
+    "vue-router": "^4.0.16",
+    "vue-session": "^1.0.0",
+    "vue3-storage": "^0.1.11",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",

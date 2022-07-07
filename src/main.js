@@ -1,9 +1,9 @@
-import { createApp } from 'vue'
+import { createApp} from 'vue'
 import App from './App.vue'
 import './index.css'
 import router from './router.js'
 import axios from "axios";
-
+import Vue3Storage from "vue3-storage";
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -13,13 +13,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { create } from 'lodash';
 
 /* add icons to the library */
 library.add(faUserSecret)
 
-axios.defaults.baseURL = 'http://localhost:8080'
+
+
 const app = createApp(App)
-app.config.globalProperties.axios=axios;
+
 
 app.use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app')
 

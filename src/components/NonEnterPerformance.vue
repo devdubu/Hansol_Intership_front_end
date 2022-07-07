@@ -1,8 +1,7 @@
 <!--
-추가 사항
-  1. 데이터 바인딩을 통해서 반복문 돌리기, ajax 사용하기
-  2. 최대 height를 지정하고 overflow: scroll 적용하기(때에 따라서 무한 스크롤로 돌려보기)
-  3. alert창 구현하기
+  변수 변경 완료
+  AJAX요청 미완
+  
 -->
 
 <template>
@@ -86,14 +85,14 @@
             <!-- 실제 데이터 인풋 -->
             <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ noenter.depart_id }}</p></div>
+                <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ noenter.deptCode }}</p></div>
                 <div class="pt-2 border-l middle-table">
-                  <p>{{ noenter.depart_name }}</p>
+                  <p>{{ noenter.deptNm }}</p>
                 </div>
                 <div class="pt-2 interval border-l middle-table"><p >{{ noenter.empolyee_name }}</p></div>
-                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.phonenumber }}</p></div>
-                <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobile_type }}</p></div>
-                <div class="pt-2 name-interval border-l long-table"><p class="ml-4">{{ noenter.no_enter_day }}</p></div>
+                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.phoneNumber }}</p></div>
+                <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobileType }}</p></div>
+                <div class="pt-2 name-interval border-l long-table"><p class="ml-4">{{ noenter.noEnterDays }}</p></div>
                 
               </div>
             </div>

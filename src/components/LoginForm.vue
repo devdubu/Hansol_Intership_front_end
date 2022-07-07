@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'redaxios';
 export default {
   name: "LoginForm",
   data() {
@@ -48,13 +48,11 @@ export default {
 
     async login() {
       //로그인 성공
-
       await axios
         .post("api/members/login", {
           memberCode: this.username,
           pwd: this.password
-
-        })
+        },{withCredentials : true})
         .then(response => {
           this.userData = response.data.result;
           this.responseCode = response.data.code;
@@ -62,8 +60,11 @@ export default {
 
           if(this.responseCode === 1000){
             alert("로그인에 성공하였습니다.")
-            console.log(this.userData)
-            this.$emit("grade", this.userData);
+            // this.$session.set('grade', 'memberGrade')
+            console.log(response.headers)
+            this.$emit("Login", this.userData)
+            // this.$session.start()
+            // this.$session.set('user', response.headers)
           }else{
             alert(this.backMessage)
             return;

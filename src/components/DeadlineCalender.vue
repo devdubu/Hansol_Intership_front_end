@@ -94,7 +94,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[0][first]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -113,7 +113,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[1][second]" class="mt-3 ml-20"><input v-model="sendData" :value="month" class="check-box-size" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -131,7 +131,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[2][three]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -149,7 +149,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[3][four]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -167,7 +167,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[4][five]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -185,7 +185,7 @@
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
                   <div v-if="calendarInfo[5][six]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
-                  <div v-if="month.is_Deadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
+                  <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
                 </div>
@@ -277,9 +277,9 @@ export default {
 
       for(var i = 0;i<this.deadline.length;i++){
         calender.push({
-          Deadline_day : this.deadline[i].Deadline_day,
+          DeadlineDay : this.deadline[i].DeadlineDay,
           dayOfTheWeek: this.deadline[i].dayOfTheWeek,
-          is_Deadline : this.deadline[i].is_Deadline
+          isDeadline : this.deadline[i].isDeadline
         })
       }
 
@@ -311,14 +311,14 @@ export default {
         for (var j = 0; j < 7; j++) {
           if (calender[index].dayOfTheWeek === j && index < calender.length-1) {
             week.push({
-              date: String(calender[index].Deadline_day),
-              is_Deadline: calender[index].is_Deadline,
+              date: String(calender[index].DeadlineDay),
+              isDeadline: calender[index].isDeadline,
             })
             index++;
           } else{
             week.push({
               date : '0',
-              is_Deadline: '0',
+              isDeadline: '0',
             })
           }
         }
@@ -387,7 +387,7 @@ export default {
     CancleDeadline(){
       var cancleData = []
       for(var i = 0;i<this.sendData.length;i++){
-        if(this.sendData[i].is_Deadline === '0') {
+        if(this.sendData[i].isDeadline === '0') {
           var warningDate = [this.sendData[i].date.slice(4, 6), '월', this.sendData[i].date.slice(6, 8), '일'].join('')
           alert(warningDate + ' 은 마감 취소 할 수 없습니다.');
           return;
@@ -402,7 +402,7 @@ export default {
     ComfirmDeadline(){
       var confrimData = []
       for(var i = 0;i<this.sendData.length;i++){
-        if(this.sendData[i].is_Deadline === '1') {
+        if(this.sendData[i].isDeadline === '1') {
           var warningDate = [this.sendData[i].date.slice(4, 6), '월', this.sendData[i].date.slice(6, 8), '일'].join('')
           alert(warningDate + ' 은 이미 마감된 날짜 입니다.');
           return;

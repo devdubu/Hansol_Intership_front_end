@@ -150,12 +150,12 @@ import axios from 'axios';
 export default {
     name: 'PlanCalender',
   async mounted(){
-    // this.calDate(this.plan[0].plan_day)
+    // this.calDate(this.plan[0].planDay)
     // this.viewDay(this.Date)
     // this.calDayWorkTime(this.plan)
 
-    this.GetData()
-    this.calDate_v2(this.plan[0].plan_day, this.Date)
+    await this.GetData()
+    this.calDate_v2(this.plan[0].planDay, this.Date)
     this.calDayOfData()
     this.calDayWorkTime_v2()
     this.printPrevWorkType(this.plan)
@@ -179,7 +179,7 @@ export default {
       sendDayWorkTime: '',
 
       //받은 데이터
-      plan: plandata,
+      plan: [],
 
       //보낼 데이터
       DayOfTheWeek: ['Mon', 'Tue', 'Web', 'Thu','Fri','Sat','Sun'],
@@ -200,21 +200,21 @@ export default {
     methods:{
       //AXIOS 로 데이터를 받아와서 vue데이터로 받아오는 방법
       async GetData(){
-        try{
-          const data = await axios.get("/api")
-          this.showGetData = data.data;
-          console.log(data)
-        }catch{
-          console.log('실패');
-        }
-        console.log(this.showGetData)
+          await axios.get("api/plans",{},{withCredentials : true})
+          .then((res)=>{
+            this.plan = res.data.result;
+            console.log(res)
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
       },
       showViewModal(index){
         
         var tasknum = 0;
 
         for(var i = 0;i<this.plan.length;i++){
-          if(this.Date[index] === this.plan[i].plan_day){
+          if(this.Date[index] === this.plan[i].planDay){
             this.sendDetailInfo[tasknum] = this.plan[i];
             tasknum++;
           }
@@ -259,8 +259,8 @@ export default {
         var startTime, endTime;
         var restTime = 100;
         for(var i = 0;i<this.DayOfData.length;i++){
-          startTime = this.DayOfData[i].started_hour;
-          endTime = (this.DayOfData[i].day_hour*100)+restTime;
+          startTime = this.DayOfData[i].startedHour;
+          endTime = (this.DayOfData[i].dayHour*100)+restTime;
 
           endTime = String(Number(startTime)+endTime);
 
@@ -277,11 +277,11 @@ export default {
         for(var i = 0;i<this.twoWeek;i++){
           var task = [];
           for(var j = 0;j<total;j++){
-            if(this.Date[i] === plan[j].plan_day){//해당 일자에서
-              if(this.plan[j].group_main_id === 'TR001'){
-                task.push('W'+plan[j].task_hour+' '+plan[j].work_detail)//group_name이 아닌 기타사항이 들어가야함
-              }else if(this.plan[j].group_sub_id === 'TR002'){
-                task.push('P'+plan[j].task_hour+' '+plan[j].work_detail)//group_name이 아닌 기타사항이 들어가야함
+            if(this.Date[i] === plan[j].planDay){//해당 일자에서
+              if(this.plan[j].groupMainId === 'TR001'){
+                task.push('W'+plan[j].taskHour+' '+plan[j].workDetail)//codeMainNm이 아닌 기타사항이 들어가야함
+              }else if(this.plan[j].groupSubId === 'TR002'){
+                task.push('P'+plan[j].taskHour+' '+plan[j].workDetail)//codeMainNm이 아닌 기타사항이 들어가야함
               }
             }
           }
@@ -291,21 +291,21 @@ export default {
       //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
       DistinguishHoliday(){
         for(var i = 0;i<this.twoWeek;i++){
-          if(this.DayOfData[i].is_Holiday === 'Y'){
+          if(this.DayOfData[i].isHoliday === 'Y'){
             this.HolidayCheck[i] = false;
           }
         }
       },
       calApprovalTime(){
         for(var i = 0;i<this.twoWeek;i++){
-          if(this.DayOfData[i].is_Holiday === 'N'){
-            this.approvalTime += this.DayOfData[i].day_hour;
+          if(this.DayOfData[i].isHoliday === 'N'){
+            this.approvalTime += this.DayOfData[i].dayHour;
           }
         }
       },
       DistinguishStatus(){
         for(var i = 0;i<this.twoWeek;i++){
-         if(this.DayOfData[i].enroll_yn === "2"){
+         if(this.DayOfData[i].enrollYn === "2"){
            this.status[i] = true;
          }
         }
@@ -318,7 +318,7 @@ export default {
       //     this.Date[i] = startdate+i;
       //   }
       //   for(var j = 0;j<this.plan.length;j++) {
-      //     if (Date[1]===this.plan[j].plan_day && this.plan[j].seq == 1) {
+      //     if (Date[1]===this.plan[j].planDay && this.plan[j].seq == 1) {
       //       console.log('check');
       //     }
       //   }
@@ -348,14 +348,14 @@ export default {
       //   for(var j = 0;j<daytime;j++) {
       //     for (var i = 0; i < total; i++) {
       //       if (plan[i].seq == 1) {
-      //         startTime = plan[i].started_hour;
+      //         startTime = plan[i].startedHour;
       //         //String을 시간과 분으로 분리
       //         hour = startTime.substr(0, 2);
       //         min = startTime.substr(2, 4);
       //         //시작 시간에 : 을 붙임
       //         startTime = hour + ':' + min;
       //         //끝나는 hour를 구하기 위해서 총 근로시간과 시작 시간을 더한다, 그리고 휴식 시간까지 더한다.
-      //         hour = String(Number(hour) + Number(plan[i].day_hour) + restTime);
+      //         hour = String(Number(hour) + Number(plan[i].dayHour) + restTime);
       //         //끝나는 시간을 더한다.
       //         endTime = hour + ":" + min;
       //

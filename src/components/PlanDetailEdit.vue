@@ -78,14 +78,14 @@
                 <div class="flex">
 
                   <div class="mt-3 ml-3 select-option rounded" style="width: 300px;">
-                    <select v-model="task.group_sub_id" @change="onChangeSelectMain($event, index)" class="rounded text-black" style="width: 300px">
-                        <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
+                    <select v-model="task.groupSubId" @change="onChangeSelectMain($event, index)" class="rounded text-black" style="width: 300px">
+                        <option v-for="main in mainGroup" :value="main.groupSubId">{{ main.codeMainNm }}</option>
                     </select>
                   </div>
 
                   <div class="mt-3 ml-3 select-option" style="width: 400px">
-                    <select v-model="task.code_id" @change="onChangeSelectSub($event, index)" class="rounded" style="width: 400px">
-                      <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
+                    <select v-model="task.codeId" @change="onChangeSelectSub($event, index)" class="rounded" style="width: 400px">
+                      <option v-for="subtask in subTaskCopy[index]" :value="subtask.codeId">{{ subtask.codeSubNm }}</option>
                     </select>
                   </div>
 
@@ -101,7 +101,7 @@
                   <div  style="height:25px; width: 110px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
                     <p class="pl-1">시간 :</p>
                     <div>
-                      <input v-model="task.task_hour" @change="onChangeTaskHour_v2($event, index) " type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+                      <input v-model="task.taskHour" @change="onChangeTaskHour_v2($event, index) " type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                     </div>
                   </div>
                   <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{renderTaskStartHour[index]}} ~
@@ -195,19 +195,19 @@ export default {
       subProejct:[],
 
       //task를 생성했을 때 기본으로 제공해주는 값
-      defaultStartTime: "0900", //this.sendTaskDayInfo[index].group_main_id
-      defalutEndTimeData: "1800", //this.sendTaskDayInfo[index].group_main_id
+      defaultStartTime: "0900", //this.sendTaskDayInfo[index].groupMainId
+      defalutEndTimeData: "1800", //this.sendTaskDayInfo[index].groupMainId
 
-      defalutMainGroupData: "TR001", //this.sendTaskDayInfo[index].group_main_id
-      defaultSubGroupData: "ZDUM1", //this.sendTaskDayInfo[index].group_main_id
-      defaultCodeData : "Z001", //this.sendTaskDayInfo[index].group_main_id
+      defalutMainGroupData: "TR001", //this.sendTaskDayInfo[index].groupMainId
+      defaultSubGroupData: "ZDUM1", //this.sendTaskDayInfo[index].groupMainId
+      defaultCodeData : "Z001", //this.sendTaskDayInfo[index].groupMainId
       defaultGroupName: "주업무",
       defaultCodeName:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
       defaultWorkDetail: this.defaultGroupName,
-      defaultWfh_yn: "0",
-      defaultEnroll_yn:"0",
-      defaultMember_id: "",
-      defaultIs_Holiday:"N",
+      defaultwfhYn: "0",
+      defaultenrollYn:"0",
+      defaultmemberId: "",
+      defaultisHoliday:"N",
 
 
 
@@ -236,23 +236,23 @@ export default {
       for(var i = 0;i<this.oneDayInfo.length;i++){
         this.deleteBox.push(true);//삭제 버튼 활성화
         this.sendTaskData.push({
-          plan_id: this.oneDayInfo[i].plan_id,
+          planId: this.oneDayInfo[i].planId,
           seq: this.oneDayInfo[i].seq,
-          task_hour: this.oneDayInfo[i].task_hour,
-          plan_day: this.oneDayInfo[i].plan_day,
-          day_hour: this.oneDayInfo[i].day_hour,
-          started_hour: this.oneDayInfo[i].started_hour,
-          ended_hour: this.oneDayInfo[i].ended_hour,
-          group_main_id: this.oneDayInfo[i].group_main_id,
-          group_sub_id: this.oneDayInfo[i].group_sub_id,
-          code_id: this.oneDayInfo[i].code_id,
-          group_name: this.oneDayInfo[i].group_name,
-          code_name: this.oneDayInfo[i].code_name,
-          work_detail: this.oneDayInfo[i].work_detail,
-          wfh_yn: this.oneDayInfo[i].wfh_yn,
-          enroll_yn: this.oneDayInfo[i].enroll_yn,
-          member_id: this.oneDayInfo[i].member_id,
-          is_Holiday: this.oneDayInfo[i].is_Holiday
+          taskHour: this.oneDayInfo[i].taskHour,
+          planDay: this.oneDayInfo[i].planDay,
+          dayHour: this.oneDayInfo[i].dayHour,
+          startedHour: this.oneDayInfo[i].startedHour,
+          endedHour: this.oneDayInfo[i].endedHour,
+          groupMainId: this.oneDayInfo[i].groupMainId,
+          groupSubId: this.oneDayInfo[i].groupSubId,
+          codeId: this.oneDayInfo[i].codeId,
+          codeMainNm: this.oneDayInfo[i].codeMainNm,
+          codeSubNm: this.oneDayInfo[i].codeSubNm,
+          workDetail: this.oneDayInfo[i].workDetail,
+          wfhYn: this.oneDayInfo[i].wfhYn,
+          enrollYn: this.oneDayInfo[i].enrollYn,
+          memberId: this.oneDayInfo[i].memberId,
+          isHoliday: this.oneDayInfo[i].isHoliday
         });
       }
     },
@@ -267,7 +267,7 @@ export default {
       for(var i = 0;i<this.oneDayInfo.length; i++){
         for(var j = 0; j<this.subTaskCopy[i].length; j++){
 
-          if(this.subTaskCopy[i][j].group_sub_id != this.oneDayInfo[i].group_sub_id){
+          if(this.subTaskCopy[i][j].groupSubId != this.oneDayInfo[i].groupSubId){
             this.subTaskCopy[i].splice(j,1)
             j--;
           }
@@ -277,15 +277,15 @@ export default {
     ClassifyTaskType(){//완성
       for(var i = 0;i<this.taskType.length;i++){
         if(this.taskType[i].group_id === 'TR001'){
-          this.mainGroup.push({group_main_id: this.taskType[i].group_id, group_sub_id: this.taskType[i].code_id, group_name: this.taskType[i].code_nm});
+          this.mainGroup.push({groupMainId: this.taskType[i].group_id, groupSubId: this.taskType[i].codeId, codeMainNm: this.taskType[i].code_nm});
         }else{
-          this.subTask.push({group_sub_id: this.taskType[i].group_id, code_id: this.taskType[i].code_id, code_name: this.taskType[i].code_nm});
+          this.subTask.push({groupSubId: this.taskType[i].group_id, codeId: this.taskType[i].codeId, codeSubNm: this.taskType[i].code_nm});
         }
       }
     },
     ClassifyProject(){
       for(var i = 0;i<this.project.length;i++){
-        this.mainGroup.push({group_main_id: this.project[i].project_code, group_sub_id: 'TR002',group_name: this.project[i].project_nm});
+        this.mainGroup.push({groupMainId: this.project[i].project_code, groupSubId: 'TR002',codeMainNm: this.project[i].project_nm});
       }
     },
 
@@ -300,24 +300,24 @@ export default {
       var index = this.sendTaskData.length;
       this.sendTaskData.push({
         seq: index+1,//박스의 길이대로 순서 작성
-        task_hour: 0,
-        plan_day: this.oneDayInfo[0].plan_day,
-        day_hour: 0,
-        started_hour: this.sendTaskData[index-1].ended_hour,
-        ended_hour: this.sendTaskData[index-1].ended_hour,
-        group_main_id: this.defalutMainGroupData,
-        group_sub_id: this.defaultSubGroupData,
-        code_id: this.defaultCodeData,
-        group_name: this.defaultGroupName,
-        code_name: this.defaultCodeName,
-        work_detail: "",
-        wfh_yn: this.defaultWfh_yn,
-        enroll_yn: this.defaultEnroll_yn,
-        member_id: this.defaultMember_id,
-        is_Holiday: this.defaultIs_Holiday
+        taskHour: 0,
+        planDay: this.oneDayInfo[0].planDay,
+        dayHour: 0,
+        startedHour: this.sendTaskData[index-1].endedHour,
+        endedHour: this.sendTaskData[index-1].endedHour,
+        groupMainId: this.defalutMainGroupData,
+        groupSubId: this.defaultSubGroupData,
+        codeId: this.defaultCodeData,
+        codeMainNm: this.defaultGroupName,
+        codeSubNm: this.defaultCodeName,
+        workDetail: "",
+        wfhYn: this.defaultwfhYn,
+        enrollYn: this.defaultenrollYn,
+        memberId: this.defaultmemberId,
+        isHoliday: this.defaultisHoliday
       });
-      this.taskStartHour.push(Number(this.sendTaskData[index].started_hour));
-      this.taskEndHour.push(Number(this.sendTaskData[index].ended_hour));
+      this.taskStartHour.push(Number(this.sendTaskData[index].startedHour));
+      this.taskEndHour.push(Number(this.sendTaskData[index].endedHour));
 
       this.addSelectMain(index)
     },
@@ -327,12 +327,12 @@ export default {
       //삭제시에 보내는 데이터 senddata 삭제
     },
     addSelectMain(index){
-      var sub = this.sendTaskData[index].group_sub_id
+      var sub = this.sendTaskData[index].groupSubId
 
       for(var i = 0;i<this.mainGroup.length;i++){
-        if(sub === this.mainGroup[i].group_sub_id){
-          this.sendTaskData[index].group_main_id = this.mainGroup[i].group_main_id;
-          this.sendTaskData[index].group_name = this.mainGroup[i].group_name;
+        if(sub === this.mainGroup[i].groupSubId){
+          this.sendTaskData[index].groupMainId = this.mainGroup[i].groupMainId;
+          this.sendTaskData[index].codeMainNm = this.mainGroup[i].codeMainNm;
           break;
         }
       }
@@ -340,7 +340,7 @@ export default {
 
 
       for(var i = 0; i < this.subTaskCopy[index].length; i++){
-        if(sub != this.subTaskCopy[index][i].group_sub_id){
+        if(sub != this.subTaskCopy[index][i].groupSubId){
           this.subTaskCopy[index].splice(i,1);
           i--;
         }
@@ -350,12 +350,12 @@ export default {
     onChangeSelectMain(event, index){
       var sub = event.target.value
 
-      this.sendTaskData[index].group_sub_id = sub;
+      this.sendTaskData[index].groupSubId = sub;
 
       for(var i = 0;i<this.mainGroup.length;i++){
-        if(sub === this.mainGroup[i].group_sub_id){
-          this.sendTaskData[index].group_main_id = this.mainGroup[i].group_main_id;
-          this.sendTaskData[index].group_name = this.mainGroup[i].group_name;
+        if(sub === this.mainGroup[i].groupSubId){
+          this.sendTaskData[index].groupMainId = this.mainGroup[i].groupMainId;
+          this.sendTaskData[index].codeMainNm = this.mainGroup[i].codeMainNm;
           break;
         }
       }
@@ -363,7 +363,7 @@ export default {
 
 
       for(var i = 0; i < this.subTaskCopy[index].length; i++){
-        if(sub != this.subTaskCopy[index][i].group_sub_id){
+        if(sub != this.subTaskCopy[index][i].groupSubId){
           this.subTaskCopy[index].splice(i,1);
           i--;
         }
@@ -373,11 +373,11 @@ export default {
 
       var code = event.target.value;
 
-      this.sendTaskData[index].code_id = code;
+      this.sendTaskData[index].codeId = code;
 
       for(var i = 0;i<this.subTask.length;i++){
-        if(this.subTask[i].code_id === code){
-          this.sendTaskData[index].code_name = this.subTask[i].code_name;
+        if(this.subTask[i].codeId === code){
+          this.sendTaskData[index].codeSubNm = this.subTask[i].codeSubNm;
         }
       }
 
@@ -385,7 +385,7 @@ export default {
     // 데이터 보내는 메서드
     saveData(status){
       for(var i = 0; i<this.sendTaskData.length;i++){
-        this.sendTaskData[i].enroll_yn = status;
+        this.sendTaskData[i].enrollYn = status;
       }
 
     },
@@ -413,11 +413,11 @@ export default {
     },
     SetTaskHour_v2(){
       for(var i = 0;i<this.sendTaskData.length;i++){
-        this.taskStartHour.push(Number(this.sendTaskData[i].started_hour))
-        this.taskEndHour.push(Number(this.sendTaskData[i].ended_hour))
-        this.taskTime.push(this.sendTaskData[i].task_hour)
+        this.taskStartHour.push(Number(this.sendTaskData[i].startedHour))
+        this.taskEndHour.push(Number(this.sendTaskData[i].endedHour))
+        this.taskTime.push(this.sendTaskData[i].taskHour)
       }
-      this.totalDayWorkTime = this.sendTaskData[0].day_hour;
+      this.totalDayWorkTime = this.sendTaskData[0].dayHour;
       this.RenderTime_v2()
 
     },
@@ -510,11 +510,11 @@ export default {
           stringTaskEndHour = String(stringTaskEndHour);
         }
 
-        this.sendTaskData[i].task_hour =  this.taskTime[i];
-        this.sendTaskData[i].day_hour = this.totalDayWorkTime;
-        this.sendTaskData[i].started_hour = stringTaskStartHour;
-        this.sendTaskData[i].ended_hour = stringTaskEndHour;
-        this.sendTaskData[i].enroll_yn = status;
+        this.sendTaskData[i].taskHour =  this.taskTime[i];
+        this.sendTaskData[i].dayHour = this.totalDayWorkTime;
+        this.sendTaskData[i].startedHour = stringTaskStartHour;
+        this.sendTaskData[i].endedHour = stringTaskEndHour;
+        this.sendTaskData[i].enrollYn = status;
       }
      
     }
@@ -522,12 +522,12 @@ export default {
       //   var taskTime = event.target.value;
       //   if(taskTime< 0){
       //     alert("양수만 입력해주시길 바랍니다.")
-      //     this.sendTaskData[index].task_hour = 0
+      //     this.sendTaskData[index].taskHour = 0
       //   }else{
       //     // 시간 데이터가 들어올 때 task 단위로 시간을 계산하는 로직
       //     // task수행 시간을 받아오게 되면,
-      //     this.StartWorkTime = this.oneDayInfo[0].started_hour;// 시작 시간에 대한 데이터
-      //     this.TotalWorkTime = this.oneDayInfo[0].day_hour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
+      //     this.StartWorkTime = this.oneDayInfo[0].startedHour;// 시작 시간에 대한 데이터
+      //     this.TotalWorkTime = this.oneDayInfo[0].dayHour;//끝나는 시간에 대한 데이터( 일한 시간을 바탕으로 따로 계산)
       //
       //
       //     var start = Number(this.StartWorkTime); // 시작 시간에 대한 데이터를 Number화 해서 계산을 진행함
@@ -538,10 +538,10 @@ export default {
       //     var taskstart = start, lunch=0;
       //     this.TaskStartTime[0] = taskstart;
       //
-      //     this.sendTaskData[index].task_hour = taskTime;
+      //     this.sendTaskData[index].taskHour = taskTime;
       //
       //     for(var i = 0;i<this.sendTaskData.length;i++){
-      //       var taskhour = (this.sendTaskData[i].task_hour*100)
+      //       var taskhour = (this.sendTaskData[i].taskHour*100)
       //
       //       taskstart += taskhour;
       //       if(taskstart >= 1700 && lunch == 0){
@@ -566,17 +566,17 @@ export default {
       //       var startview, endview
       //       if(this.TaskStartTime[i]/100 < 10){
       //         startview = '0'+String(this.TaskStartTime[i]);
-      //         this.sendTaskData[i].started_hour = startview;
+      //         this.sendTaskData[i].startedHour = startview;
       //       }else{
       //         startview = String(this.TaskStartTime[i]);
-      //         this.sendTaskData[i].started_hour = startview;
+      //         this.sendTaskData[i].startedHour = startview;
       //       }
       //       if(this.TaskEndTime[i]/100 < 10){
       //         endview = '0'+ String(this.TaskEndTime[i]);
-      //         this.sendTaskData[i].ended_hour = endview
+      //         this.sendTaskData[i].endedHour = endview
       //       }else{
       //         endview = String(this.TaskEndTime[i]);
-      //         this.sendTaskData[i].ended_hour = endview
+      //         this.sendTaskData[i].endedHour = endview
       //       }
       //       this.TaskStartTimeView[i] = [startview.slice(0,2),':',startview.slice(2,4)].join('');
       //       this.TaskEndTimeView[i] = [endview.slice(0,2),':',endview.slice(2,4)].join('');
@@ -586,8 +586,8 @@ export default {
       //
       // },
     // CalTime(){
-    //   this.StartWorkTime = this.oneDayInfo[0].started_hour;
-    //   this.TotalWorkTime = this.oneDayInfo[0].day_hour;
+    //   this.StartWorkTime = this.oneDayInfo[0].startedHour;
+    //   this.TotalWorkTime = this.oneDayInfo[0].dayHour;
     //
     //   var start = Number(this.StartWorkTime);
     //   var end = String(start + (this.TotalWorkTime*100)+100);
@@ -597,7 +597,7 @@ export default {
     //   this.TaskStartTime.push(taskstart);
     //
     //   for(var i = 0;i<this.oneDayInfo.length;i++){
-    //     var taskhour = (this.oneDayInfo[i].task_hour*100)
+    //     var taskhour = (this.oneDayInfo[i].taskHour*100)
     //
     //     taskstart += taskhour;
     //     if(taskstart == 1700){

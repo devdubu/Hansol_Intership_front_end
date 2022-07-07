@@ -1,13 +1,9 @@
 <!--
-개선 사항
-
-추가사항
-  1. 데이터 바인딩 하기
-  2. ajax를 통해서 데이터 바인딩하기
-  3. view페이지는 위 시간대를 고정적으로 바꾸기(select구문 삭제 후 div 박스로 변경하기)
-고려 사항
-  1. 확정, 팀장 승인, 사업부 승인, 마감 등등 표기 버튼 만들기
-  2. 입력한 시간에 따라서 동적으로 상단 시간 변경하기
+  변수 바꾸기 완료
+  추가 사항
+  1. Deadline 추가 하기
+  2. 재택 근무 여부 추가하가
+  overtimeDetail 추가하기
 -->
 <template>
   <div class="bg-slate-700 relative">
@@ -30,7 +26,7 @@
         <div class="text-white ml-3 mr-3 text-lg">
           <p class="">{{ DayWorkTime }}</p>
         </div>
-        <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].day_hour }}</span>시간</p></div>
+        <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].dayHour }}</span>시간</p></div>
       </div>
       <div class="flex mt-2 ml-3 text-white">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
@@ -76,8 +72,8 @@
               <!-- 데이터 반복 구간-->
               <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="(data,index) in oneDayInfo">
                 <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.group_name }}</p></div>
-                  <div class="mt-3 ml-3"><p>{{ data.code_name }}</p></div>
+                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.codeMainNm }}</p></div>
+                  <div class="mt-3 ml-3"><p>{{ data.codeSubNm }}</p></div>
                   <div class="grow"></div>
                   <div v-if="confirm[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-0.5">확정</p></div>
                   <div v-if="approve[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-fuchsia-500 rounded-xl"><p class="mt-0.5">팀장</p></div>
@@ -86,7 +82,7 @@
                 <div class="flex">
                   <div><p class="mt-3 ml-3">{{ data.detail }}</p></div>
                   <div class="grow"></div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.task_hour }}</div>
+                  <div style="width: 100px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.taskHour }}</div>
                   <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{ taskHour[index] }}</div>
                 </div>
               </div>
@@ -153,14 +149,15 @@ export default {
   },
   methods:{
     calDay(){
-      var perfDay = String(this.oneDayInfo[0].perf_day)
+      var perfDay = String(this.oneDayInfo[0].perfDay)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
     },
     partHour(){
       this.TaskNum = this.oneDayInfo.length;
+      console.log(this.TaskNum)
       for(var i = 0;i<this.TaskNum;i++){
-        var startTask = this.oneDayInfo[i].started_hour;
-        var endTask = this.oneDayInfo[i].ended_hour;
+        var startTask = this.oneDayInfo[i].startedHour;
+        var endTask = this.oneDayInfo[i].endedHour;
 
         this.taskHour[i] = [startTask.slice(0,2),':',startTask.slice(2,4),' ~ ',endTask.slice(0,2),':',endTask.slice(2,4)].join('');
       }
@@ -168,17 +165,17 @@ export default {
     DistinguishDetailStatus(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++) {
-        if (this.oneDayInfo[i].sign_status === '2') {
+        if (this.oneDayInfo[i].signStatus === '2') {
           this.confirm[i] = true;
           this.approve[i] = false;
-        } else if(this.oneDayInfo[i].sign_status === '3') {
+        } else if(this.oneDayInfo[i].signStatus === '3') {
           this.confirm[i] = false;
           this.approve[i] = true;
         }else{
           this.confirm[i] = false;
           this.approve[i] = true;
         }
-        if(this.oneDayInfo[i].is_Deadline === '1'){
+        if(this.oneDayInfo[i].isDeadline === '1'){
           this.confirm[i] = false;
           this.approve[i] = false;
           this.ended[i] = true;
@@ -189,13 +186,13 @@ export default {
       }
     },
     IsDeadline(){
-      if(this.oneDayInfo[0].is_Deadline === '1'){
+      if(this.oneDayInfo[0].isDeadline === '1'){
         this.showEditBtn = false;
       }
     },
     async ConfirmData(){
 
-      const perfConfirmDay = this.oneDayInfo[0].perf_day
+      const perfConfirmDay = this.oneDayInfo[0].perfDau
       console.log(perfConfirmDay)
 
       //axios 통신

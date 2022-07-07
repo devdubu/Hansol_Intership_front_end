@@ -28,7 +28,7 @@
         <div class="text-white ml-3 mr-3 text-lg">
           <p class="">{{ DayWorkTime }}</p>
         </div>
-        <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].day_hour }}</span>시간</p></div>
+        <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].dayHour }}</span>시간</p></div>
       </div>
       <div class="flex mt-2 ml-3 text-white">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
@@ -74,15 +74,15 @@
               <!-- 데이터 반복 구간-->
               <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="(data,index) in oneDayInfo">
                 <div class="flex">
-                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.group_name }}</p></div>
-                  <div class="mt-3 ml-3"><p>{{ data.code_name }}</p></div>
+                  <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.codeMainNm }}</p></div>
+                  <div class="mt-3 ml-3"><p>{{ data.codeSubNm }}</p></div>
                   <div class="grow"></div>
                   <div v-if="status[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-0.5">확정</p></div>
                 </div>
                 <div class="flex">
                   <div><p class="mt-3 ml-3">{{ data.detail }}</p></div>
                   <div class="grow"></div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.task_hour }}</div>
+                  <div class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.taskHour }}</div>
                   <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{ taskHour[index] }}</div>
                 </div>
               </div>
@@ -142,8 +142,8 @@ export default {
     partHour(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++){
-        var startTask = this.oneDayInfo[i].started_hour;
-        var endTask = this.oneDayInfo[i].ended_hour;
+        var startTask = this.oneDayInfo[i].startedHour;
+        var endTask = this.oneDayInfo[i].endedHour;
 
         this.taskHour[i] = [startTask.slice(0,2),':',startTask.slice(2,4),' ~ ',endTask.slice(0,2),':',endTask.slice(2,4)].join('');
       }
@@ -151,7 +151,7 @@ export default {
     DistinguishDetailStatus(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++) {
-        if (this.oneDayInfo[i].enroll_yn === '2') {
+        if (this.oneDayInfo[i].enrollYn === '2') {
           this.status[i] = true;
         } else {
           this.status[i] = false;
@@ -170,14 +170,14 @@ export default {
       }else{
         this.nowdate = (year*1000)+(month*100)+day;
       }
-      if(this.oneDayInfo[0].plan_day < this.nowdate){
+      if(this.oneDayInfo[0].planDay < this.nowdate){
         this.showEditBtn = false;
       }
 
     },
     ConfirmData(){
         
-        const sendData = this.oneDayInfo[0].plan_day
+        const sendData = this.oneDayInfo[0].planDay
         console.log(sendData)
     }
   },

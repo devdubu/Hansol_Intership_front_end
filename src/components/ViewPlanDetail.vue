@@ -1,6 +1,6 @@
 <!--
   change에 대한 부분을 고려하지 않고, 단순히 뿌려주기만 하면 그만인 작업이기 때문에
-  code_name, group_name만을 사용해서 화면에 띄워주기만 하면 됨
+  codeSubNm, codeMainNm만을 사용해서 화면에 띄워주기만 하면 됨
 
 -->
 <template>
@@ -18,7 +18,7 @@
     </div>
     <!--데이터 반복 시작 부분-->
     <div v-for="(date, dateIndex) in viewData" >
-      <div v-if="is_Holiday[dateIndex]" class="scroll-bar" style="height: 300px;">
+      <div v-if="isHoliday[dateIndex]" class="scroll-bar" style="height: 300px;">
         <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-slate-800 rounded-t-lg" style="width: 1235px">
           <div class=" border-b-2">
             <p class="mb-1 ml-5 text-xl ">{{ Viewdate[dateIndex] }} <span class="bg-gray-500 pr-1 pl-1 rounded">{{ ViewDay[dateIndex] }}</span>
@@ -54,14 +54,14 @@
               <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
                 <div class="flex">
                   <div  class="mr-3">
-                    <p style="width: 100px">{{Task.group_name}}</p>
+                    <p style="width: 100px">{{Task.codeMainNm}}</p>
                   </div>
                   <div style="width: 600px;" class="">
-                    <p style="width: 800px;">{{Task.code_name}}</p>
+                    <p style="width: 800px;">{{Task.codeSubNm}}</p>
                   </div>
                 </div>
                 <div style="width: 400px" class="mt-3">
-                  <p>{{Task.work_detail}}</p>
+                  <p>{{Task.workDetail}}</p>
                 </div>
               </div>
 
@@ -72,7 +72,7 @@
                     <p>시간 :</p>
                   </div>
                   <div class="pb-1">
-                    <p>{{Task.task_hour}}</p>
+                    <p>{{Task.taskHour}}</p>
                   </div>
                 </div>
                 <div class="mt-4 mr-4">
@@ -114,7 +114,7 @@ export default {
 
       //화면에 뿌려주는 변수
       viewData: [[]],
-      is_Holiday : [true, true, true, true, true, true, true, true, true, true, true, true, true, true],
+      isHoliday : [true, true, true, true, true, true, true, true, true, true, true, true, true, true],
       detailTask: [],
 
 
@@ -173,23 +173,23 @@ export default {
       for(var i = 0;i<14;i++){
          arr = [{
           seq:1,
-          task_hour:8,
+          taskHour:8,
           plan_day: this.startDate+i,
-          day_hour: 8,
+          dayHour: 8,
           started_hour:"0900",
-          ended_hour: "1800",
-          group_main_id:"TR001",
-          group_sub_id : "ZDUM1",
-          code_id : "Z001",
-          group_name : "주업무",
-          code_name:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
-          work_detail : "주업무",
-          wfh_yn : "0",
-          enroll_yn : "0",
-          is_Holiday : "N"
+          endedHour: "1800",
+          groupMainId:"TR001",
+          groupSubId : "ZDUM1",
+          codeId : "Z001",
+          codeMainNm : "주업무",
+          codeSubNm:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
+          workDetail : "주업무",
+          wfhYn : "0",
+          enrollYn : "0",
+          isHoliday : "N"
         }];
         if(i === 5 || i === 6 || i === 12 || i === 13){
-          arr[0].is_Holiday = "Y"
+          arr[0].isHoliday = "Y"
         }
         this.viewData[i] = arr;
       }
@@ -205,8 +205,8 @@ export default {
         strdate = String(date[i])
         this.Viewdate[i] = [strdate.slice(0,4),'.',strdate.slice(4,6),'.',strdate.slice(6,8)].join('');
 
-        if(this.viewData[i][0].is_Holiday === 'Y'){
-          this.is_Holiday[i] = false;
+        if(this.viewData[i][0].isHoliday === 'Y'){
+          this.isHoliday[i] = false;
         }
       }
     },
@@ -214,9 +214,9 @@ export default {
     //   var MainArr = []
     //   for (var i = 0; i < this.project.length; i++) {
     //     MainArr.push({
-    //       group_main_id: this.project[i].project_code,
-    //       group_sub_id: 'TR002',
-    //       group_name: this.project[i].project_nm
+    //       groupMainId: this.project[i].project_code,
+    //       groupSubId: 'TR002',
+    //       codeMainNm: this.project[i].project_nm
     //     });
     //   }
     //   for(var i = 0;i<14;i++){
@@ -230,20 +230,20 @@ export default {
         var taskstart = [], taskend =[], tasktime =[];
         for(var i = 0;i<this.viewData[j].length;i++){
            taskstart.push(Number(this.viewData[j][i].started_hour))
-           taskend.push(Number(this.viewData[j][i].ended_hour))
-           tasktime.push(this.viewData[j][i].task_hour)
+           taskend.push(Number(this.viewData[j][i].endedHour))
+           tasktime.push(this.viewData[j][i].taskHour)
         }
         this.taskStartHour[j] = taskstart
         this.taskEndHour[j] = taskend
         this.taskTime[j] = tasktime
       }
       for(var i = 0;i<14;i++){
-        this.totalDayWorkTime[i] = this.viewData[i][0].day_hour;
+        this.totalDayWorkTime[i] = this.viewData[i][0].dayHour;
         this.StartWorkTime[i] = this.viewData[i][0].started_hour;
       }
 
       for(var i = 0;i<this.totalDayWorkTime.length;i++){
-        if(this.is_Holiday[i]){
+        if(this.isHoliday[i]){
           this.totalWeekWorkTime += this.totalDayWorkTime[i];
         }
       }
@@ -316,7 +316,7 @@ export default {
     SaveData(){
       alert: for(var i = 0;i<14;i++){
         for(var j = 0;j<this.viewData[i].length;j++){
-          if(this.viewData[i][j].task_hour === 0){
+          if(this.viewData[i][j].taskHour === 0){
             var warn_day = String(this.viewData[i][j].plan_day)
             warn_day = [warn_day.slice(0,4),'.',warn_day.slice(4,6),'.',warn_day.slice(6,8)].join('')
             alert(warn_day+'일의 시간을 입력해주세요')
@@ -335,9 +335,9 @@ export default {
           }else{
             stringTaskEndHour = '0'+String(stringTaskEndHour);
           }
-          this.viewData[i][j].day_hour = this.totalDayWorkTime[i];
+          this.viewData[i][j].dayHour = this.totalDayWorkTime[i];
           this.viewData[i][j].started_hour = stringTaskStartHour;
-          this.viewData[i][j].ended_hour = stringTaskEndHour;
+          this.viewData[i][j].endedHour = stringTaskEndHour;
         }
       }
 
@@ -347,21 +347,22 @@ export default {
           this.sendData[index] = {
             plan_day: this.startDate+i,
             seq: this.viewData[i][j].seq,
-            day_hour: this.viewData[i][j].day_hour,
-            start_hour: this.viewData[i][j].started_hour,
-            ended_hour: this.viewData[i][j].ended_hour,
-            group_main_id: this.viewData[i][j].group_main_id,
-            group_sub_id: this.viewData[i][j].group_sub_id,
-            code_id : this.viewData[i][j].code_id,
-            group_name: this.viewData[i][j].group_name,
-            code_name: this.viewData[i][j].code_name,
-            work_detail : this.viewData[i][j].work_detail,
-            wfh_yn: "0",
-            enroll_yn: '0',
-            is_Holiday :"N"
+            taskHour: this.view[i][j].taskHour,
+            dayHour: this.viewData[i][j].dayHour,
+            startedHour: this.viewData[i][j].started_hour,
+            endedHour: this.viewData[i][j].endedHour,
+            groupMainId: this.viewData[i][j].groupMainId,
+            groupSubId: this.viewData[i][j].groupSubId,
+            codeId : this.viewData[i][j].codeId,
+            codeMainNm: this.viewData[i][j].codeMainNm,
+            codeSubNm: this.viewData[i][j].codeSubNm,
+            workDetail : this.viewData[i][j].workDetail,
+            wfhYn: "0",
+            enrollYn: '0',
+            isHoliday :"N"
           }
           if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].is_Holiday = "Y";
+            this.sendData[index].isHoliday = "Y";
           }
           index++;
         }

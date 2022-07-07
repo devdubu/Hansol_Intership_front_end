@@ -136,6 +136,7 @@ export default {
             this.getProj = res.data.result;
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
+            console.log(response)
 
             if(this.responseCode != 1000){
               alert(this.backMessage);

@@ -49,13 +49,13 @@
             <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
               <div class="flex">
                 <div class="mr-3 text-black">
-                  <select v-model="Task.group_sub_id" @change="onChangeSelectMain($event, index)" style="width: 300px">
-                    <option v-for="main in mainGroup" :value="main.group_sub_id">{{ main.group_name }}</option>
+                  <select v-model="Task.groupSubId" @change="onChangeSelectMain($event, index)" style="width: 300px">
+                    <option v-for="main in mainGroup" :value="main.groupSubId">{{ main.codeMainNm }}</option>
                   </select>
                 </div>
                 <div class="text-black">
-                  <select v-model="Task.code_id" @change="onChangeSelectSub($event, index)" style="width: 450px">
-                    <option v-for="subtask in subTaskCopy[index]" :value="subtask.code_id">{{ subtask.code_name }}</option>
+                  <select v-model="Task.codeId" @change="onChangeSelectSub($event, index)" style="width: 450px">
+                    <option v-for="subtask in subTaskCopy[index]" :value="subtask.codeId">{{ subtask.codeSubNm }}</option>
                   </select>
                 </div>
               </div>
@@ -71,7 +71,7 @@
                   <p>시간 :</p>
                 </div>
                 <div class="pb-1">
-                  <input @change="onChangeTaskHour_v2($event,index)" min="0" v-model="Task.task_hour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                  <input @change="onChangeTaskHour_v2($event,index)" min="0" v-model="Task.taskHour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
                 </div>
               </div>
               <div class="mt-4 mr-4 ">
@@ -122,15 +122,15 @@ export default {
       viewData: [{
         Week: "7월 1주차 ~ 7월 2주차",
         seq: 1,
-        task_hour: 8,
+        taskHour: 8,
         started_hour: "0900",
-        ended_hour: "1800",
-        group_main_id: "TR001",
-        group_sub_id: "ZDUM1",
-        code_id: "Z001",
-        group_name: "주업무",
-        code_name: "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
-        work_detail: "주업무",
+        endedHour: "1800",
+        groupMainId: "TR001",
+        groupSubId: "ZDUM1",
+        codeId: "Z001",
+        codeMainNm: "주업무",
+        codeSubNm: "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
+        workDetail: "주업무",
       }
       ],
 
@@ -190,7 +190,7 @@ export default {
       for(var i = 0;i<this.viewData.length; i++){
         for(var j = 0; j<this.subTaskCopy[i].length; j++){
 
-          if(this.subTaskCopy[i][j].group_sub_id != this.viewData[i].group_sub_id){
+          if(this.subTaskCopy[i][j].groupSubId != this.viewData[i].groupSubId){
             this.subTaskCopy[i].splice(j,1)
             j--;
           }
@@ -203,15 +203,15 @@ export default {
       for (var i = 0; i < this.taskType.length; i++) {
         if (this.taskType[i].group_id === 'TR001') {
           this.mainGroup.push({
-            group_main_id: this.taskType[i].group_id,
-            group_sub_id: this.taskType[i].code_id,
-            group_name: this.taskType[i].code_nm
+            groupMainId: this.taskType[i].group_id,
+            groupSubId: this.taskType[i].codeId,
+            codeMainNm: this.taskType[i].code_nm
           });
         } else {
           this.subTask.push({
-            group_sub_id: this.taskType[i].group_id,
-            code_id: this.taskType[i].code_id,
-            code_name: this.taskType[i].code_nm
+            groupSubId: this.taskType[i].group_id,
+            codeId: this.taskType[i].codeId,
+            codeSubNm: this.taskType[i].code_nm
           });
         }
       }
@@ -219,9 +219,9 @@ export default {
     ClassifyProject() {
       for (var i = 0; i < this.project.length; i++) {
         this.mainGroup.push({
-          group_main_id: this.project[i].project_code,
-          group_sub_id: 'TR002',
-          group_name: this.project[i].project_nm
+          groupMainId: this.project[i].project_code,
+          groupSubId: 'TR002',
+          codeMainNm: this.project[i].project_nm
         });
       }
     },
@@ -230,17 +230,17 @@ export default {
           {
             Week: "7월 1주차 ~ 7월 2주차",
             seq: 1,
-            task_hour: 8,
-            day_hour: 8,
+            taskHour: 8,
+            dayHour: 8,
             started_hour: "0900",
-            ended_hour: "1200",
-            group_main_id: "TR001",
-            group_sub_id: "ZDUM1",
-            code_id: "Z001",
-            group_name: "주업무",
-            code_name: "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
-            work_detail: "주업무",
-            enroll_yn : "0",
+            endedHour: "1200",
+            groupMainId: "TR001",
+            groupSubId: "ZDUM1",
+            codeId: "Z001",
+            codeMainNm: "주업무",
+            codeSubNm: "R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
+            workDetail: "주업무",
+            enrollYn : "0",
           }
       );
      
@@ -248,12 +248,12 @@ export default {
     onChangeSelectMain(event, index) {
       var sub = event.target.value
 
-      this.viewData[index].group_sub_id = sub;
+      this.viewData[index].groupSubId = sub;
 
       for (var i = 0; i < this.mainGroup.length; i++) {
-        if (sub === this.mainGroup[i].group_sub_id) {
-          this.viewData[index].group_main_id = this.mainGroup[i].group_main_id;
-          this.viewData[index].group_name = this.mainGroup[i].group_name;
+        if (sub === this.mainGroup[i].groupSubId) {
+          this.viewData[index].groupMainId = this.mainGroup[i].groupMainId;
+          this.viewData[index].codeMainNm = this.mainGroup[i].codeMainNm;
           break;
         }
       }
@@ -261,7 +261,7 @@ export default {
 
 
       for (var i = 0; i < this.subTaskCopy[index].length; i++) {
-        if (sub != this.subTaskCopy[index][i].group_sub_id) {
+        if (sub != this.subTaskCopy[index][i].groupSubId) {
           this.subTaskCopy[index].splice(i, 1);
           i--;
         }
@@ -271,21 +271,21 @@ export default {
 
       var code = event.target.value;
 
-      this.viewData[index].code_id = code;
+      this.viewData[index].codeId = code;
 
       for (var i = 0; i < this.subTask.length; i++) {
-        if (this.subTask[i].code_id === code) {
-          this.viewData[index].code_name = this.subTask[i].code_name;
+        if (this.subTask[i].codeId === code) {
+          this.viewData[index].codeSubNm = this.subTask[i].codeSubNm;
         }
       }
     },
     SetTaskHour_v2(){
       for(var i = 0;i<this.viewData.length;i++){
         this.taskStartHour.push(Number(this.viewData[i].started_hour))
-        this.taskEndHour.push(Number(this.viewData[i].ended_hour))
-        this.taskTime.push(this.viewData[i].task_hour)
+        this.taskEndHour.push(Number(this.viewData[i].endedHour))
+        this.taskTime.push(this.viewData[i].taskHour)
       }
-      this.totalDayWorkTime = this.viewData[0].day_hour;
+      this.totalDayWorkTime = this.viewData[0].dayHour;
       this.RenderTime_v2()
       
     },
@@ -382,32 +382,33 @@ export default {
         }else {
           stringTaskEndHour = String(stringTaskEndHour);
         }
-        this.viewData[i].task_hour = this.taskTime[i];
-        this.viewData[i].day_hour = this.totalDayWorkTime;
+        this.viewData[i].taskHour = this.taskTime[i];
+        this.viewData[i].dayHour = this.totalDayWorkTime;
         this.viewData[i].started_hour = stringTaskStartHour;
-        this.viewData[i].ended_hour = stringTaskEndHour;
+        this.viewData[i].endedHour = stringTaskEndHour;
       }
       var index = 0;
       for(var i = 0;i<14;i++){
         for(var j = 0; j<this.viewData.length;j++){
           this.sendData[index] = {
-            plan_day: this.startDate+i,
+            planDay: this.startDate+i,
             seq: this.viewData[j].seq,
-            day_hour: this.viewData[j].day_hour,
-            start_hour: this.viewData[j].started_hour,
-            ended_hour: this.viewData[j].ended_hour,
-            group_main_id: this.viewData[j].group_main_id,
-            group_sub_id: this.viewData[j].group_sub_id,
-            code_id : this.viewData[j].code_id,
-            group_name: this.viewData[j].group_name,
-            code_name: this.viewData[j].code_name,
-            work_detail : this.viewData[j].work_detail,
-            wfh_yn: "0",
-            enroll_yn: '0',
-            is_Holiday :"N"
+            taskHour: this.viewData[j].taskHour,
+            dayHour: this.viewData[j].dayHour,
+            startedHour: this.viewData[j].started_hour,
+            endedHour: this.viewData[j].endedHour,
+            groupMainId: this.viewData[j].groupMainId,
+            groupSubId: this.viewData[j].groupSubId,
+            codeId : this.viewData[j].codeId,
+            codeMainNm: this.viewData[j].codeMainNm,
+            codeSubNm: this.viewData[j].codeSubNm,
+            workDetail : this.viewData[j].workDetail,
+            wfhYn: "0",
+            enrollYn: '0',
+            isHoliday :"N"
           }
           if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].is_Holiday = "Y";
+            this.sendData[index].isHoliday = "Y";
           }
           index++;
         }

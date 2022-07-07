@@ -1,5 +1,4 @@
 import { createWebHistory, createRouter } from "vue-router";
-
 import CompanyProject from './components/CompanyProject.vue';
 import ComfirmManager from './components/ConfirmManager.vue';
 import NonEnterPerformance from './components/NonEnterPerformance.vue';
@@ -10,10 +9,15 @@ import PerfCalender from './components/PerfCalender.vue';
 import RegisterPlan from "./components/RegisterPlan.vue";
 import RegisterPlanDetail from "./components/RegisterPlanDetail.vue";
 import ViewPlanDetail from "./components/ViewPlanDetail.vue";
+import LoginForm from "./components/LoginForm.vue"
 import {createApp} from "vue";
 
 
 const routes = [
+  {
+    path: "/login",
+    component: LoginForm,
+  },
   {
     path: "/performance",
     component: PerfCalender,

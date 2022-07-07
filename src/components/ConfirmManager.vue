@@ -140,10 +140,10 @@
                     <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[0].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[0].is_Deadline)" :class="{blind:statusFunc(member[0].signStatus)}, confirmCheck(member[0].signStatus)" class="w-10 rounded-xl state-interval">
+                            <div v-if="blindStatus(member[0].isDeadline)" :class="{blind:statusFunc(member[0].signStatus)}, confirmCheck(member[0].signStatus)" class="w-10 rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[0].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[0].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[0].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -151,10 +151,10 @@
                      <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[1].totalTime }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[1].is_Deadline)" :class="{blind:statusFunc(member[1].signStatus)}, confirmCheck(member[1].signStatus)" class="w-10 rounded-xl state-interval">
+                            <div v-if="blindStatus(member[1].isDeadline)" :class="{blind:statusFunc(member[1].signStatus)}, confirmCheck(member[1].signStatus)" class="w-10 rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[1].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[1].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[1].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -162,10 +162,10 @@
                      <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[2].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[2].is_Deadline)" :class="{blind:statusFunc(member[2].signStatus)}, confirmCheck(member[2].signStatus)" class="w-10 rounded-xl state-interval">
+                            <div v-if="blindStatus(member[2].isDeadline)" :class="{blind:statusFunc(member[2].signStatus)}, confirmCheck(member[2].signStatus)" class="w-10 rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[2].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[2].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[2].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -173,10 +173,10 @@
                      <div class="flex sub-interval border-r" >
                         <div class=" hour-interval "><p class="pt-1">{{ member[3].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[3].is_Deadline)" :class="{blind:statusFunc(member[3].signStatus)}, confirmCheck(member[3].signStatus)" class="w-10  rounded-xl state-interval">
+                            <div v-if="blindStatus(member[3].isDeadline)" :class="{blind:statusFunc(member[3].signStatus)}, confirmCheck(member[3].signStatus)" class="w-10  rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[3].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[3].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[3].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -184,10 +184,10 @@
                      <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[4].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[4].is_Deadline)" :class="{blind:statusFunc(member[4].signStatus)}, confirmCheck(member[4].signStatus)" class="w-10  rounded-xl state-interval">
+                            <div v-if="blindStatus(member[4].isDeadline)" :class="{blind:statusFunc(member[4].signStatus)}, confirmCheck(member[4].signStatus)" class="w-10  rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[4].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[4].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[4].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -195,10 +195,10 @@
                      <div class="flex sub-interval border-r" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[5].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[5].is_Deadline)" :class="{blind:statusFunc(member[5].signStatus)}, confirmCheck(member[5].signStatus)" class="w-10  rounded-xl state-interval">
+                            <div v-if="blindStatus(member[5].isDeadline)" :class="{blind:statusFunc(member[5].signStatus)}, confirmCheck(member[5].signStatus)" class="w-10  rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[5].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[5].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[5].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -206,10 +206,10 @@
                      <div class="flex sub-interval" >
                         <div class=" hour-interval"><p class="pt-1">{{ member[6].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
-                            <div v-if="blindStatus(member[6].is_Deadline)" :class="{blind:statusFunc(member[6].signStatus)}, confirmCheck(member[6].signStatus)" class="w-10 rounded-xl state-interval">
+                            <div v-if="blindStatus(member[6].isDeadline)" :class="{blind:statusFunc(member[6].signStatus)}, confirmCheck(member[6].signStatus)" class="w-10 rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[6].signStatus] }}</p>
                             </div>
-                            <div v-if="!(blindStatus(member[6].is_Deadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
+                            <div v-if="!(blindStatus(member[6].isDeadline))" class="w-10 bg-rose-500 rounded-xl state-interval">
                               <p class="mt-1">마감</p>
                             </div>
                         </div>
@@ -317,8 +317,8 @@ export default {
           signStatus: this.approval[i].signStatus,
           totalTime : this.approval[i].totalTime,
           dayHour: this.approval[i].dayHour,
-          is_Holiday: this.approval[i].is_Holiday,
-          is_Deadline: this.approval[i].is_Deadline
+          isHoliday: this.approval[i].isHoliday,
+          isDeadline: this.approval[i].isDeadline
         })
       }
     },
@@ -328,7 +328,7 @@ export default {
       var Deadline =[]
       for(var i = 0;i<this.CopyApprovalDate.length;i++){
         if(this.CopyApprovalDate[0].memberId === this.CopyApprovalDate[i].memberId){
-          Deadline.push(this.CopyApprovalDate[i].is_Deadline);
+          Deadline.push(this.CopyApprovalDate[i].isDeadline);
         }
       }
 
@@ -337,7 +337,7 @@ export default {
        this.SendDate.push({
          index: i,
          date: String(this.Date[i]),
-         is_Deadline: Deadline[i]
+         isDeadline: Deadline[i]
        })
      }
 
@@ -394,7 +394,7 @@ export default {
           this.checkDeadline.push({
             id: index,
             perfDay: String(this.CopyApprovalDate[i].perfDay),
-            is_Deadline:this.CopyApprovalDate[i].is_Deadline,
+            isDeadline:this.CopyApprovalDate[i].isDeadline,
           });
           index++
         }
@@ -416,7 +416,7 @@ export default {
 
 
       for(var i = 0;i<this.checkDate.length;i++){
-        if(this.checkDate[i].is_Deadline === '1'){
+        if(this.checkDate[i].isDeadline === '1'){
           alert([this.checkDate[i].date.slice(0,4),'년 ',this.checkDate[i].date.slice(4,6),'월 ',this.checkDate[i].date.slice(6,8),'일'].join('')+'은 마감일 이므로 승인이 불가능합니다.')
           return
         }

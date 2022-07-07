@@ -1,19 +1,6 @@
 <!--
 
-추가 사항 :
-  1. 데이터 바인딩 시작 -> 주말은 고정적으로 빨간 색깔
-  2. ajax로 데이터 바인딩 받기
-  3. 계획과 실적 테이블 나누기
-개선 사항 :
-  1. 상단에 버튼 다시 하기
-  2. alert 창 적용하여 경고문 날리기
-  3. url로 detail 칸 작성하기
-고려 사항 :
-  1. 데이터에서 휴일일 경우 빨간색으로 표시
-  2. wfh_yn 의 데이터 별로 확정, PM승인, 팀장 승인 등등을 구별해서  표기함
-  3. 만약 캘린더 데이터가 많이 있을 경우 overflow 를 사용해서 자르기
-
-Mon 부터 시작하기
+변수 변경 완료
 
 -->
 
@@ -185,18 +172,20 @@ import perfdata from '../assets/perfData.json';
 
 
 */
-import axios from "axios";
+import axios from 'axios';
 export default {
   name: 'PerfCalender',
   async created(){
-
+    // await this.GetServer();
+    
+    // console.log(this.$session.get('memberGrade'))
   },
-  mounted(){
-    // this.calDate(this.perf[0].perf_day)
+  async mounted(){
+    // this.calDate(this.perf[0].perfDay)
     // this.viewDay(this.Date)
     // this.calDayWorkTime(this.perf)
-
-    this.calDate_v2(this.perf[0].perf_day, this.Date)
+    await this.GetServer();
+    this.calDate_v2(this.Date)
     this.calDayOfData()
     this.calDayWorkTime_v2()
     this.printPrevWorkType(this.perf)
@@ -208,7 +197,7 @@ export default {
   data: function () {
     return {
       //axios로 인해서 받은 데이터
-      getPerf : [],
+      Getperf : [],
       responseCode: 0,
       backMessage: '',
       //
@@ -224,7 +213,7 @@ export default {
       sendDayWorkTime: '',
 
       //받은 데이터
-      perf: perfdata,
+      perf: [],
       plan: plandata,
 
       //보낼 데이터
@@ -254,26 +243,30 @@ export default {
   methods:{
     // spring 서버와 통신 부분
     async GetServer(){
-      await axios.get('/api/performance')
+      
+        await axios.get("/api/performances",{},{withCredentials : true})
           .then((response)=>{
-            this.getPerf = response.data.result;
+            this.perf = response.data.result;
             this.responseCode = response.data.code;
             this.backMessage = response.data.message;
+            console.log(response)
             if(this.responseCode != 1000){
-              alert("로그인 후에 이용해주세요")
-              this.$router.push('/');
+              alert(this.backMessage)
             }
           })
           .catch((response)=>{
             console.log(response);
           })
+      
     },
     showViewModal(index){
       var tasknum = 0;
+      
 
       for(var i = 0;i<this.perf.length;i++){
-        if(this.Date[index] === this.perf[i].perf_day){
+        if(this.Date[index] === this.perf[i].perfDay){
           this.sendDetailInfo[tasknum] = this.perf[i];
+          console.log(this.sendDetailInfo)
           tasknum++;
         }
       }
@@ -283,11 +276,13 @@ export default {
     showViewModalEdit(){
       this.editModal = !this.editModal;
     },
-    calDate_v2(startdate, date){
+    calDate_v2(date){
       //날짜를 데이터에 인풋
+     
       for(var i = 0;i<this.twoWeek;i++){
-        this.Date[i] = startdate+i;
+        date[i] = this.perf[0].perfDay+i;
       }
+       console.log(this.perf[0].perfDay)
       //view 데이터에 인풋
       var viewdate = []
       for(var i = 0;i<this.twoWeek;i++){
@@ -295,7 +290,7 @@ export default {
         viewdate[i] = viewdate[i].substr(6, 2);
       }
       this.viewDate = viewdate;
-
+      console.log(this.Date)
 
     },
 
@@ -315,29 +310,30 @@ export default {
           planindex++
         }
       }
+      console.log(this.planDayOfDate)
     },
     calTotalWeekTime(){
       var perfTotalHour = 0, planTotalHour = 0;
       for(var i = 0;i<this.planDayOfDate.length;i++){
         if(i<7){
-          if(this.planDayOfDate[i].is_Holiday === 'N'){
-            this.FirstPlanTotalHour += this.planDayOfDate[i].day_hour;
+          if(this.planDayOfDate[i].isHoliday === 'N'){
+            this.FirstPlanTotalHour += this.planDayOfDate[i].dayHour;
           }
         }else{
-          if(this.planDayOfDate[i].is_Holiday === 'N'){
-            this.SecondPlanTotalHour += this.planDayOfDate[i].day_hour;
+          if(this.planDayOfDate[i].isHoliday === 'N'){
+            this.SecondPlanTotalHour += this.planDayOfDate[i].dayHour;
           }
         }
       }
 
       for(var i = 0;i<this.DayOfData.length;i++){
         if(i<7){
-          if(this.DayOfData[i].is_Holiday === 'N'){
-            this.FirstPerfTotalHour += this.DayOfData[i].day_hour;
+          if(this.DayOfData[i].isHoliday === 'N'){
+            this.FirstPerfTotalHour += this.DayOfData[i].dayHour;
           }
         }else{
-          if(this.DayOfData[i].is_Holiday === 'N'){
-            this.SecondPerfTotalHour += this.DayOfData[i].day_hour;
+          if(this.DayOfData[i].isHoliday === 'N'){
+            this.SecondPerfTotalHour += this.DayOfData[i].dayHour;
           }
         }
       }
@@ -347,15 +343,15 @@ export default {
 
     //--------------------------------하루 업무 시간을 보여주는 함수--------------------------------
     calDayWorkTime_v2(){
-      var startTime, endTime;
+      var start_time, end_time;
       var restTime = 100;
       for(var i = 0;i<this.DayOfData.length;i++){
-        startTime = this.DayOfData[i].started_hour;
-        endTime = (this.DayOfData[i].day_hour*100)+restTime;
+        start_time = this.DayOfData[i].startedHour;
+        end_time = (this.DayOfData[i].dayHour*100)+restTime;
 
-        endTime = String(Number(startTime)+endTime);
+        end_time = String(Number(start_time)+end_time);
 
-        this.DayWorkTime[i] = [startTime.slice(0,2),':',startTime.slice(2,4),' ~ ',endTime.slice(0,2),':',endTime.slice(2,4)].join('');
+        this.DayWorkTime[i] = [start_time.slice(0,2),':',start_time.slice(2,4),' ~ ',end_time.slice(0,2),':',end_time.slice(2,4)].join('');
 
       }
     },
@@ -368,11 +364,11 @@ export default {
       for(var i = 0;i<this.twoWeek;i++){
         var task = [];
         for(var j = 0;j<total;j++){
-          if(this.Date[i] === perf[j].perf_day){//해당 일자에서
-            if(this.perf[j].group_main_id === 'TR001'){
-              task.push('W'+perf[j].task_hour+' '+perf[j].work_detail)//group_name이 아닌 기타사항이 들어가야함
-            }else if(this.perf[j].group_sub_id === 'TR002'){
-              task.push('P'+perf[j].task_hour+' '+perf[j].work_detail)//group_name이 아닌 기타사항이 들어가야함
+          if(this.Date[i] === perf[j].perfDay){//해당 일자에서
+            if(this.perf[j].groupMainId === 'TR001'){
+              task.push('W'+perf[j].taskHour+' '+perf[j].workDetail)//group_name이 아닌 기타사항이 들어가야함
+            }else if(this.perf[j].groupSubId === 'TR002'){
+              task.push('P'+perf[j].taskHour+' '+perf[j].workDetail)//group_name이 아닌 기타사항이 들어가야함
             }
           }
         }
@@ -382,26 +378,26 @@ export default {
     //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
     DistinguishHoliday(){
       for(var i = 0;i<this.twoWeek;i++){
-        if(this.DayOfData[i].is_Holiday === 'Y'){
+        if(this.DayOfData[i].isHoliday === 'Y'){
           this.HolidayCheck[i] = false;
         }
       }
     },
     calApprovalTime(){
       for(var i = 0;i<this.twoWeek;i++){
-        if(this.DayOfData[i].is_Holiday === 'N'){
-          this.approvalTime += this.DayOfData[i].day_hour;
+        if(this.DayOfData[i].isHoliday === 'N'){
+          this.approvalTime += this.DayOfData[i].dayHour;
         }
       }
     },
     DistinguishStatus(){
       for(var i = 0;i<this.twoWeek;i++){
-        if(this.DayOfData[i].sign_status === '2'){
+        if(this.DayOfData[i].signStatus === '2'){
           this.confirm[i] = true;
-        }else if(this.DayOfData[i].sign_status === '3'){
+        }else if(this.DayOfData[i].signStatus === '3'){
           this.approve[i] = true;
         }
-        if(this.DayOfData[i].is_Deadline === '1'){
+        if(this.DayOfData[i].isDeadline === '1'){
           this.ended[i] = true;
         }
       }
@@ -418,7 +414,7 @@ export default {
     //     this.Date[i] = startdate+i;
     //   }
     //   for(var j = 0;j<this.perf.length;j++) {
-    //     if (Date[1]===this.perf[j].perf_day && this.perf[j].seq == 1) {
+    //     if (Date[1]===this.perf[j].perfDay && this.perf[j].seq == 1) {
     //       console.log('check');
     //     }
     //   }
@@ -448,14 +444,14 @@ export default {
     //   for(var j = 0;j<daytime;j++) {
     //     for (var i = 0; i < total; i++) {
     //       if (perf[i].seq == 1) {
-    //         startTime = perf[i].started_hour;
+    //         startTime = perf[i].startedHour;
     //         //String을 시간과 분으로 분리
     //         hour = startTime.substr(0, 2);
     //         min = startTime.substr(2, 4);
     //         //시작 시간에 : 을 붙임
     //         startTime = hour + ':' + min;
     //         //끝나는 hour를 구하기 위해서 총 근로시간과 시작 시간을 더한다, 그리고 휴식 시간까지 더한다.
-    //         hour = String(Number(hour) + Number(perf[i].day_hour) + restTime);
+    //         hour = String(Number(hour) + Number(perf[i].dayHour) + restTime);
     //         //끝나는 시간을 더한다.
     //         endTime = hour + ":" + min;
     //
