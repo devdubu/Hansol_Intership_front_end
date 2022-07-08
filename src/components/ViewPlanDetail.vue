@@ -94,7 +94,7 @@
 
 import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
-
+import axios from "axios";
 export default {
   name: 'ViewPlanDetail',
   mounted() {
@@ -168,6 +168,7 @@ export default {
     }
   },
   methods: {
+
     MountDataSet(){
       var arr = []
       for(var i = 0;i<14;i++){

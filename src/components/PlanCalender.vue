@@ -147,14 +147,20 @@ import plandata from '../assets/planData.json';
 
 */
 import axios from 'axios';
+import weekly from '../assets/biweekly.json'
 export default {
     name: 'PlanCalender',
   async mounted(){
     // this.calDate(this.plan[0].planDay)
     // this.viewDay(this.Date)
-    // this.calDayWorkTime(this.plan)
+    await this.calNowDate()
 
     await this.GetData()
+
+    await this.calSelectWeek()
+    await this.calSelectYear()
+
+
     this.calDate_v2(this.plan[0].planDay, this.Date)
     this.calDayOfData()
     this.calDayWorkTime_v2()
@@ -165,6 +171,19 @@ export default {
   },
   data: function () {
     return {
+      //상단에 날짜를 받아오는 변수
+      getWeekly: [],
+      searchWeekly: weekly.twoWeeksDtos,
+      searchWeekYear: [],
+
+      copySearchWeekly: [],
+
+      selectWeek: weekly.startOfWeek,
+      selectYear: weekly.startOfWeek.slice(0,4),
+
+      nowDate: 0,
+      strNowDate: '',
+
       showGetData: [],
       //
       twoWeek: 14,
@@ -198,11 +217,78 @@ export default {
     }
   },
     methods:{
+
+      async calNowDate(){
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+
+        if(month<10){
+          this.nowDate = (year*10000)+(month*100)+day;
+        }else{
+          this.nowDate = (year*1000)+(month*100)+day;
+        }
+        this.strNowDate = String(this.nowDate);
+      },
+      async GetWeekData(){
+        await axios.get('/api/biweekly',{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                this.getWeekly = res.data.result.twoWeeksDtos;
+                this.selectWeek = res.data.result.startOfWeek;
+                console.log(this.getWeekly)
+              }else{
+                alert(res.data.message);
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
+      calSelectYear(){
+        var index = 0;
+        for(var i = 0;i<this.searchWeekly.length;i++) {
+          if (index === 0) {
+            this.searchWeekYear.push(this.searchWeekly[i].year);
+            index++;
+          } else if (this.searchWeekYear[index] != this.searchWeekly[i].year) {
+            this.searchWeekYear.push(this.searchWeekly[i].push)
+            index++;
+          }
+        }
+        console.log(this.searchWeekYear);
+      },
+      calSelectWeek(){
+        for(var i = 0;i<this.searchWeekly.length;i++){
+          this.selectWeek.push({
+            year: this.searchWeekly[i].year,
+            fromdt: this.searchWeekly[i].fromdt,
+            content: this.searchWeekly[i].content
+          })
+        }
+
+        for(var i = 0;i<this.copySearchWeekly.length;i++){
+          if(this.copySearchWeekly[i].year != this.selectYear){
+            this.copySearchWeekly.splice(i,0);
+            i--;
+          }
+        }
+      },
+
       //AXIOS 로 데이터를 받아와서 vue데이터로 받아오는 방법
       async GetData(){
-          await axios.get("api/plans",{},{withCredentials : true})
+          await axios.get("api/plans",{
+            params:{
+              day: this.nowDate,
+            }
+          },{withCredentials : true})
           .then((res)=>{
-            this.plan = res.data.result;
+            if(res.data.code === 1000){
+              this.plan = res.data.result;
+            }else{
+              alert(res.data.message)
+            }
             console.log(res)
           })
           .catch((res)=>{

@@ -244,7 +244,7 @@ export default {
     // spring 서버와 통신 부분
     async GetServer(){
       
-        await axios.get("/api/performances",{},{withCredentials : true})
+        await axios.get("/api/performances",{withCredentials : true})
           .then((response)=>{
             this.perf = response.data.result;
             this.responseCode = response.data.code;

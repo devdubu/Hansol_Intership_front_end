@@ -192,7 +192,7 @@ export default {
     },
     async ConfirmData(){
 
-      const perfConfirmDay = this.oneDayInfo[0].perfDau
+      const perfConfirmDay = this.oneDayInfo[0].perfDay
       console.log(perfConfirmDay)
 
       //axios 통신
@@ -200,7 +200,7 @@ export default {
         params:{
             day: perfConfirmDay
         }
-      })
+      }, {withCredentials: true})
           .then((res)=>{
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;

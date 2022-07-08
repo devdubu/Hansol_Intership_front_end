@@ -31,8 +31,8 @@
     </div>
     <div style="width: 1250px" class="flex mt-4" >
       <div class="grow"></div>
-      <button style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded mr-2">등록</button>
-      <button @click="SaveData()" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+      <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded mr-2">등록</button>
+      <button @click="PostData('2')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
     </div>
     <!--데이터 반복 시작 부분-->
     <div v-for="(date, dateIndex) in viewData" >
@@ -120,6 +120,7 @@
 
 import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
+import axios from "axios";
 
 export default {
   name: 'RegisterPlanDetail',
@@ -512,7 +513,7 @@ export default {
         alert('음수는 입력할 수 없습니다.')
       }
     },
-    SaveData(){
+    async PostData(status){
       alert: for(var i = 0;i<14;i++){
         for(var j = 0;j<this.viewData[i].length;j++){
           if(this.viewData[i][j].taskHour === 0){
@@ -557,7 +558,7 @@ export default {
             codeSubNm: this.viewData[i][j].codeSubNm,
             workDetail : this.viewData[i][j].workDetail,
             wfhYn: "0",
-            enrollYn: '0',
+            enrollYn: status,
             isHoliday :"N"
           }
           if(i === 5 || i === 6 || i === 12 || i === 13){
@@ -567,6 +568,20 @@ export default {
         }
       }
       console.log(this.sendData)
+      if(status === '1'){
+        await axios.post('/api/drafts',this.sendData,{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                alert('계획이 수정되었습니다.')
+                this.$router.push('/plan')
+              }else{
+                alert(res.data.message)
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      }
     },
   }
 }

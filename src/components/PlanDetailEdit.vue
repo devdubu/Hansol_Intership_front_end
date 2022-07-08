@@ -137,6 +137,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
+import axios from "axios";
 
 /* add each imported icon to the library */
 library.add(faXmark, faPlus)
@@ -495,7 +496,7 @@ export default {
 
     },
     //================================ 데이터 보내기 ===================================
-    PostData(status){
+    async PostData(status){
       for(var i = 0;i<this.sendTaskData.length;i++){
         var stringTaskStartHour = this.taskStartHour[i]
         var stringTaskEndHour = this.taskEndHour[i]
@@ -516,6 +517,22 @@ export default {
         this.sendTaskData[i].endedHour = stringTaskEndHour;
         this.sendTaskData[i].enrollYn = status;
       }
+      console.log(this.sendTaskData)
+
+      await axios.post('/api/plans', this.sendTaskData,{withCredentials: true})
+          .then((res)=>{
+            if(res.data.code === 1000 && status === '1'){
+              alert('수정된 데이터가 저장 처리 되었습니다.')
+            }else if(res.data.code === 1000 && status === '2'){
+              alert('수정된 데이터가 확정 처리 되었습니다.');
+            }else{
+              alert(res.data.message);
+              this.$router.go(-1);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
      
     }
     // onChangeTaskTime(event,index){

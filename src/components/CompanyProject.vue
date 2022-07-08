@@ -131,7 +131,7 @@ export default {
   methods:{
     //axios get 요청
     async GetProject(){
-      await axios.get('/api/projects')
+      await axios.get('/api/projects',{withCredentials:true})
           .then((res)=>{
             this.getProj = res.data.result;
             this.responseCode = res.data.code;

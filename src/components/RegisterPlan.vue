@@ -84,7 +84,8 @@
       <div class="flex mt-4">
         <div class="grow"></div>
         <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">날짜별 세부 계획</button></router-link>
-        <button @click="SaveData" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+        <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+        <button @click="PostData('2')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">등록</button>
         <div class="grow"></div>
       </div>
 
@@ -98,6 +99,7 @@
 
 import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
+import axios from "axios";
 
 export default {
   name: 'RegisterPlan',
@@ -201,17 +203,17 @@ export default {
 
     ClassifyTaskType() {//완성
       for (var i = 0; i < this.taskType.length; i++) {
-        if (this.taskType[i].group_id === 'TR001') {
+        if (this.taskType[i].groupId === 'TR001') {
           this.mainGroup.push({
-            groupMainId: this.taskType[i].group_id,
+            groupMainId: this.taskType[i].groupId,
             groupSubId: this.taskType[i].codeId,
-            codeMainNm: this.taskType[i].code_nm
+            codeMainNm: this.taskType[i].codeNm
           });
         } else {
           this.subTask.push({
-            groupSubId: this.taskType[i].group_id,
+            groupSubId: this.taskType[i].groupId,
             codeId: this.taskType[i].codeId,
-            codeSubNm: this.taskType[i].code_nm
+            codeSubNm: this.taskType[i].codeNm
           });
         }
       }
@@ -219,9 +221,9 @@ export default {
     ClassifyProject() {
       for (var i = 0; i < this.project.length; i++) {
         this.mainGroup.push({
-          groupMainId: this.project[i].project_code,
+          groupMainId: this.project[i].projectCode,
           groupSubId: 'TR002',
-          codeMainNm: this.project[i].project_nm
+          codeMainNm: this.project[i].projectNm
         });
       }
     },
@@ -368,7 +370,7 @@ export default {
         alert('삭제할 수 없습니다.');
       }
     },
-    SaveData(){
+    async PostData(status){
       for(var i = 0;i<this.viewData.length;i++){
         var stringTaskStartHour = this.taskStartHour[i]
         var stringTaskEndHour = this.taskEndHour[i]
@@ -414,7 +416,21 @@ export default {
         }
       }
       console.log(this.sendData)
+      if(status === '1'){
+        await axios.post('/api/drafts',this.sendData,{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                alert('계획이 등록 되었습니다.')
+              }else{
+                alert(this.data.message)
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      }
     }
+
   }
 }
 </script>

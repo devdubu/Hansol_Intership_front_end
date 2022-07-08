@@ -129,7 +129,7 @@ export default {
        params:{
          year: year,
          month : month,
-       }
+       },withCredentials:true
      })
          .then((res)=>{
            this.getNoEnter = res.data.result;

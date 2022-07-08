@@ -66,7 +66,7 @@
                 <button style="width: 200px; height: 40px;" class="mr-4 bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></button>
                 <button style="width: 100px; height: 40px;" class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
                 <button style="width: 50px; height: 40px;" class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
-                <button style="width: 50px; height: 40px;" @click="SendApprovalData" class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
+                <button style="width: 50px; height: 40px;" @click="ConfirmApprovalFunc()" class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
             </div>
           </div>
           <!-- 상단 검색 부분 끝 -->
@@ -291,7 +291,7 @@ export default {
       await axios.get('/api/approvals',{
         params:{
           day: this.nowdate,
-        }
+        },withCredentials:true
       })
           .then((res)=>{
             this.responseCode = res.data.code;
@@ -457,21 +457,7 @@ export default {
 
       console.log(this.sendData)
 
-      await axios.post('/api/approvals', this.sendData)
-          .then((res)=>{
-            this.responseCode = res.data.code;
-            this.backMessage = res.data.message;
-            if(this.responseCode === 1000){
-              alert('승인 처리가 완료 되었습니다.')
-            }else{
-              alert(this.backMessage)
-            }
-          })
-          .catch((res)=>{
-            console.error(res);
-          });
 
-      await this.GetApprove();
 
       //마감, signStatus, memberId, perfDay
 
@@ -485,9 +471,50 @@ export default {
       //       console.error(error)
       //     })
     },
-    CancelApprovalFunc(){
+    async ConfirmApprovalFunc(){
+      //시작 날짜도 보내야함
+      await this.SendApprovalData()
 
+      await axios.post('/api/approvals', this.sendData,{withCredentials:true})
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            if(this.responseCode === 1000){
+              alert('승인 처리가 완료 되었습니다.')
+            }else{
+              alert(this.backMessage)
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          });
     },
+    async CancelApprovalFunc(){
+      await axios.post('/api/approvals/cancel',this.sendData,{withCredentials:true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              alert('승인 취소가 완료 되었습니다.')
+            }else{
+              alert(res.data.message);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    },
+    async ResetApprovalFunc(){
+      await axios.post('/api/approvals/reset',this.sendData,{withCredentials: true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              alert('승인이 반려되었습니다.')
+            }else{
+              alert(res.data.message);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    }
 
   },
   components: {

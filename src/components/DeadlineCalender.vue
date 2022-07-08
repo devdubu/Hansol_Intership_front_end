@@ -257,7 +257,7 @@ export default {
           params:{
             year: year,
             month: month,
-          }
+          }, withCredentials:true
         })
             .then((res)=>{
               this.responseCode = res.data.code;

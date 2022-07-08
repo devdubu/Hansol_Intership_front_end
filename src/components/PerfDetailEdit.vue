@@ -569,7 +569,7 @@ export default {
         params:{
           day: this.oneDayInfo[0].perfDay,
         }
-      })
+      },{withCredentials:true})
           .then((res)=>{
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
