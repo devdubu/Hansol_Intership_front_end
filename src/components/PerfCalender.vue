@@ -298,11 +298,13 @@ export default {
     calDayOfData(){
       var perftindex = 0;
       for(var i = 0; i<this.perf.length;i++){
-        if(this.perf[i].seq === 1){
-          this.DayOfData[perftindex] = this.perf[i];
+        if(this.perf[i].seq === 1 || this.perf[i].seq){
+          this.DayOfData[perftindex] = this.perf[i]; // seq 가 없을 수도 있으니, 그걸로 예외 처리
           perftindex++;
         }
+      console.log("calDayOfData",this.DayOfData)
       }
+
       var planindex = 0;
       for(var i =0;i<this.plan.length;i++){
         if(this.plan[i].seq === 1){
@@ -377,14 +379,20 @@ export default {
     },
     //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
     DistinguishHoliday(){
-      for(var i = 0;i<this.twoWeek;i++){
-        if(this.DayOfData[i].isHoliday === 'Y'){
+      console.log(this.DayOfData[0].isHoliday)
+      for(var i = 0;i<this.twoWeek.length;i++){
+        if(this.DayOfData[i].isHoliday === "Y"){
           this.HolidayCheck[i] = false;
+        }else{
+          this.HolidayCheck[i] = true;
         }
       }
+      
     },
     calApprovalTime(){
+      console.log("ApprovalTime()",this.DayOfData)
       for(var i = 0;i<this.twoWeek;i++){
+        console.log(i,this.twoWeek,this.DayOfData[i])
         if(this.DayOfData[i].isHoliday === 'N'){
           this.approvalTime += this.DayOfData[i].dayHour;
         }

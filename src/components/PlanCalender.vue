@@ -16,22 +16,14 @@
                         <span class="ml-4 text-white">년도</span>
                     </div>
                     <div class="mt-1.5 ml-4">
-                        <select>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
+                        <select v-model="selectYear" @change="calSelectWeek()">
+                            <option  v-for="year in searchWeekYear" :value="year">{{ year }}</option>
                         </select>
                     </div>
                     <div class="mt-1.5 ml-4">
                       <div>
-                        <select>
-                          <option>05월 2주 ~ 05월 4주</option>
-                          <option>06월 1주 ~ 06월 3주</option>
-                          <option>06월 4주 ~ 07월 1주</option>
-                          <option>07월 2주 ~ 07월 4주</option>
+                        <select v-model="selectWeek">
+                          <option v-for="week in copySearchWeekly" :value="week.fromdt">{{ week.content }}</option>
                         </select>
                       </div>
                     </div>
@@ -157,8 +149,8 @@ export default {
 
     await this.GetData()
 
-    await this.calSelectWeek()
-    await this.calSelectYear()
+    this.calSelectWeek()
+    this.calSelectYear()
 
 
     this.calDate_v2(this.plan[0].planDay, this.Date)
@@ -260,8 +252,9 @@ export default {
         console.log(this.searchWeekYear);
       },
       calSelectWeek(){
+        console.log(this.searchWeekly)
         for(var i = 0;i<this.searchWeekly.length;i++){
-          this.selectWeek.push({
+          this.copySearchWeekly.push({
             year: this.searchWeekly[i].year,
             fromdt: this.searchWeekly[i].fromdt,
             content: this.searchWeekly[i].content
