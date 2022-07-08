@@ -8,22 +8,21 @@
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">
           <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
-                <div class="flex">
-                    <div class="mt-1.5">
-                        <span class="ml-4 text-white">년 월</span>
-                    </div>
-                    <div class="mt-1.5 ml-4">
-                        <select>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
-                        </select>
-                    </div>                    
-                    
+              <div class="flex">
+                <div class="mt-1.5">
+                  <span class="ml-4 text-white">주 시작일</span>
                 </div>
+                <div class="mt-1.5 ml-4">
+                  <select v-model="selectYear">
+                    <option v-for="year in searchYear" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+                <div>
+                  <select v-model="selectMonth">
+                    <option v-for="month in searchMonth" :value="month.value">{{ month.text }}</option>
+                  </select>
+                </div>
+              </div>
                 
                 <div class="flex">
                     <div class="mt-1.5">
@@ -41,7 +40,7 @@
             </div>
             <div class="grow"></div>
             
-            <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+            <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <div class="flex" style="width:1260px">
             <div class="grow"></div>
@@ -202,11 +201,29 @@
 <script>
 import deadline from '../assets/deadlineData.json';
 import axios from "axios";
-import router from "../router";
+import weekly from '../assets/biweekly.json'
+
 export default {
     name: 'DeadlineCalender',
     data(){
         return{
+          //상단 날짜 검색에 관한 데이터
+          searchWeekly: weekly.twoWeeksDtos,
+          searchYear: [],
+          searchMonth: [
+            {text: '1월', value: '01'},
+            {text: '2월', value: '02'},
+            {text: '3월', value: '03'},
+            {text: '4월', value: '05'},
+            {text: '6월', value: '06'},
+            {text: '7월', value: '07'},
+            {text: '8월', value: '09'},
+            {text: '10월', value: '10'},
+            {text: '11월', value: '11'},
+            {text: '12월', value: '12'}],
+          selectMonth: '',
+          selectYear: weekly.startOfWeek.slice(0,4),
+
           //axios로 인해서 받은 데이터
           getDead : [],
           responseCode: 0,
@@ -237,7 +254,9 @@ export default {
     beforeMount() {
     },
   async mounted() {
-    
+
+    await this.GetWeekData();
+    this.calSelectYear();
     await this.getNowDeadline();
     
     this.SetCalender()
@@ -247,7 +266,8 @@ export default {
     this.setWeekAndAllSelect()
     },
   methods: {
-      async getNowDeadline(){
+    //------------------------------------ AXIOS -------------------------------------------
+    async getNowDeadline(){
         const date = new Date();
 
         const year = date.getFullYear();
@@ -272,6 +292,58 @@ export default {
               console.error(res);
             })
       },
+    async GetWeekData(){
+      await axios.get('/api/biweekly',{withCredentials: true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              this.searchWeekly = res.data.result.twoWeeksDtos;
+              console.log(this.searchWeekly)
+            }else{
+              alert(res.data.message);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    },
+    async SearchDate(){
+      await axios.get('/api/deadline',{
+        params:{
+          year: this.searchYear,
+          month : this.selectMonth,
+        },withCredentials:true
+      })
+          .then((res)=>{
+            if(res.data.code != 1000){
+              this.plan = res.data.result;
+            }else{
+              alert(res.data.message)
+            }
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
+    },
+    //------------------------------------ AXIOS -------------------------------------------
+    calSelectYear(){
+      var index = 0;
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(index === 0 ){
+          this.searchYear[index] = this.searchWeekly[i].year
+          index++;
+        }
+
+        var selectyear = 0, datayear = 0;
+
+        selectyear = Number(this.searchYear[index-1])
+        datayear=Number(this.searchWeekly[i].year)
+
+        if(selectyear < datayear){
+          this.searchYear.push(this.searchWeekly[i].year)
+          index++;
+        }
+      }
+    },
     SetCalender() {
       // 1 > 일요일, 2 > 월요일, 3 > 화요일 --->
       //if => 1이면, +7로 설정 후에 단체로 -2를 한다.

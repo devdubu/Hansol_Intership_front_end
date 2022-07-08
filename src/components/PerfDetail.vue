@@ -148,6 +148,33 @@ export default {
     }
   },
   methods:{
+    //------------------------------------ AXIOS -------------------------------------------
+    async ConfirmData(){
+
+      const perfConfirmDay = this.oneDayInfo[0].perfDay
+      console.log(perfConfirmDay)
+
+      //axios 통신
+      await axios.post('/api/performances/confirm',{
+        params:{
+          day: perfConfirmDay
+        }
+      }, {withCredentials: true})
+          .then((res)=>{
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
+            if(this.responseCode === 1000){
+              alert('확정 처리 되었습니다.');
+              this.$router.push('/performance');
+            }else{
+              alert(this.backMessage)
+              this.$router.push('/performance');
+            }
+          })
+          .catch((res)=>{
+            console.log(res)
+          })
+    },
     calDay(){
       var perfDay = String(this.oneDayInfo[0].perfDay)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
@@ -190,32 +217,7 @@ export default {
         this.showEditBtn = false;
       }
     },
-    async ConfirmData(){
 
-      const perfConfirmDay = this.oneDayInfo[0].perfDay
-      console.log(perfConfirmDay)
-
-      //axios 통신
-      await axios.post('/api/performances/confirm',{
-        params:{
-            day: perfConfirmDay
-        }
-      }, {withCredentials: true})
-          .then((res)=>{
-            this.responseCode = res.data.code;
-            this.backMessage = res.data.message;
-            if(this.responseCode === 1000){
-              alert('확정 처리 되었습니다.');
-              this.$router.push('/performance');
-            }else{
-              alert(this.backMessage)
-              this.$router.push('/performance');
-            }
-          })
-          .catch((res)=>{
-            console.log(res)
-          })
-    }
 
   },
   components: {

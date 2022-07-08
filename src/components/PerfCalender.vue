@@ -20,32 +20,23 @@
                 
           <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
-                <div class="flex">
-                    <div class="mt-1.5">
-                        <span class="ml-4 text-white">년도</span>
-                    </div>
-                    <div class="mt-1.5 ml-4">
-                        <select>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
-                        </select>
-                    </div>
-                    <div class="mt-1.5 ml-4">
-                      <div>
-                        <select>
-                          <option>05월 2주 ~ 05월 4주</option>
-                          <option>06월 1주 ~ 06월 3주</option>
-                          <option>06월 4주 ~ 07월 1주</option>
-                          <option>07월 2주 ~ 07월 4주</option>
-                        </select>
-                      </div>
-                    </div>
-                    
+              <div class="flex">
+                <div class="mt-1.5">
+                  <span class="ml-4 text-white">년도</span>
                 </div>
+                <div class="mt-1.5 ml-4">
+                  <select v-model="selectYear" @change="calSelectWeek()">
+                    <option  v-for="year in searchWeekYear" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+                <div class="mt-1.5 ml-4">
+                  <div>
+                    <select v-model="selectWeek">
+                      <option v-for="week in copySearchWeekly" :value="week.fromdt">{{ week.content }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
             </div>
             <div class="grow"></div>
@@ -173,6 +164,7 @@ import perfdata from '../assets/perfData.json';
 
 */
 import axios from 'axios';
+import weekly from "../assets/biweekly.json";
 export default {
   name: 'PerfCalender',
   async created(){
@@ -184,7 +176,12 @@ export default {
     // this.calDate(this.perf[0].perfDay)
     // this.viewDay(this.Date)
     // this.calDayWorkTime(this.perf)
+
+
+
     await this.GetServer();
+
+
     this.calDate_v2(this.Date)
     this.calDayOfData()
     this.calDayWorkTime_v2()
@@ -196,6 +193,17 @@ export default {
   },
   data: function () {
     return {
+      //상단에 날짜를 받아오는 변수
+      getWeekly: [],
+      searchWeekly: weekly.twoWeeksDtos,
+      searchWeekYear: [],
+
+      copySearchWeekly: [],
+
+      selectWeek: weekly.startOfWeek,
+      selectYear: weekly.startOfWeek.slice(0,4),
+
+      selectDay : 0, //실제 파라미터 값으로 들어가는 값
       //axios로 인해서 받은 데이터
       Getperf : [],
       responseCode: 0,
@@ -213,8 +221,8 @@ export default {
       sendDayWorkTime: '',
 
       //받은 데이터
-      perf: [],
-      plan: plandata,
+      perf: [], // ------------------------------------> 실제 get요청을 받는 곳
+      plan: plandata,// ------------------------------------> 실제 get요청을 받는 곳
 
       //보낼 데이터
       DayOfTheWeek: ['Mon', 'Tue', 'Web', 'Thu','Fri','Sat','Sun'],
@@ -241,7 +249,7 @@ export default {
     }
   },
   methods:{
-    // spring 서버와 통신 부분
+    //------------------------------------ AXIOS -------------------------------------------
     async GetServer(){
       
         await axios.get("/api/performances",{withCredentials : true})
@@ -258,6 +266,76 @@ export default {
             console.log(response);
           })
       
+    },
+    // 상단 검색 버튼을 누르면 실행되는 메서드
+    async SearchDate(){
+      await axios.get('/api/plans',{
+        params:{
+          day: this.selectWeek
+        },withCredentials:true
+      })
+          .then((res)=>{
+            if(res.data.code != 1000){
+              this.plan = res.data.result;
+            }else{
+              alert(res.data.message)
+            }
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
+    },
+    //------------------------------------ AXIOS -------------------------------------------
+    calNowDate(){
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      if(month<10){
+        this.selectDay = (year*10000)+(month*100)+day;
+      }else{
+        this.selectDay = (year*1000)+(month*100)+day;
+      }
+    },
+
+    calSelectYear(){
+      var index = 0;
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(index === 0 ){
+          this.searchWeekYear[index] = this.searchWeekly[i].year
+          index++;
+        }
+
+        var selectyear = 0, datayear = 0;
+
+        selectyear = Number(this.searchWeekYear[index-1])
+        datayear=Number(this.searchWeekly[i].year)
+
+        if(selectyear < datayear){
+          this.searchWeekYear.push(this.searchWeekly[i].year)
+          index++;
+        }
+      }
+    },
+
+    calSelectWeek(){
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        this.copySearchWeekly.push({
+          year: this.searchWeekly[i].year,
+          fromdt: this.searchWeekly[i].fromdt,
+          content: this.searchWeekly[i].content
+        })
+      }
+      console.log('week 데이터',this.copySearchWeekly)
+
+      for(var i = 0;i<this.copySearchWeekly.length;i++){
+        if(this.selectYear != this.copySearchWeekly[i].year){
+          this.copySearchWeekly.splice(i,1);
+        }
+      }
+      console.log('대조군',this.selectYear);
+      console.log('결과 값',this.copySearchWeekly);
     },
     showViewModal(index){
       var tasknum = 0;
@@ -411,9 +489,6 @@ export default {
       }
 
     },
-    sendData(){
-      //날짜 검색 부분에 데이터 전송  
-    }
 
 
     //------------------------------------------------------------------------ 삭제 요망

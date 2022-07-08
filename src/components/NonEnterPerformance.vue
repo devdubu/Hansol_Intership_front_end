@@ -14,18 +14,16 @@
                         <span class="ml-4 text-white">주 시작일</span>
                     </div>
                     <div class="mt-1.5 ml-4">
-                        <select>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
+                        <select v-model="selectYear">
+                            <option v-for="year in searchYear" :value="year">{{ year }}</option>
                         </select>
-                    </div>                    
-                    
+                    </div>
+                  <div>
+                    <select v-model="selectMonth">
+                      <option v-for="month in searchMonth" :value="month.value">{{ month.text }}</option>
+                    </select>
+                  </div>
                 </div>
-                
                 <div class="flex">
                     <div class="flex">
                         <div class="mt-1.5">
@@ -105,10 +103,29 @@
 <script>
 import noenter from '../assets/nonEnterData.json';
 import axios from "axios";
+import weekly from '../assets/biweekly.json'
+
 export default {
   name: 'NonEnterPerformance',
   data(){
     return{
+      //상단 날짜 검색에 관한 데이터
+      searchWeekly: weekly.twoWeeksDtos,
+      searchYear: [],
+      searchMonth: [
+        {text: '1월', value: '01'},
+        {text: '2월', value: '02'},
+        {text: '3월', value: '03'},
+        {text: '4월', value: '05'},
+        {text: '6월', value: '06'},
+        {text: '7월', value: '07'},
+        {text: '8월', value: '09'},
+        {text: '10월', value: '10'},
+        {text: '11월', value: '11'},
+        {text: '12월', value: '12'}],
+      selectMonth: '',
+      selectYear: weekly.startOfWeek.slice(0,4),
+
       //axios로 인해서 받은 데이터
       getNoEnter : [],
       responseCode: 0,
@@ -117,8 +134,14 @@ export default {
       noEnter : noenter,
     }
   },
+  async mounted(){
+    await this.GetWeekData();
+    this.calSelectYear();
+    await this.getNoEnter();
+  },
   methods:{
-   async getNoEnter(){
+    //------------------------------------ AXIOS -------------------------------------------
+    async getNoEnter(){
 
      const date = new Date();
 
@@ -142,7 +165,59 @@ export default {
            }
 
          })
-   }
+   },
+    async GetWeekData(){
+      await axios.get('/api/biweekly',{withCredentials: true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              this.searchWeekly = res.data.result.twoWeeksDtos;
+              console.log(this.searchWeekly)
+            }else{
+              alert(res.data.message);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    },
+    async SearchDate(){
+      await axios.get('/api/performances/noenters',{
+        params:{
+          year: this.searchYear,
+          month : this.selectMonth,
+        },withCredentials:true
+      })
+          .then((res)=>{
+            if(res.data.code != 1000){
+              this.plan = res.data.result;
+            }else{
+              alert(res.data.message)
+            }
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
+    },
+    //------------------------------------ AXIOS -------------------------------------------
+    calSelectYear(){
+      var index = 0;
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(index === 0 ){
+          this.searchYear[index] = this.searchWeekly[i].year
+          index++;
+        }
+
+        var selectyear = 0, datayear = 0;
+
+        selectyear = Number(this.searchYear[index-1])
+        datayear=Number(this.searchWeekly[i].year)
+
+        if(selectyear < datayear){
+          this.searchYear.push(this.searchWeekly[i].year)
+          index++;
+        }
+      }
+    },
   },
   components: {
   }

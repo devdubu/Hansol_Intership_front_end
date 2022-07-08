@@ -27,7 +27,6 @@
                         </select>
                       </div>
                     </div>
-                    
                 </div>
 
             </div>
@@ -37,7 +36,7 @@
                   <p class="text-left	">결제 시간 <span class="text-rose-500">{{ approvalTime }}Hr</span></p>
                 </div>
             </div>
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <div class="flex text-white" style="max-width:1265px">
             <div class="ml-7 mt-7 text-xl">
@@ -235,8 +234,7 @@ export default {
           await axios.get("api/plans",{
             params:{
               day: this.selectDay,
-            }
-          },{withCredentials : true})
+            },withCredentials : true})
           .then((res)=>{
             if(res.data.code === 1000){
               this.plan = res.data.result;
@@ -248,6 +246,24 @@ export default {
           .catch((res)=>{
             console.error(res)
           })
+      },
+      // 상단 검색 버튼을 누르면 실행되는 메서드
+      async SearchDate(){
+        await axios.get('/api/plans',{
+          params:{
+            day: this.selectWeek
+          },withCredentials:true
+        })
+            .then((res)=>{
+              if(res.data.code != 1000){
+                this.plan = res.data.result;
+              }else{
+                alert(res.data.message)
+              }
+            })
+            .catch((res)=>{
+              console.error(res)
+            })
       },
       //------------------------------------ AXIOS -------------------------------------------
       calNowDate(){
@@ -300,8 +316,6 @@ export default {
         }
         console.log('대조군',this.selectYear);
         console.log('결과 값',this.copySearchWeekly);
-
-
       },
       showViewModal(index){
         
