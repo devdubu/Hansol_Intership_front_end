@@ -139,6 +139,7 @@ import plandata from '../assets/planData.json';
 
 */
 import axios from 'axios';
+import plan from '../assets/planData.json'
 import weekly from '../assets/biweekly.json'
 export default {
     name: 'PlanCalender',
@@ -147,10 +148,10 @@ export default {
     // this.viewDay(this.Date)
     await this.calNowDate()
 
-    await this.GetData()
+    // await this.GetData()
 
-    this.calSelectWeek()
     this.calSelectYear()
+    this.calSelectWeek()
 
 
     this.calDate_v2(this.plan[0].planDay, this.Date)
@@ -163,6 +164,8 @@ export default {
   },
   data: function () {
     return {
+      //AXIOS로 받아오는 데이터
+
       //상단에 날짜를 받아오는 변수
       getWeekly: [],
       searchWeekly: weekly.twoWeeksDtos,
@@ -173,8 +176,10 @@ export default {
       selectWeek: weekly.startOfWeek,
       selectYear: weekly.startOfWeek.slice(0,4),
 
-      nowDate: 0,
-      strNowDate: '',
+      selectDay : 0, //실제 파라미터 값으로 들어가는 값
+
+
+      plan: plan, // AXIOS, 실제 데이터를 받는 부분 ------------------------------------------------>
 
       showGetData: [],
       //
@@ -189,8 +194,7 @@ export default {
       sendDetailInfo: [],
       sendDayWorkTime: '',
 
-      //받은 데이터
-      plan: [],
+
 
       //보낼 데이터
       DayOfTheWeek: ['Mon', 'Tue', 'Web', 'Thu','Fri','Sat','Sun'],
@@ -210,19 +214,7 @@ export default {
   },
     methods:{
 
-      async calNowDate(){
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-
-        if(month<10){
-          this.nowDate = (year*10000)+(month*100)+day;
-        }else{
-          this.nowDate = (year*1000)+(month*100)+day;
-        }
-        this.strNowDate = String(this.nowDate);
-      },
+      //------------------------------------ AXIOS -------------------------------------------
       async GetWeekData(){
         await axios.get('/api/biweekly',{withCredentials: true})
             .then((res)=>{
@@ -238,42 +230,11 @@ export default {
               console.error(res);
             })
       },
-      calSelectYear(){
-        var index = 0;
-        for(var i = 0;i<this.searchWeekly.length;i++) {
-          if (index === 0) {
-            this.searchWeekYear.push(this.searchWeekly[i].year);
-            index++;
-          } else if (this.searchWeekYear[index] != this.searchWeekly[i].year) {
-            this.searchWeekYear.push(this.searchWeekly[i].push)
-            index++;
-          }
-        }
-        console.log(this.searchWeekYear);
-      },
-      calSelectWeek(){
-        console.log(this.searchWeekly)
-        for(var i = 0;i<this.searchWeekly.length;i++){
-          this.copySearchWeekly.push({
-            year: this.searchWeekly[i].year,
-            fromdt: this.searchWeekly[i].fromdt,
-            content: this.searchWeekly[i].content
-          })
-        }
-
-        for(var i = 0;i<this.copySearchWeekly.length;i++){
-          if(this.copySearchWeekly[i].year != this.selectYear){
-            this.copySearchWeekly.splice(i,0);
-            i--;
-          }
-        }
-      },
-
       //AXIOS 로 데이터를 받아와서 vue데이터로 받아오는 방법
       async GetData(){
           await axios.get("api/plans",{
             params:{
-              day: this.nowDate,
+              day: this.selectDay,
             }
           },{withCredentials : true})
           .then((res)=>{
@@ -287,6 +248,60 @@ export default {
           .catch((res)=>{
             console.error(res)
           })
+      },
+      //------------------------------------ AXIOS -------------------------------------------
+      calNowDate(){
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+
+        if(month<10){
+          this.selectDay = (year*10000)+(month*100)+day;
+        }else{
+          this.selectDay = (year*1000)+(month*100)+day;
+        }
+      },
+
+      calSelectYear(){
+        var index = 0;
+        for(var i = 0;i<this.searchWeekly.length;i++){
+          if(index === 0 ){
+            this.searchWeekYear[index] = this.searchWeekly[i].year
+            index++;
+          }
+
+          var selectyear = 0, datayear = 0;
+
+          selectyear = Number(this.searchWeekYear[index-1])
+          datayear=Number(this.searchWeekly[i].year)
+
+          if(selectyear < datayear){
+            this.searchWeekYear.push(this.searchWeekly[i].year)
+            index++;
+          }
+        }
+      },
+
+      calSelectWeek(){
+        for(var i = 0;i<this.searchWeekly.length;i++){
+          this.copySearchWeekly.push({
+            year: this.searchWeekly[i].year,
+            fromdt: this.searchWeekly[i].fromdt,
+            content: this.searchWeekly[i].content
+          })
+        }
+        console.log('week 데이터',this.copySearchWeekly)
+
+        for(var i = 0;i<this.copySearchWeekly.length;i++){
+          if(this.selectYear != this.copySearchWeekly[i].year){
+            this.copySearchWeekly.splice(i,1);
+          }
+        }
+        console.log('대조군',this.selectYear);
+        console.log('결과 값',this.copySearchWeekly);
+
+
       },
       showViewModal(index){
         
