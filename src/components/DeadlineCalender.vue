@@ -229,7 +229,7 @@ export default {
           responseCode: 0,
           backMessage: '',
 
-          deadline: deadline,
+          deadline: deadline, // ----------------------------------------------------> axios get 요청을 받는 변수 부분
 
           setCalenderTime : 0,
           //실제 캘린더에 적용할 데이터들

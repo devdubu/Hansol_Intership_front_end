@@ -220,6 +220,8 @@
                 </div>
               </div>
             </div>
+            <p>{{ checkOutMember }}</p>
+            <p>{{checkDate}}</p>
           </div>
       </div>
 
@@ -237,7 +239,7 @@ export default {
 
       nowdate: 0,
       //원본 데이터 파일
-      approval: [],
+      approval: approval, // ----------------------------------------------> axios get 요청 데이터를 받는 곳
       //화면이 보여주는 영역
 
       Date: [],
@@ -260,13 +262,17 @@ export default {
           "memberids": [],
           "days": []
         },
+      copySendData:{
+        "memberids": [],
+        "days":[]
+      },
       ended:[]
 
 
     }
   },
   async mounted() {
-    await this.GetApprove();
+    // await this.GetApprove();
     this.SetCopyData()
     this.calDate(this.CopyApprovalDate[0].perfDay);
     this.extractionDeadline();
@@ -325,13 +331,14 @@ export default {
     //------------------------------------------- 데이터를 화면에 출력해주는 함수들 --------------------------------
 
     calDate(startdate){
+      console.log(this.CopyApprovalDate)
       var Deadline =[]
       for(var i = 0;i<this.CopyApprovalDate.length;i++){
         if(this.CopyApprovalDate[0].memberId === this.CopyApprovalDate[i].memberId){
           Deadline.push(this.CopyApprovalDate[i].isDeadline);
         }
       }
-
+      console.log(Deadline)
      for(var i = 0;i<7;i++){
        this.Date[i] = startdate+i;
        this.SendDate.push({
@@ -409,11 +416,26 @@ export default {
     },
     //--------------------------------------------------- 데이터를 수집하는 함수 --------------------------------
     async SendApprovalData(){
-      this.sendData.days = this.checkDate;
-      const member = this.sendData.memberids;
-      const checkoutMember = this.checkOutMember;
-      this.sendData.memberids = member.filter(x=>!checkoutMember.includes(x))
 
+      this.copySendData.memberids = [...this.sendData.memberids];
+      this.copySendData.days = [...this.sendData.days];
+
+      console.log(this.copySendData)
+
+      this.copySendData.days = [...this.checkDate];
+      const member = [...this.copySendData.memberids];
+      this.copySendData.memberids = [...member.filter(x=>!this.checkOutMember.includes(x))] //승인 제외 reverse를 구하는 함수
+
+      console.log(this.copySendData)
+
+      if(this.copySendData.days.length === 0){
+        alert('날짜를 선택 해주세요')
+        return
+      }
+      if(this.copySendData.memberids.length === 0){
+        alert('팀원을 선택 해주세요')
+        return;
+      }
 
       for(var i = 0;i<this.checkDate.length;i++){
         if(this.checkDate[i].isDeadline === '1'){
@@ -422,13 +444,13 @@ export default {
         }
       }
 
-      var totalMember = this.sendData.memberids.length;
+      var totalMember = this.copySendData.memberids.length;
 
 
       for(var j = 0;j<totalMember;j++){
         var memberData = []
         for(var i = 0;i<this.CopyApprovalDate.length;i++){
-          if(this.sendData.memberids[j] === this.CopyApprovalDate[i].memberId){
+          if(this.copySendData.memberids[j] === this.CopyApprovalDate[i].memberId){
             memberData.push({
               memberId: this.CopyApprovalDate[i].memberId,
               signStatus: this.CopyApprovalDate[i].signStatus
@@ -438,7 +460,6 @@ export default {
         this.checkStatus.push(memberData);
       }
 
-      var checkIndex = [];
       for(var i = 0;i<totalMember;i++){
         for(var j = 0;j<this.checkDate.length;j++){
 
@@ -455,7 +476,7 @@ export default {
       // memberid를 비교해서 결과물을 추출해본다.
 
 
-      console.log(this.sendData)
+      console.log(this.copySendData)
 
 
 
@@ -475,7 +496,7 @@ export default {
       //시작 날짜도 보내야함
       await this.SendApprovalData()
 
-      await axios.post('/api/approvals', this.sendData,{withCredentials:true})
+      await axios.post('/api/approvals', this.copySendData,{withCredentials:true})
           .then((res)=>{
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
@@ -490,7 +511,7 @@ export default {
           });
     },
     async CancelApprovalFunc(){
-      await axios.post('/api/approvals/cancel',this.sendData,{withCredentials:true})
+      await axios.post('/api/approvals/cancel',this.copySendData,{withCredentials:true})
           .then((res)=>{
             if(res.data.code === 1000){
               alert('승인 취소가 완료 되었습니다.')
@@ -503,7 +524,7 @@ export default {
           })
     },
     async ResetApprovalFunc(){
-      await axios.post('/api/approvals/reset',this.sendData,{withCredentials: true})
+      await axios.post('/api/approvals/reset',this.copySendData,{withCredentials: true})
           .then((res)=>{
             if(res.data.code === 1000){
               alert('승인이 반려되었습니다.')

@@ -6,8 +6,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "1"
+    "isHoliday": "N",
+    "isDeadline": "1"
   },
   {
     "perfDay" : 20220704,
@@ -16,8 +16,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "1"
+    "isHoliday": "N",
+    "isDeadline": "1"
   },
   {
     "perfDay" : 20220705,
@@ -26,8 +26,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "1"
+    "isHoliday": "N",
+    "isDeadline": "1"
   },
   {
     "perfDay" : 20220705,
@@ -36,8 +36,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220706,
@@ -46,8 +46,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220706,
@@ -56,8 +56,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220707,
@@ -66,8 +66,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220707,
@@ -76,8 +76,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220708,
@@ -86,8 +86,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220708,
@@ -96,8 +96,8 @@
     "signStatus": 1,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220709,
@@ -106,8 +106,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220709,
@@ -116,8 +116,8 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "N",
-    "is_Deadline": "0"
+    "isHoliday": "N",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220710,
@@ -126,8 +126,8 @@
     "signStatus": 2,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "Y",
-    "is_Deadline": "0"
+    "isHoliday": "Y",
+    "isDeadline": "0"
   },
   {
     "perfDay" : 20220710,
@@ -136,7 +136,7 @@
     "signStatus": 3,
     "totalTime" : 40.0,
     "dayHour": 8.0,
-    "is_Holiday": "Y",
-    "is_Deadline": "0"
+    "isHoliday": "Y",
+    "isDeadline": "0"
   }
 ]
