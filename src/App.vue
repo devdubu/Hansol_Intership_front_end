@@ -71,7 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <router-view @Grade='Grade'/>
+          <router-view/>
       </div>
     </div>
   </div>
@@ -85,6 +85,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
 
 /* add each imported icon to the library */
 library.add( faXmark, faPlus)
@@ -93,6 +94,21 @@ library.add( faXmark, faPlus)
 export default {
   name: 'App',
   emits:['Grade'],
+  async beforeCreate(){
+    await console.log('Grade실행4')
+    await this.Grade()
+  },
+  beforeRouteEnter(){
+    console.log('Grade실행2')
+
+  },
+  async beforeUpdate(){
+    await console.log('Grade실행')
+    await this.Grade()
+  },
+  async beforeRouteUpdate(){
+    await console.log('Grade실행3')
+  },
   data(){
     return{
       LM_manoutToggle : true,
@@ -111,11 +127,8 @@ export default {
       is_manager : false,
     }
   },
-  mounted(){
-    this.Grade()
-  },
   methods:{
-    Grade(){
+    async Grade(){
       this.grade = localStorage.getItem('grade')
       switch(this.grade){
         case 'ADMIN':
@@ -144,11 +157,21 @@ export default {
       }
 
     },
-    Logout(){
+    async Logout(){
+      localStorage.setItem('memberId', '0')
       localStorage.setItem('memberNm','No');
       localStorage.setItem('grade','GEUST');
       this.Grade()
-      this.$router.push('/login')
+      var memberId = localStorage.getItem('memberId')
+      axios.post('/api/members/logout',memberId,{withCredentials: true})
+      .then((res)=>{
+        alert('로그아웃 되었습니다.')
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+      this.$router.push('/')
+      
     },
     smallMenuToggle(menuName){
       switch(menuName){

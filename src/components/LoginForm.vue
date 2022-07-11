@@ -1,3 +1,9 @@
+<!--
+
+로그인 화면
+
+-->
+
 <template id="login-form">
   <div class="login-wrapper">
     <div class="login-left">
@@ -17,7 +23,7 @@
 
       </div> 
       <div class="button-area">
-        <button class="btn btn-primary pull-right" @click="login()" >Login</button>
+          <button class="btn btn-primary pull-right " @click="login()">Login</button>
       </div>
     </form>
   </div>
@@ -67,12 +73,12 @@ export default {
           if(this.responseCode === 1000){
             alert("로그인에 성공하였습니다.")
             // this.$session.set('grade', 'memberGrade')
+            localStorage.setItem('memberId', this.userData.memberId)
             localStorage.setItem('memberNm', this.userData.memberNm)
             localStorage.setItem('grade', this.userData.grade)
 
             console.log(this.userData)
-            this.$emit('Grade')
-            this.$router.push('/performance')
+            window.location.href = "http://localhost:3000/performance"
             // this.$session.start()
             // this.$session.set('user', response.headers)
           }else{

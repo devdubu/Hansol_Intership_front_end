@@ -1,6 +1,6 @@
 <!--
 
-변수 변경 완료
+실적 캘린더
 
 -->
 
@@ -167,17 +167,15 @@ import axios from 'axios';
 import weekly from "../assets/biweekly.json";
 export default {
   name: 'PerfCalender',
-  async created(){
-    // await this.GetServer();
-    
-    // console.log(this.$session.get('memberGrade'))
-  },
   async mounted(){
     // this.calDate(this.perf[0].perfDay)
     // this.viewDay(this.Date)
     // this.calDayWorkTime(this.perf)
 
 
+    await this.GetWeekData()
+    this.calSelectYear()
+    this.calSelectWeek()
 
     await this.GetServer();
 
@@ -255,8 +253,14 @@ export default {
         await axios.get("/api/performances",{withCredentials : true})
           .then((response)=>{
             this.perf = response.data.result;
+            console.log(this.perf)
             this.responseCode = response.data.code;
             this.backMessage = response.data.message;
+            if(this.responseCode === 2009){
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
+            }
             console.log(response)
             if(this.responseCode != 1000){
               alert(this.backMessage)
@@ -267,6 +271,22 @@ export default {
           })
       
     },
+    async GetWeekData(){
+        await axios.get('/api/biweekly',{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                this.searchWeekly = res.data.result.twoWeeksDtos;
+                this.selectWeek = res.data.result.startOfWeek;
+                this.selectYear = this.selectWeek.slice(0,4);
+                console.log('주간 데이터',this.getWeekly)
+              }else{
+                alert(res.data.message);
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
     // 상단 검색 버튼을 누르면 실행되는 메서드
     async SearchDate(){
       await axios.get('/api/plans',{
@@ -300,43 +320,41 @@ export default {
     },
 
     calSelectYear(){
-      var index = 0;
-      for(var i = 0;i<this.searchWeekly.length;i++){
-        if(index === 0 ){
-          this.searchWeekYear[index] = this.searchWeekly[i].year
-          index++;
+        var index = 0;
+        for(var i = 0;i<this.searchWeekly.length;i++){
+          if(index === 0 ){
+            this.searchWeekYear[index] = this.searchWeekly[i].year
+            index++;
+          }
+
+          var selectyear = 0, datayear = 0;
+
+          selectyear = Number(this.searchWeekYear[index-1])
+          datayear=Number(this.searchWeekly[i].year)
+
+          if(selectyear < datayear){
+            this.searchWeekYear.push(this.searchWeekly[i].year)
+            index++;
+          }
+        }
+      },
+
+      calSelectWeek(){
+        for(var i = 0;i<this.searchWeekly.length;i++){
+          this.copySearchWeekly.push({
+            year: this.searchWeekly[i].year,
+            fromdt: this.searchWeekly[i].fromdt,
+            content: this.searchWeekly[i].content
+          })
         }
 
-        var selectyear = 0, datayear = 0;
-
-        selectyear = Number(this.searchWeekYear[index-1])
-        datayear=Number(this.searchWeekly[i].year)
-
-        if(selectyear < datayear){
-          this.searchWeekYear.push(this.searchWeekly[i].year)
-          index++;
+        for(var i = 0;i<this.copySearchWeekly.length;i++){
+          if(this.selectYear != this.copySearchWeekly[i].year){
+            this.copySearchWeekly.splice(i,1);
+            i--;
+          }
         }
-      }
-    },
-
-    calSelectWeek(){
-      for(var i = 0;i<this.searchWeekly.length;i++){
-        this.copySearchWeekly.push({
-          year: this.searchWeekly[i].year,
-          fromdt: this.searchWeekly[i].fromdt,
-          content: this.searchWeekly[i].content
-        })
-      }
-      console.log('week 데이터',this.copySearchWeekly)
-
-      for(var i = 0;i<this.copySearchWeekly.length;i++){
-        if(this.selectYear != this.copySearchWeekly[i].year){
-          this.copySearchWeekly.splice(i,1);
-        }
-      }
-      console.log('대조군',this.selectYear);
-      console.log('결과 값',this.copySearchWeekly);
-    },
+      },
     showViewModal(index){
       var tasknum = 0;
       
@@ -344,7 +362,6 @@ export default {
       for(var i = 0;i<this.perf.length;i++){
         if(this.Date[index] === this.perf[i].perfDay){
           this.sendDetailInfo[tasknum] = this.perf[i];
-          console.log(this.sendDetailInfo)
           tasknum++;
         }
       }
@@ -360,7 +377,6 @@ export default {
       for(var i = 0;i<this.twoWeek;i++){
         date[i] = this.perf[0].perfDay+i;
       }
-       console.log(this.perf[0].perfDay)
       //view 데이터에 인풋
       var viewdate = []
       for(var i = 0;i<this.twoWeek;i++){
@@ -368,7 +384,6 @@ export default {
         viewdate[i] = viewdate[i].substr(6, 2);
       }
       this.viewDate = viewdate;
-      console.log(this.Date)
 
     },
 
@@ -376,21 +391,19 @@ export default {
     calDayOfData(){
       var perftindex = 0;
       for(var i = 0; i<this.perf.length;i++){
-        if(this.perf[i].seq === 1 || this.perf[i].seq){
+        if(this.perf[i].seq === 1 || this.perf[i].seq === 0){
           this.DayOfData[perftindex] = this.perf[i]; // seq 가 없을 수도 있으니, 그걸로 예외 처리
           perftindex++;
         }
-      console.log("calDayOfData",this.DayOfData)
       }
 
       var planindex = 0;
       for(var i =0;i<this.plan.length;i++){
-        if(this.plan[i].seq === 1){
+        if(this.perf[i].seq === 1 || this.perf[i].seq === 0){
           this.planDayOfDate[planindex] = this.plan[i];
           planindex++
         }
       }
-      console.log(this.planDayOfDate)
     },
     calTotalWeekTime(){
       var perfTotalHour = 0, planTotalHour = 0;
@@ -457,20 +470,16 @@ export default {
     },
     //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
     DistinguishHoliday(){
-      console.log(this.DayOfData[0].isHoliday)
-      for(var i = 0;i<this.twoWeek.length;i++){
+      for(var i = 0;i<this.DayOfData.length;i++){
         if(this.DayOfData[i].isHoliday === "Y"){
           this.HolidayCheck[i] = false;
         }else{
           this.HolidayCheck[i] = true;
         }
       }
-      
     },
     calApprovalTime(){
-      console.log("ApprovalTime()",this.DayOfData)
       for(var i = 0;i<this.twoWeek;i++){
-        console.log(i,this.twoWeek,this.DayOfData[i])
         if(this.DayOfData[i].isHoliday === 'N'){
           this.approvalTime += this.DayOfData[i].dayHour;
         }

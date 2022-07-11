@@ -1,6 +1,7 @@
 <!--
-개선사항
-  1. checkbox로 교체하기
+
+마감 관리
+
 -->
 <template>
     <div>

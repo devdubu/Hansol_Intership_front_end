@@ -145,13 +145,13 @@ export default {
   async mounted(){
     // this.calDate(this.plan[0].planDay)
     // this.viewDay(this.Date)
-    await this.calNowDate()
+    this.calNowDate()
 
     // await this.GetData()
-
+    await this.GetWeekData()
     this.calSelectYear()
     this.calSelectWeek()
-
+    await this.GetData()
 
     this.calDate_v2(this.plan[0].planDay, this.Date)
     this.calDayOfData()
@@ -167,18 +167,18 @@ export default {
 
       //상단에 날짜를 받아오는 변수
       getWeekly: [],
-      searchWeekly: weekly.twoWeeksDtos,
+      searchWeekly: '', // AXIOS, twoWeekDtos 데이터 받는 부분 ------------------------------------------------>
       searchWeekYear: [],
 
       copySearchWeekly: [],
 
-      selectWeek: weekly.startOfWeek,
-      selectYear: weekly.startOfWeek.slice(0,4),
+      selectWeek: '',// AXIOS, startOfWeek 데이터 받는 부분 ------------------------------------------------>
+      selectYear: '',// AXIOS, startOfWeek.slice(0,4) 데이터 받는 부분 ------------------------------------------------>
 
       selectDay : 0, //실제 파라미터 값으로 들어가는 값
 
 
-      plan: plan, // AXIOS, 실제 데이터를 받는 부분 ------------------------------------------------>
+      plan: [], // AXIOS, 실제 데이터를 받는 부분 ------------------------------------------------>
 
       showGetData: [],
       //
@@ -218,9 +218,10 @@ export default {
         await axios.get('/api/biweekly',{withCredentials: true})
             .then((res)=>{
               if(res.data.code === 1000){
-                this.getWeekly = res.data.result.twoWeeksDtos;
+                this.searchWeekly = res.data.result.twoWeeksDtos;
                 this.selectWeek = res.data.result.startOfWeek;
-                console.log(this.getWeekly)
+                this.selectYear = this.selectWeek.slice(0,4);
+                console.log('주간 데이터',this.getWeekly)
               }else{
                 alert(res.data.message);
               }
@@ -312,6 +313,7 @@ export default {
         for(var i = 0;i<this.copySearchWeekly.length;i++){
           if(this.selectYear != this.copySearchWeekly[i].year){
             this.copySearchWeekly.splice(i,1);
+            i--;
           }
         }
         console.log('대조군',this.selectYear);
@@ -353,7 +355,7 @@ export default {
       calDayOfData(){
         var index = 0;
         for(var i = 0; i<this.plan.length;i++){
-          if(this.plan[i].seq === 1){
+          if(this.plan[i].seq === 1 || this.plan[i] === 0){
             this.DayOfData[index] = this.plan[i];
             index++;
           }
@@ -382,7 +384,7 @@ export default {
       printPrevWorkType(plan) {
         let total = this.plan.length;
 
-        for(var i = 0;i<this.twoWeek;i++){
+        for(var i = 0;i<this.DayOfData.length;i++){
           var task = [];
           for(var j = 0;j<total;j++){
             if(this.Date[i] === plan[j].planDay){//해당 일자에서
@@ -398,8 +400,8 @@ export default {
       },
       //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
       DistinguishHoliday(){
-        console.log(this.DayOfData)
-        for(var i = 0;i<this.twoWeek;i++){
+        console.log('DayOfDate',this.DayOfData)
+        for(var i = 0;i<this.DayOfData.length;i++){
           if(this.DayOfData[i].isHoliday === 'Y'){
             this.HolidayCheck[i] = false;
           }else{
@@ -408,14 +410,14 @@ export default {
         }
       },
       calApprovalTime(){
-        for(var i = 0;i<this.twoWeek;i++){
+        for(var i = 0;i<this.DayOfData.length;i++){
           if(this.DayOfData[i].isHoliday === 'N'){
             this.approvalTime += this.DayOfData[i].dayHour;
           }
         }
       },
       DistinguishStatus(){
-        for(var i = 0;i<this.twoWeek;i++){
+        for(var i = 0;i<this.DayOfData.length;i++){
          if(this.DayOfData[i].enrollYn === "2"){
            this.status[i] = true;
          }
