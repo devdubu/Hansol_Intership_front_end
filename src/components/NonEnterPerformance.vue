@@ -162,8 +162,14 @@ export default {
            if(this.responseCode != 1000){
              alert(this.backMessage);
              this.$router.push('/');
+           }else{
+             this.$emit("Logout")
+             this.$router.push('/');
            }
 
+         })
+         .catch((res)=>{
+           console.error(res)
          })
    },
     async GetWeekData(){

@@ -71,7 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <router-view :Grade="Grade()" :Logout="Logout()"/>
+          <router-view :Grade="Grade" :Logout="Logout"/>
       </div>
     </div>
   </div>
@@ -93,10 +93,10 @@ library.add( faXmark, faPlus)
 
 export default {
   name: 'App',
-  emits:['Grade'],
   mounted() {
     this.Grade();
   },
+  emits: ['Grade', 'Logout'],
   data(){
     return{
       LM_manoutToggle : true,
@@ -115,15 +115,24 @@ export default {
       is_manager : false,
     }
   },
+  watch:{
+    $route(to, from){
+      if(to.path != from.path){
+        this.Grade()
+      }
+
+    }
+  },
   methods:{
-    async Grade(){
+    Grade(){
       this.grade = localStorage.getItem('grade')
+
       switch(this.grade){
         case 'ADMIN':
           this.is_manager = true;
           this.is_leader = true;
           this.is_employee = true;
-          this.is_logined - true;
+          this.is_logined = true;
           break;
         case 'MANAGER':
           this.is_manager = false;

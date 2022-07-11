@@ -224,6 +224,8 @@ export default {
                 console.log('주간 데이터',this.getWeekly)
               }else{
                 alert(res.data.message);
+                this.$emit("Logout");
+                this.$router.push('/')
               }
             })
             .catch((res)=>{

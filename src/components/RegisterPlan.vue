@@ -12,10 +12,10 @@
   <div class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white">
     <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
-        <p>계획 정보 : 06월 3주 ~ 07월 1주 (2022.6.20 ~ 2022.7.3)</p>
+        <p>계획 정보 : 06월 3주 ~ 07월 1주 (2022.6.20 ~ 2022.7.3)</p><!--오늘 데이터를 전달 받아야함 props로 해결하면 될듯-->
       </div>
       <div class="grow"></div>
-      <div class="mt-5 mr-3"><p>평일 80.0시간</p></div>
+      <div class="mt-5 mr-3"><p>평일 {{ WeekWorkTime }}시간</p></div>
     </div>
     <div class="flex mt-4" style="width: 1270px">
       <div class="grow"></div>
@@ -46,15 +46,15 @@
               <p>재택근무<span><input type="checkbox"></span></p>
             </div>
           </div>
-            <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
+            <div class="ml-3 mt-5 pt-2" style="height:100px; width: 800px;">
               <div class="flex">
                 <div class="mr-3 text-black">
                   <select v-model="Task.groupSubId" @change="onChangeSelectMain($event, index)" style="width: 300px">
                     <option v-for="main in mainGroup" :value="main.groupSubId">{{ main.codeMainNm }}</option>
                   </select>
                 </div>
-                <div class="text-black">
-                  <select v-model="Task.codeId" @change="onChangeSelectSub($event, index)" style="width: 450px">
+                <div class="text-black" style="width: 450px">
+                  <select  v-model="Task.codeId" @change="onChangeSelectSub($event, index)" style="width: 450px">
                     <option v-for="subtask in subTaskCopy[index]" :value="subtask.codeId">{{ subtask.codeSubNm }}</option>
                   </select>
                 </div>
@@ -121,6 +121,7 @@ export default {
       sendData: [],
 
       //화면에 뿌려주는 변수
+      WeekWorkTime: 0,
       viewData: [{
         Week: "7월 1주차 ~ 7월 2주차",
         seq: 1,
@@ -288,6 +289,7 @@ export default {
         this.taskTime.push(this.viewData[i].taskHour)
       }
       this.totalDayWorkTime = this.viewData[0].dayHour;
+      this.WeekWorkTime = this.taskTime[0]*10
       this.RenderTime_v2()
       
     },
@@ -306,6 +308,12 @@ export default {
       }
       this.totalDayWorkTime = sumTime
 
+      console.log(index)
+      var weekSum = 0
+      for(var i = 0;i<this.taskTime.length;i++){
+        weekSum += this.taskTime[i]*10
+      }
+      this.WeekWorkTime = weekSum
       this.calTime_v2();
 
     },//시간 계산을 해주는 메서드 -> 시간 계산이 필요할 때 활용하면 된다.
@@ -368,6 +376,9 @@ export default {
         this.viewData.pop();
       }else{
         alert('삭제할 수 없습니다.');
+      }
+      if(this.taskTime.length>1){
+        this.taskTime.pop()
       }
     },
     async PostData(status){

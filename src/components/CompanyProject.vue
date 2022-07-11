@@ -95,7 +95,7 @@
                   <!--SAP에 등록 날짜 임으로 ajax 요청 후에 교체 요망-->
                   <!---->
                   <div class="interval bg-slate-600  border-l" style="width:120px;">
-                    <button v-if="IsMyProject(index)" class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
+                    <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
                   </div>
                 </div>
               </div>
@@ -145,20 +145,40 @@ export default {
             console.error(res);
           })
     },
+    async PostData(projectId){
+      await axios.post('/api/project',{
+        memberId: localStorage.getItem('memberId')
+      },{
+        params:{
+          projectId: projectId,
+        },withCredentials:true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              alert('추가 되었습니다.')
+            }else{
+              alert(res.data.message);
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+      await this.GetProject();
+      this.writeDate();
+    },
     writeDate(){
      for(var i = 0; i<this.proj.length;i++){
-      this.startedAt[i] = [this.proj[i].startedAt.slice(0,4),'-',this.proj[i].startedAt.slice(4,6),'-',this.proj[i].startedAt.slice(6,8)].join('')       
-      console.log(this.startedAt[i])
+      this.startedAt[i] = [this.proj[i].startedAt.slice(0,4),'-',this.proj[i].startedAt.slice(4,6),'-',this.proj[i].startedAt.slice(6,8)].join('')
       this.endedAt[i] = [this.proj[i].endedAt.slice(0,4),'-',this.proj[i].endedAt.slice(4,6),'-',this.proj[i].endedAt.slice(6,8)].join('');
      }
    },
-   IsMyProject(index){
-    if(this.proj[index].isMyProject === '0'){
-      return true;
-    }else{
+   IsMyProject(project){
+    if(project === '1'){
       return false;
+    }else{
+      return true;
     }
    },
+
 
   },
   components: {

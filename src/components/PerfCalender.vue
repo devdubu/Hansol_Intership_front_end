@@ -256,19 +256,16 @@ export default {
           params:{
             day: this.selectWeek
           },withCredentials : true})
-          .then((response)=>{
-            this.perf = response.data.result;
+          .then((res)=>{
+            console.log(res)
+            this.perf = res.data.result;
             console.log(this.perf)
-            this.responseCode = response.data.code;
-            this.backMessage = response.data.message;
-            if(this.responseCode === 2009){
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
-            }
-            console.log(response)
+            this.responseCode = res.data.code;
+            this.backMessage = res.data.message;
             if(this.responseCode != 1000){
               alert(this.backMessage)
+              this.$emit("Logout")
+              this.$router.push('/');
             }
           })
           .catch((response)=>{

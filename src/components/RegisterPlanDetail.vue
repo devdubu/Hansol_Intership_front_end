@@ -272,25 +272,25 @@ export default {
       var MainArr = []
 
       for (var i = 0; i < this.taskType.length; i++) {
-        if (this.taskType[i].group_id === 'TR001') {
+        if (this.taskType[i].groupId === 'TR001') {
           MainArr.push({
-            groupMainId: this.taskType[i].group_id,
+            groupMainId: this.taskType[i].groupId,
             groupSubId: this.taskType[i].codeId,
-            codeMainNm: this.taskType[i].code_nm
+            codeMainNm: this.taskType[i].codeNm
           });
         } else {
           this.subTask.push({
-            groupSubId: this.taskType[i].group_id,
+            groupSubId: this.taskType[i].groupId,
             codeId: this.taskType[i].codeId,
-            codeSubNm: this.taskType[i].code_nm
+            codeSubNm: this.taskType[i].codeNm
           });
         }
       }
       for (var i = 0; i < this.project.length; i++) {
         MainArr.push({
-          groupMainId: this.project[i].project_code,
+          groupMainId: this.project[i].projectCode,
           groupSubId: 'TR002',
-          codeMainNm: this.project[i].project_nm
+          codeMainNm: this.project[i].projectNm
         });
       }
       for(var i = 0;i<14;i++){
@@ -305,9 +305,9 @@ export default {
     //   var MainArr = []
     //   for (var i = 0; i < this.project.length; i++) {
     //     MainArr.push({
-    //       groupMainId: this.project[i].project_code,
+    //       groupMainId: this.project[i].projectCode,
     //       groupSubId: 'TR002',
-    //       codeMainNm: this.project[i].project_nm
+    //       codeMainNm: this.project[i].projectNm
     //     });
     //   }
     //   for(var i = 0;i<14;i++){
@@ -370,10 +370,10 @@ export default {
       var code = event.target.value;
 
       this.viewData[dateIndex][index].codeId = code;
-
+      console.log(this.subTask)
       for (var i = 0; i < this.subTask.length; i++) {
-        if (this.subTask[dateIndex][i].codeId === code) {
-          this.viewData[dateIndex][index].codeSubNm = this.subTask[dateIndex][i].codeSubNm;
+        if (this.subTask[i].codeId === code) {
+          this.viewData[dateIndex][index].codeSubNm = this.subTask[i].codeSubNm;
         }
       }
     },
@@ -421,6 +421,7 @@ export default {
       this.totalDayWorkTime = sumTime
 
       this.calTime_v2(dateIndex);
+
 
     },//시간 계산을 해주는 메서드 -> 시간 계산이 필요할 때 활용하면 된다.
     calTime_v2(dateIndex){

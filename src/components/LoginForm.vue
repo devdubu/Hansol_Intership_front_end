@@ -76,10 +76,10 @@ export default {
             localStorage.setItem('memberId', this.userData.memberId)
             localStorage.setItem('memberNm', this.userData.memberNm)
             localStorage.setItem('grade', this.userData.grade)
-
+            this.$emit('Grade')
             console.log(this.userData)
             //emit->Grade
-            this.$emit("Grade")
+
 
             this.$router.push('/performance');
             // this.$session.start()
