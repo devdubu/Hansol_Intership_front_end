@@ -8,7 +8,7 @@
       </div>
       <div class="grow bg-emerald-400 flex divide-x divide-dash ">
         <div class="grow"></div>
-        <div class="flex-none w-40 mt-1">
+        <div v-if="is_logined" class="flex-none w-40 mt-1">
           <button @click="Logout()">Logout</button>
         </div>
       </div>
@@ -71,7 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <router-view/>
+          <router-view :Grade="Grade()" :Logout="Logout()"/>
       </div>
     </div>
   </div>
@@ -94,20 +94,8 @@ library.add( faXmark, faPlus)
 export default {
   name: 'App',
   emits:['Grade'],
-  async beforeCreate(){
-    await console.log('Grade실행4')
-    await this.Grade()
-  },
-  beforeRouteEnter(){
-    console.log('Grade실행2')
-
-  },
-  async beforeUpdate(){
-    await console.log('Grade실행')
-    await this.Grade()
-  },
-  async beforeRouteUpdate(){
-    await console.log('Grade실행3')
+  mounted() {
+    this.Grade();
   },
   data(){
     return{

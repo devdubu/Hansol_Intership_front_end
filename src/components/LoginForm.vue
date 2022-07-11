@@ -78,11 +78,15 @@ export default {
             localStorage.setItem('grade', this.userData.grade)
 
             console.log(this.userData)
-            window.location.href = "/performance"
+            //emit->Grade
+            this.$emit("Grade")
+
+            this.$router.push('/performance');
             // this.$session.start()
             // this.$session.set('user', response.headers)
           }else{
             alert(this.backMessage)
+            this.$emit('Logout')
             return;
           }
         //   this.$emit("grade",this.userData)

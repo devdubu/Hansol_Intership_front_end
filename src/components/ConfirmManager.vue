@@ -334,7 +334,6 @@ export default {
       }
     },
     //------------------------------------------- 데이터를 화면에 출력해주는 함수들 --------------------------------
-    
     async SearchDate(){
       await this.GetApprove();
       this.SetCopyData()
