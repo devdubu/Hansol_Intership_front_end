@@ -78,7 +78,7 @@ export default {
             localStorage.setItem('grade', this.userData.grade)
 
             console.log(this.userData)
-            window.location.href = "http://localhost:3000/performance"
+            window.location.href = "/performance"
             // this.$session.start()
             // this.$session.set('user', response.headers)
           }else{

@@ -9,14 +9,7 @@
                         <span class="ml-4 text-white">주 시작일</span>
                     </div>
                     <div class="mt-1.5 ml-4">
-                        <select>
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                            <option>2025</option>
-                            <option>2026</option>
-                        </select>
+                        <input v-model="searchDay" @change="SearchDay()" type="date"/>
                     </div>                    
                     
                 </div>
@@ -55,7 +48,7 @@
                     <div><p class="mt-1">마감</p></div>
                 </div>
             </div>
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <div class="flex text-white" style="max-width:1265px">
             <div class="ml-7 mt-7 text-xl">
@@ -64,8 +57,8 @@
             <div class="grow"></div>
             <div class="flex mt-7">
                 <button style="width: 200px; height: 40px;" class="mr-4 bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none"><p class="mt-0.5 ml-0.5">미승인PM SMS전송</p></button>
-                <button style="width: 100px; height: 40px;" class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
-                <button style="width: 50px; height: 40px;" class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
+                <button style="width: 100px; height: 40px;" @click="CancelApprovalFunc()" class="mr-4 bg-red-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인취소</p></button>
+                <button style="width: 50px; height: 40px;" @click="ResetApprovalFunc()" class="mr-4 bg-yellow-500 w-10 rounded-lg	hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none"><p class="mt-0.5 ml-0.5">반려</p></button>
                 <button style="width: 50px; height: 40px;" @click="ConfirmApprovalFunc()" class="mr-4 bg-emerald-500	w-10 rounded-lg	hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none"><p class="mt-0.5 ml-0.5">승인</p></button>
             </div>
           </div>
@@ -149,7 +142,7 @@
                         </div>
                     </div>
                      <div class="flex sub-interval border-r" >
-                        <div class=" hour-interval"><p class="pt-1">{{ member[1].totalTime }}</p></div>
+                        <div class=" hour-interval"><p class="pt-1">{{ member[1].dayHour }}</p></div>
                         <div class=" hour-interval border-l">
                             <div v-if="blindStatus(member[1].isDeadline)" :class="{blind:statusFunc(member[1].signStatus)}, confirmCheck(member[1].signStatus)" class="w-10 rounded-xl state-interval">
                               <p class="mt-1">{{ confirmText[member[1].signStatus] }}</p>
@@ -222,11 +215,13 @@
             </div>
             <p>{{ checkOutMember }}</p>
             <p>{{checkDate}}</p>
+            <p>{{ searchDay }}</p>
           </div>
       </div>
 
 </template>
 <script>
+import { isGloballyWhitelisted } from "@vue/shared";
 import axios from "axios";
 import approval from '../assets/approvalData.json';
 export default {
@@ -234,12 +229,13 @@ export default {
   data(){
     return{
       //axios로 인해서 받은 데이터
+      searchDay: '',
       responseCode: 0,
       backMessage: '',
 
-      nowdate: 0,
+      selectDate: 0,
       //원본 데이터 파일
-      approval: approval, // ----------------------------------------------> axios get 요청 데이터를 받는 곳
+      approval: [], // ----------------------------------------------> axios get 요청 데이터를 받는 곳
       //화면이 보여주는 영역
 
       Date: [],
@@ -259,20 +255,26 @@ export default {
       CopyApprovalDate: [],
       sendData:
         {
-          "memberids": [],
+          "memberIds": [],
           "days": []
         },
       copySendData:{
-        "memberids": [],
+        "memberIds": [],
         "days":[]
       },
-      ended:[]
+      ended:[],
+      patchData: {
+        "memberIds":[],
+        "days" : [],
+        "startDate": ''
+      }
 
 
     }
   },
   async mounted() {
-    // await this.GetApprove();
+    this.SetNowDate();
+    await this.GetApprove();
     this.SetCopyData()
     this.calDate(this.CopyApprovalDate[0].perfDay);
     this.extractionDeadline();
@@ -282,21 +284,10 @@ export default {
   methods:{
     //------------------------------------------- 마운트 되기 전에 실행되야하는 함수 --------------------------------
     async GetApprove(){
-
-      const date = new Date();
-
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-
-      if(month < 10){
-        this.nowdate = (year*10000)+(month*100)+day;
-      }else{
-        this.nowdate = (year*1000)+(month*100)+day;
-      }
+      
       await axios.get('/api/approvals',{
         params:{
-          day: this.nowdate,
+          day: this.selectDate,
         },withCredentials:true
       })
           .then((res)=>{
@@ -314,6 +305,20 @@ export default {
 
 
     },
+    SetNowDate(){
+      const date = new Date();
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      if(month < 10){
+        this.selectDate = (year*10000)+(month*100)+day;
+      }else{
+        this.selectDate = (year*1000)+(month*100)+day;
+      }
+      
+    },
     SetCopyData(){
       for(var i = 0;i<this.approval.length;i++){
         this.CopyApprovalDate.push({
@@ -329,7 +334,22 @@ export default {
       }
     },
     //------------------------------------------- 데이터를 화면에 출력해주는 함수들 --------------------------------
+    
+    async SearchDate(){
+      await this.GetApprove();
+      this.SetCopyData()
+      this.calDate(this.CopyApprovalDate[0].perfDay);
+      this.extractionDeadline();
+      this.calTeamMember(this.CopyApprovalDate);
+      this.viewApprovalTableFunc(this.CopyApprovalDate);
+    },
+    SearchDay(){
+      var sendDate = String(this.searchDay);
+      sendDate = sendDate.replaceAll('-','')
+      sendDate = Number(sendDate);
+      this.selectDate = sendDate;
 
+    },
     calDate(startdate){
       console.log(this.CopyApprovalDate)
       var Deadline =[]
@@ -365,7 +385,7 @@ export default {
         this.teamMember.push(approval[i].memberId)
       }
      }
-     this.sendData.memberids = this.teamMember
+     this.sendData.memberIds = this.teamMember
     },//화면에 멤버 리스트가 뽑히는 부분
     viewApprovalTableFunc(approval){
       for(var i = 0; i<this.teamMember.length;i++){
@@ -381,7 +401,7 @@ export default {
     },
     statusFunc(status){
       //색상이랑, p태그만 교체하면됨
-      if(status === 1){
+      if(status === '1'){
         return true
       }else{
         return false
@@ -389,8 +409,8 @@ export default {
     },
     confirmCheck(status){
       return{
-        'bg-green-500': status === 2,
-        'bg-fuchsia-500':status === 3,
+        'bg-green-500': status === '2',
+        'bg-fuchsia-500':status === '3',
       }
     },
     //deadline 추출하기
@@ -415,16 +435,16 @@ export default {
       }
     },
     //--------------------------------------------------- 데이터를 수집하는 함수 --------------------------------
-    async SendApprovalData(){
+    async SendApprovalData(NowStatus, NextStatus){
 
-      this.copySendData.memberids = [...this.sendData.memberids];
+      this.copySendData.memberIds = [...this.sendData.memberIds];
       this.copySendData.days = [...this.sendData.days];
 
       console.log(this.copySendData)
 
       this.copySendData.days = [...this.checkDate];
-      const member = [...this.copySendData.memberids];
-      this.copySendData.memberids = [...member.filter(x=>!this.checkOutMember.includes(x))] //승인 제외 reverse를 구하는 함수
+      const member = [...this.copySendData.memberIds];
+      this.copySendData.memberIds = [...member.filter(x=>!this.checkOutMember.includes(x))] //승인 제외 reverse를 구하는 함수
 
       console.log(this.copySendData)
 
@@ -432,11 +452,11 @@ export default {
         alert('날짜를 선택 해주세요')
         return
       }
-      if(this.copySendData.memberids.length === 0){
+      if(this.copySendData.memberIds.length === 0){
         alert('팀원을 선택 해주세요')
         return;
       }
-
+      console.log(this.checkDate)
       for(var i = 0;i<this.checkDate.length;i++){
         if(this.checkDate[i].isDeadline === '1'){
           alert([this.checkDate[i].date.slice(0,4),'년 ',this.checkDate[i].date.slice(4,6),'월 ',this.checkDate[i].date.slice(6,8),'일'].join('')+'은 마감일 이므로 승인이 불가능합니다.')
@@ -444,13 +464,13 @@ export default {
         }
       }
 
-      var totalMember = this.copySendData.memberids.length;
+      var totalMember = this.copySendData.memberIds.length;
 
 
       for(var j = 0;j<totalMember;j++){
         var memberData = []
         for(var i = 0;i<this.CopyApprovalDate.length;i++){
-          if(this.copySendData.memberids[j] === this.CopyApprovalDate[i].memberId){
+          if(this.copySendData.memberIds[j] === this.CopyApprovalDate[i].memberId){
             memberData.push({
               memberId: this.CopyApprovalDate[i].memberId,
               signStatus: this.CopyApprovalDate[i].signStatus
@@ -460,23 +480,42 @@ export default {
         this.checkStatus.push(memberData);
       }
 
-      for(var i = 0;i<totalMember;i++){
-        for(var j = 0;j<this.checkDate.length;j++){
-
-          if(this.checkStatus[i][this.checkDate[j].index].signStatus === 1){
-            alert('확정되지 않는 실적입니다.')
-            return;
-          }else if(this.checkStatus[i][this.checkDate[j].index].signStatus === 3){
-            alert('이미 처리된 실적입니다.')
-            return;
+      if(NowStatus === '2' && NextStatus === '3'){
+        for(var i = 0;i<totalMember;i++){
+          for(var j = 0;j<this.checkDate.length;j++){
+            if(this.checkStatus[i][this.checkDate[j].index].signStatus === '1'){
+              alert('확정되지 않는 실적입니다.')
+              return;
+            }else if(this.checkStatus[i][this.checkDate[j].index].signStatus === '3'){
+              alert('이미 처리된 실적입니다.')
+              return;
+            }
+          }
+        }
+      }else if(NowStatus === '3' && NextStatus === '1'){
+        for(var i = 0;i<totalMember;i++){
+          for(var j = 0;j<this.checkDate.length;j++){
+            if(this.checkStatus[i][this.checkDate[j].index].signStatus === '1' || this.checkStatus[i][this.checkDate[j].index].signStatus === '2'){
+              alert('승인되지 않은 데이터 입니다.')
+              return;
+            }
+          }
+        }
+      }else if(NowStatus === '2' && NextStatus === '1'){
+        for(var i = 0;i<totalMember;i++){
+          for(var j = 0;j<this.checkDate.length;j++){
+            if(this.checkStatus[i][this.checkDate[j].index].signStatus === '2' || this.checkStatus[i][this.checkDate[j].index].signStatus === '1'){
+              alert('반려 할 수 없는 데이터 입니다.')
+              return;
+            }
           }
         }
       }
-
+      
       // memberid를 비교해서 결과물을 추출해본다.
 
 
-      console.log(this.copySendData)
+      
 
 
 
@@ -494,9 +533,24 @@ export default {
     },
     async ConfirmApprovalFunc(){
       //시작 날짜도 보내야함
-      await this.SendApprovalData()
+      await this.SendApprovalData('2','3')
 
-      await axios.post('/api/approvals', this.copySendData,{withCredentials:true})
+      
+
+      var days = [],memberIds = [];
+
+      for(var i = 0;i<this.copySendData.days.length;i++){
+        days.push(this.copySendData.days[i].date);
+      }
+      memberIds = [...this.copySendData.memberIds];
+      console.log(days,memberIds)
+      this.patchData.memberIds = memberIds;
+      this.patchData.days = days;
+      this.patchData.startDate = String(this.CopyApprovalDate[0].perfDay);
+
+      console.log(this.patchData);
+
+      await axios.patch('/api/approvals', this.patchData,{withCredentials:true})
           .then((res)=>{
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
@@ -511,7 +565,23 @@ export default {
           });
     },
     async CancelApprovalFunc(){
-      await axios.post('/api/approvals/cancel',this.copySendData,{withCredentials:true})
+      
+      await this.SendApprovalData('3','1')
+
+      var days = [],memberIds = [];
+
+      for(var i = 0;i<this.copySendData.days.length;i++){
+        days.push(this.copySendData.days[i].date);
+      }
+      memberIds = [...this.copySendData.memberIds];
+      console.log(days,memberIds)
+      this.patchData.memberIds = memberIds;
+      this.patchData.days = days;
+      this.patchData.startDate = String(this.CopyApprovalDate[0].perfDay);
+
+      console.log(this.patchData);
+
+      await axios.patch('/api/approvals/cancel',this.patchData,{withCredentials:true})
           .then((res)=>{
             if(res.data.code === 1000){
               alert('승인 취소가 완료 되었습니다.')
@@ -524,7 +594,23 @@ export default {
           })
     },
     async ResetApprovalFunc(){
-      await axios.post('/api/approvals/reset',this.copySendData,{withCredentials: true})
+
+      await this.SendApprovalData('2','1')
+
+      var days = [],memberIds = [];
+
+      for(var i = 0;i<this.copySendData.days.length;i++){
+        days.push(this.copySendData.days[i].date);
+      }
+      memberIds = [...this.copySendData.memberIds];
+      console.log(days,memberIds)
+      this.patchData.memberIds = memberIds;
+      this.patchData.days = days;
+      this.patchData.startDate = String(this.CopyApprovalDate[0].perfDay);
+
+      console.log(this.patchData);
+
+      await axios.patch('/api/approvals/reset',this.patchData,{withCredentials: true})
           .then((res)=>{
             if(res.data.code === 1000){
               alert('승인이 반려되었습니다.')

@@ -51,7 +51,7 @@
             <div class="mr-5 mt-5 text-white">
               <p>2주 총 실적 : <span class="text-rose-500">{{ FirstPlanTotalHour+SecondPlanTotalHour }}Hr</span></p>
             </div>
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <div class="flex text-white" style="max-width:1265px">
             <div class="ml-7 mt-7 text-xl">
@@ -193,13 +193,15 @@ export default {
     return {
       //상단에 날짜를 받아오는 변수
       getWeekly: [],
-      searchWeekly: weekly.twoWeeksDtos,
+      searchWeekly: '', // AXIOS, twoWeekDtos 데이터 받는 부분 ------------------------------------------------>
       searchWeekYear: [],
 
       copySearchWeekly: [],
 
-      selectWeek: weekly.startOfWeek,
-      selectYear: weekly.startOfWeek.slice(0,4),
+      selectWeek: '',// AXIOS, startOfWeek 데이터 받는 부분 ------------------------------------------------>
+      selectYear: '',// AXIOS, startOfWeek.slice(0,4) 데이터 받는 부분 ------------------------------------------------>
+
+      EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
 
       selectDay : 0, //실제 파라미터 값으로 들어가는 값
       //axios로 인해서 받은 데이터
@@ -250,7 +252,10 @@ export default {
     //------------------------------------ AXIOS -------------------------------------------
     async GetServer(){
       
-        await axios.get("/api/performances",{withCredentials : true})
+        await axios.get("/api/performances",{
+          params:{
+            day: this.selectWeek
+          },withCredentials : true})
           .then((response)=>{
             this.perf = response.data.result;
             console.log(this.perf)
@@ -289,21 +294,19 @@ export default {
       },
     // 상단 검색 버튼을 누르면 실행되는 메서드
     async SearchDate(){
-      await axios.get('/api/plans',{
-        params:{
-          day: this.selectWeek
-        },withCredentials:true
-      })
-          .then((res)=>{
-            if(res.data.code != 1000){
-              this.plan = res.data.result;
-            }else{
-              alert(res.data.message)
-            }
-          })
-          .catch((res)=>{
-            console.error(res)
-          })
+      
+        await this.GetServer
+
+        this.calDate_v2(this.Date)
+        this.calDayOfData()
+        this.calDayWorkTime_v2()
+        this.printPrevWorkType(this.perf)
+        this.DistinguishHoliday()
+        this.calApprovalTime()
+        this.DistinguishStatus()
+        this.calTotalWeekTime()
+
+      
     },
     //------------------------------------ AXIOS -------------------------------------------
     calNowDate(){
@@ -373,9 +376,31 @@ export default {
     },
     calDate_v2(date){
       //날짜를 데이터에 인풋
-     
+      if(this.selectYear === 0 && this.selectYear%100 != 0 || this.selectYear%400 === 0){
+        this.EndDayOfMonth[1] = 29;
+      }
+      var startMonth = parseInt((this.perf[0].perfDay%10000)/100);
+      console.log(startMonth)
+      var EndDay = this.EndDayOfMonth[startMonth-1];
+
+      EndDay = parseInt(this.perf[0].perfDay/100)*100+EndDay;
+      console.log(EndDay)
+
+      var newMonthDay = 0
+      var newDay = 0
+
+      // newDay = + parseInt(EndDay%10000) 
+      // newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+
+      // console.log('새로운 달력', newMonthDay)
+
       for(var i = 0;i<this.twoWeek;i++){
         date[i] = this.perf[0].perfDay+i;
+        if(date[i] > EndDay){
+          newDay = + parseInt(EndDay%10000) 
+          newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+          date[i] = newMonthDay;
+        }
       }
       //view 데이터에 인풋
       var viewdate = []
@@ -390,6 +415,10 @@ export default {
     //--------------------------------하루 당 데이터 구하는 함수 ------------------------------
     calDayOfData(){
       var perftindex = 0;
+      
+      
+
+
       for(var i = 0; i<this.perf.length;i++){
         if(this.perf[i].seq === 1 || this.perf[i].seq === 0){
           this.DayOfData[perftindex] = this.perf[i]; // seq 가 없을 수도 있으니, 그걸로 예외 처리

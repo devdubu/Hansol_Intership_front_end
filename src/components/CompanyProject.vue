@@ -95,7 +95,7 @@
                   <!--SAP에 등록 날짜 임으로 ajax 요청 후에 교체 요망-->
                   <!---->
                   <div class="interval bg-slate-600  border-l" style="width:120px;">
-                    <button  class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
+                    <button v-if="IsMyProject(index)" class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
                   </div>
                 </div>
               </div>
@@ -151,6 +151,13 @@ export default {
       console.log(this.startedAt[i])
       this.endedAt[i] = [this.proj[i].endedAt.slice(0,4),'-',this.proj[i].endedAt.slice(4,6),'-',this.proj[i].endedAt.slice(6,8)].join('');
      }
+   },
+   IsMyProject(index){
+    if(this.proj[index].isMyProject === '0'){
+      return true;
+    }else{
+      return false;
+    }
    },
 
   },
