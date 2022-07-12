@@ -124,7 +124,10 @@ import axios from "axios";
 
 export default {
   name: 'RegisterPlanDetail',
-  mounted() {
+  async mounted() {
+    await this.GetWeekData();
+    this.SetStartWeek();
+    await this.getTask();
     this.MountDataSet()
     this.ClassifyTaskType();
     this.MountSelect();
@@ -133,10 +136,12 @@ export default {
   data() {
     return {
       //받는 데이터
-      taskType: registerTask,
+      taskType: [],
       project: registerProject,
-      startDate : 20220704,
-      week: '06월 3주 ~07월 1주',
+
+      searchWeekly:[],
+      startDate : 0,
+      week: '',
 
       //보내는 데이터
       sendData: [],
@@ -197,6 +202,52 @@ export default {
     }
   },
   methods: {
+    async getTask(){
+      var testtask
+      await axios.get('/api/tasks',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.taskType = res.data.result;
+        }else{
+          alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+    },
+    async GetWeekData(){
+        await axios.get('/api/biweekly',{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                this.searchWeekly = res.data.result.twoWeeksDtos;
+                this.startDate = res.data.result.startOfWeek;
+                console.log('시작날짜',this.selectWeek)
+                console.log('주간데이터', this.searchWeekly)
+              }else{
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
+                this.$router.push('/')
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
+    SetStartWeek(){ 
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(this.searchWeekly[i].fromdt === this.startDate){
+          this.week = this.searchWeekly[i].content;
+          break;
+        }
+      }
+    },
     MountDataSet(){
       var arr = []
       for(var i = 0;i<14;i++){
@@ -575,6 +626,12 @@ export default {
               if(res.data.code === 1000){
                 alert('계획이 수정되었습니다.')
                 this.$router.push('/plan')
+              }else if(res.data.code === 5006){
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
+                this.$router.push('/')
               }else{
                 alert(res.data.message)
               }

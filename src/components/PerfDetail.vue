@@ -169,12 +169,13 @@ export default {
             }else{
               alert(this.backMessage)
               this.$router.push('/performance');
-            }
+            } //로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
           })
           .catch((res)=>{
             console.log(res)
           })
     },
+     //------------------------------------ AXIOS -------------------------------------------
     calDay(){
       var perfDay = String(this.oneDayInfo[0].perfDay)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')

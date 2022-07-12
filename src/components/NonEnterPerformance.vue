@@ -18,7 +18,7 @@
                             <option v-for="year in searchYear" :value="year">{{ year }}</option>
                         </select>
                     </div>
-                  <div>
+                  <div class="mt-1.5 ml-4">
                     <select v-model="selectMonth">
                       <option v-for="month in searchMonth" :value="month.value">{{ month.text }}</option>
                     </select>
@@ -45,8 +45,8 @@
                         <div class="mt-1.5 ml-4">
                             <p class="text-white">성명/사번</p>
                         </div>
-                        <div class="ml-4">
-                            <input class="h-8 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search"/> 
+                        <div class="ml-4 mt-0.5">
+                            <input style="height:30px;" class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search"/> 
                         </div>
                     </div>
                 </div>
@@ -71,26 +71,28 @@
             <!-- 상단 메뉴바 -->
             <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg  table-size">
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 middle-table"><p>부서 코드</p></div>
+                <div class="mr-3 pt-2 ml-5 short-table"><p>부서 코드</p></div>
                 <div class="pt-2 border-l middle-table"><p>부서 명</p></div>
                 <div class="pt-2 interval border-l middle-table"><p class="">사원명</p></div>
                 <div class="pt-2 interval border-l middle-table"><p class="">핸드폰 번호</p></div>
                 <div class="pt-2 name-interval border-l short-table"><p class="">모바일타입</p></div>
-                <div class="pt-2 name-interval border-l long-table"><p class="pr-2">미입력일</p></div>
+                <div class="pt-2 border-l no-enter-boxs "><p class="pr-2 no-enter-box">미입력일</p></div>
               </div>
             </div>
            
             <!-- 실제 데이터 인풋 -->
             <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
               <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ noenter.deptCode }}</p></div>
+                <div class="mr-3 pt-2 ml-5 short-table"><p>{{ noenter.deptCode }}</p></div>
                 <div class="pt-2 border-l middle-table">
                   <p>{{ noenter.deptNm }}</p>
                 </div>
-                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.empolyee_name }}</p></div>
-                <div class="pt-2 interval border-l middle-table"><p >{{ noenter.phoneNumber }}</p></div>
+                <div class="pt-2 interval border-l middle-table memberNameText-box"><p class="memberNameText">{{ noenter.memberNm }}</p></div>
+                <div class="pt-2 interval border-l middle-table"><p class="text-sm">{{ noenter.phoneNumber }}</p></div>
                 <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobileType }}</p></div>
-                <div class="pt-2 name-interval border-l long-table"><p class="ml-4">{{ noenter.noEnterDays }}</p></div>
+                <div class="pt-2 border-l no-enter-box">
+                  <p class=" ml-4 no-enter-day text-left text-sm">{{ noenter.noEnterDays }}</p>
+                </div>
                 
               </div>
             </div>
@@ -131,80 +133,62 @@ export default {
       responseCode: 0,
       backMessage: '',
 
-      noEnter : noenter,
+      noEnter : [],
     }
   },
   async mounted(){
+    this.calNowDay();
     await this.GetWeekData();
     this.calSelectYear();
-    await this.getNoEnter();
+    await this.getNoEnterFunc();
   },
   methods:{
     //------------------------------------ AXIOS -------------------------------------------
-    async getNoEnter(){
-
-     const date = new Date();
-
-     const year = date.getFullYear();
-     const month = date.getMonth() + 1;
+    async getNoEnterFunc(){
 
      await axios.get('/api/performances/noenters',{
        params:{
-         year: year,
-         month : month,
-       },withCredentials:true
-     })
+         year: this.selectYear,
+         month : this.selectMonth,
+       },withCredentials:true })
          .then((res)=>{
-           this.getNoEnter = res.data.result;
-           this.responseCode = res.data.code;
-           this.backMessage = res.data.message;
-
-           if(this.responseCode != 1000){
-             alert(this.backMessage);
-             this.$router.push('/');
-           }else{
-             this.$emit("Logout")
-             this.$router.push('/');
+          console.log(res)
+          if(res.data.code === 1000){
+            this.noEnter = res.data.result;
+            console.log(this.getNoEnter)
+          }else{
+              alert(res.data.code);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
            }
-
          })
          .catch((res)=>{
            console.error(res)
          })
    },
     async GetWeekData(){
-      await axios.get('/api/biweekly',{withCredentials: true})
-          .then((res)=>{
-            if(res.data.code === 1000){
-              this.searchWeekly = res.data.result.twoWeeksDtos;
-              console.log(this.searchWeekly)
-            }else{
-              alert(res.data.message);
-            }
-          })
-          .catch((res)=>{
-            console.error(res);
-          })
+      
     },
-    async SearchDate(){
-      await axios.get('/api/performances/noenters',{
-        params:{
-          year: this.searchYear,
-          month : this.selectMonth,
-        },withCredentials:true
-      })
-          .then((res)=>{
-            if(res.data.code != 1000){
-              this.plan = res.data.result;
-            }else{
-              alert(res.data.message)
-            }
-          })
-          .catch((res)=>{
-            console.error(res)
-          })
-    },
+    
     //------------------------------------ AXIOS -------------------------------------------
+    calNowDay(){
+      
+     const date = new Date();
+
+     const year = date.getFullYear();
+     const month = date.getMonth() + 1;
+
+      this.selectYear = String(year);
+      
+      if(month/10 < 1){
+        this.selectMonth = '0'+String(month)
+      }else{
+        this.selectMonth = String(month)
+      }
+
+    },  
     calSelectYear(){
       var index = 0;
       for(var i = 0;i<this.searchWeekly.length;i++){
@@ -268,6 +252,20 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-
+.no-enter-box{
+  width:660px;
+  height: 40px; 
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+.no-enter-box::-webkit-scrollbar{
+  display: none;
+}
+.no-enter-day{
+  height: 40px;
+  width: 1300px;
+}
+.memberNameText-box{
+  overflow: hidden;
+}
 </style>

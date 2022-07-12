@@ -147,7 +147,8 @@ export default {
   props:{
     oneDayInfo: Object,
   },
-  mounted() {
+  async mounted() {
+    await this.getTask();
     this.SetData()
     this.SetTaskHour_v2()
     this.ClassifyTaskType()
@@ -157,7 +158,7 @@ export default {
   data(){
     return{
       //받는 데이터
-      taskType: taskType,
+      taskType: [],
       project:project,
       //변경 데이터에 대한 오류 여부
 
@@ -231,7 +232,25 @@ export default {
   },
   methods:{
     //혹시라도 url상으로 접근이 가능하기 때문에, 이를 프론트 상의 코드로 막아줘야한다.(axios가 필요하지 않는 모든 페이지에서 처리 해야함)
-
+    /*-------------------------------------------- axios get 통신 ------------------------------------------- */
+     async getTask(){
+      var testtask
+      await axios.get('/api/tasks',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.taskType = res.data.result;
+        }else{
+          alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+    },
 
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
     SetData(){
@@ -279,16 +298,16 @@ export default {
     },
     ClassifyTaskType(){//완성
       for(var i = 0;i<this.taskType.length;i++){
-        if(this.taskType[i].group_id === 'TR001'){
-          this.mainGroup.push({groupMainId: this.taskType[i].group_id, groupSubId: this.taskType[i].codeId, codeMainNm: this.taskType[i].code_nm});
+        if(this.taskType[i].groupId === 'TR001'){
+          this.mainGroup.push({groupMainId: this.taskType[i].groupId, groupSubId: this.taskType[i].codeId, codeMainNm: this.taskType[i].codeNm});
         }else{
-          this.subTask.push({groupSubId: this.taskType[i].group_id, codeId: this.taskType[i].codeId, codeSubNm: this.taskType[i].code_nm});
+          this.subTask.push({groupSubId: this.taskType[i].groupId, codeId: this.taskType[i].codeId, codeSubNm: this.taskType[i].codeNm});
         }
       }
     },
     ClassifyProject(){
       for(var i = 0;i<this.project.length;i++){
-        this.mainGroup.push({groupMainId: this.project[i].project_code, groupSubId: 'TR002',codeMainNm: this.project[i].project_nm});
+        this.mainGroup.push({groupMainId: this.project[i].projectCode, groupSubId: 'TR002',codeMainNm: this.project[i].projectNm});
       }
     },
 
@@ -531,7 +550,7 @@ export default {
           }else{
             alert(res.data.message);
             this.$router.go(-1)
-          }
+          }//로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
       })
       .catch((res)=>{
         console.error(res)

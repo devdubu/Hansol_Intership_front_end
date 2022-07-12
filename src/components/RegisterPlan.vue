@@ -12,7 +12,7 @@
   <div class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white">
     <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
-        <p>계획 정보 : 06월 3주 ~ 07월 1주 (2022.6.20 ~ 2022.7.3)</p><!--오늘 데이터를 전달 받아야함 props로 해결하면 될듯-->
+        <p>계획 정보 : {{ week }}</p><!--오늘 데이터를 전달 받아야함 props로 해결하면 될듯-->
       </div>
       <div class="grow"></div>
       <div class="mt-5 mr-3"><p>평일 {{ WeekWorkTime }}시간</p></div>
@@ -103,7 +103,10 @@ import axios from "axios";
 
 export default {
   name: 'RegisterPlan',
-  mounted() {
+  async mounted() {
+    await this.GetWeekData();
+    this.SetStartWeek();
+    await this.getTask();
 
     this.ClassifyTaskType();
     this.ClassifyProject();
@@ -113,9 +116,13 @@ export default {
   data() {
     return {
       //받는 데이터
-      taskType: registerTask,
+      taskType: [],
       project: registerProject,
-      startDate: 20220704,
+      
+      searchWeekly:[],
+      startDate : 0,
+      week: '',
+
 
       //보내는 데이터
       sendData: [],
@@ -181,6 +188,53 @@ export default {
     }
   },
   methods: {
+    //----------------------------------------------AXIOS GET 통신 ----------------------------------------
+    async getTask(){
+      var testtask
+      await axios.get('/api/tasks',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.taskType = res.data.result;
+        }else{
+          alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+    },
+    async GetWeekData(){
+        await axios.get('/api/biweekly',{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                this.searchWeekly = res.data.result.twoWeeksDtos;
+                this.startDate = res.data.result.startOfWeek;
+                console.log('시작날짜',this.selectWeek)
+                console.log('주간데이터', this.searchWeekly)
+              }else{
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
+                this.$router.push('/')
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
+    SetStartWeek(){ 
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(this.searchWeekly[i].fromdt === this.startDate){
+          this.week = this.searchWeekly[i].content;
+          break;
+        }
+      }
+    },
     MountSelect() { // subTask 완성
       //MainTask - 완성
       //이거 혹시 sendTaskData가 여러개라면, 여러개를 뿌려줘야하는데
@@ -432,8 +486,14 @@ export default {
             .then((res)=>{
               if(res.data.code === 1000){
                 alert('계획이 등록 되었습니다.')
+              }else if(res.data.code === 5006){
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
+                this.$router.push('/')
               }else{
-                alert(this.data.message)
+                alert(res.data.message)
               }
             })
             .catch((res)=>{

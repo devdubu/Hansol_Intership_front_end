@@ -18,7 +18,7 @@
                     <option v-for="year in searchYear" :value="year">{{ year }}</option>
                   </select>
                 </div>
-                <div>
+                <div class="mt-1.5 ml-4">
                   <select v-model="selectMonth">
                     <option v-for="month in searchMonth" :value="month.value">{{ month.text }}</option>
                   </select>
@@ -93,7 +93,7 @@
                   <div v-if="calendarInfo[0][first]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[0][first]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
+                  <div v-if="calendarInfo[0][first]" class="mt-3 ml-20"><input class="check-box-size" v-model="firstWeek" :value="month" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -112,7 +112,7 @@
                   <div v-if="calendarInfo[1][second]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[1][second]" class="mt-3 ml-20"><input v-model="sendData" :value="month" class="check-box-size" type="checkbox"></div>
+                  <div v-if="calendarInfo[1][second]" class="mt-3 ml-20"><input v-model="secondWeek" :value="month" class="check-box-size" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -130,7 +130,7 @@
                   <div v-if="calendarInfo[2][three]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[2][three]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
+                  <div v-if="calendarInfo[2][three]" class="mt-3 ml-20"><input class="check-box-size" v-model="thirdWeek" :value="month" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -148,7 +148,7 @@
                   <div v-if="calendarInfo[3][four]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[3][four]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
+                  <div v-if="calendarInfo[3][four]" class="mt-3 ml-20"><input class="check-box-size" v-model="fourthWeek" :value="month" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -166,7 +166,7 @@
                   <div v-if="calendarInfo[4][five]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[4][five]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
+                  <div v-if="calendarInfo[4][five]" class="mt-3 ml-20"><input class="check-box-size" v-model="fifthWeek" :value="month" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -184,7 +184,7 @@
                   <div v-if="calendarInfo[5][six]" class="date bg-zinc-500">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
-                  <div v-if="calendarInfo[5][six]" class="mt-3 ml-20"><input class="check-box-size" v-model="sendData" :value="month" type="checkbox"></div>
+                  <div v-if="calendarInfo[5][six]" class="mt-3 ml-20"><input class="check-box-size" v-model="sixthWeek" :value="month" type="checkbox"></div>
                   <div v-if="month.isDeadline === '0' ? false : true" class="absolute bottom-2 left-2 bg-rose-500 w-10 h-7 rounded-xl">
                     <p class="mt-1">마감</p>
                   </div>
@@ -230,7 +230,7 @@ export default {
           responseCode: 0,
           backMessage: '',
 
-          deadline: deadline, // ----------------------------------------------------> axios get 요청을 받는 변수 부분
+          deadline: [], // ----------------------------------------------------> axios get 요청을 받는 변수 부분
 
           setCalenderTime : 0,
           //실제 캘린더에 적용할 데이터들
@@ -249,44 +249,50 @@ export default {
           sixthWeekData: [],
           allData:[],
           //보내는 데이터
+          firstWeek:[],
+          secondWeek:[],
+          thirdWeek:[],
+          fourthWeek:[],
+          fifthWeek:[],
+          sixthWeek:[],
+
           sendData:[],
         }
     },
-    beforeMount() {
-    },
   async mounted() {
+    this.SetNowDate();
 
     await this.GetWeekData();
     this.calSelectYear();
-    await this.getNowDeadline();
+    await this.getDeadline();
     
     this.SetCalender()
 
     this.SetCalenderData()
     this.SetCalenderInfo()
     this.setWeekAndAllSelect()
+
     },
   methods: {
     //------------------------------------ AXIOS -------------------------------------------
-    async getNowDeadline(){
-        const date = new Date();
-
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1;
-
+    async getDeadline(){
         await axios.get('/api/deadline',{
           params:{
-            year: year,
-            month: month,
+            year: this.selectYear,
+            month: this.selectMonth,
           }, withCredentials:true
         })
             .then((res)=>{
               this.responseCode = res.data.code;
               this.backMessage = res.data.message;
-              this.getDead = res.data.result;
+              this.deadline = res.data.result;
+              console.log(res)
               if(this.responseCode != 1000){
-                alert(this.backMessage)
-                this.$router.push('/')
+                alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
               }
             })
             .catch((res)=>{
@@ -308,24 +314,37 @@ export default {
           })
     },
     async SearchDate(){
-      await axios.get('/api/deadline',{
-        params:{
-          year: this.searchYear,
-          month : this.selectMonth,
-        },withCredentials:true
-      })
-          .then((res)=>{
-            if(res.data.code != 1000){
-              this.plan = res.data.result;
-            }else{
-              alert(res.data.message)
-            }
-          })
-          .catch((res)=>{
-            console.error(res)
-          })
+      await this.getDeadline();
+    },
+    async DeadlineRefresh(){
+      this.SetNowDate();
+
+      await this.GetWeekData();
+      this.calSelectYear();
+      await this.getDeadline();
+    
+      this.SetCalender()
+
+      this.SetCalenderData()
+      this.SetCalenderInfo()
+      this.setWeekAndAllSelect()
+
     },
     //------------------------------------ AXIOS -------------------------------------------
+    SetNowDate(){
+      const date = new Date();
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+
+      this.selectYear = String(year)
+      if(month / 10 < 1){
+        this.selectMonth = '0'+String(month);
+      }else{
+        this.selectMonth = String(month);
+      }
+
+    },
     calSelectYear(){
       var index = 0;
       for(var i = 0;i<this.searchWeekly.length;i++){
@@ -353,7 +372,7 @@ export default {
 
       for(var i = 0;i<this.deadline.length;i++){
         calender.push({
-          DeadlineDay : this.deadline[i].DeadlineDay,
+          deadlineDay : this.deadline[i].deadlineDay,
           dayOfTheWeek: this.deadline[i].dayOfTheWeek,
           isDeadline : this.deadline[i].isDeadline
         })
@@ -370,9 +389,14 @@ export default {
       //   calender[i].dayOfTheWeek -= 2;
       // }
 
-
-
-      this.processingCalenderData = [...calender]
+      for(var i = 0;i<calender.length;i++){
+        this.processingCalenderData.push({
+          deadlineDay: calender[i].deadlineDay,
+          dayOfTheWeek: calender[i].dayOfTheWeek,
+          isDeadline : calender[i].isDeadline
+        })
+      }
+      console.log(calender)
       console.log('결과')
       console.log(this.processingCalenderData)
 
@@ -385,18 +409,22 @@ export default {
       end: for (var i = 0; i < 6; i++) {
         var week = []
         for (var j = 0; j < 7; j++) {
-          if (calender[index].dayOfTheWeek === j && index < calender.length-1) {
-            week.push({
-              date: String(calender[index].DeadlineDay),
-              isDeadline: calender[index].isDeadline,
-            })
-            index++;
-          } else{
-            week.push({
-              date : '0',
-              isDeadline: '0',
-            })
+          if( index < calender.length){
+            if (this.processingCalenderData[index].dayOfTheWeek === j) {
+              week.push({
+                date: String(this.processingCalenderData[index].deadlineDay),
+                isDeadline: this.processingCalenderData[index].isDeadline,
+              })
+              index++;
+              console.log(index)
+            } else{
+              week.push({
+                date : '0',
+                isDeadline: '0',
+              })
+            }
           }
+          
         }
         DeadLineMonth[i] = week;
       }
@@ -412,47 +440,66 @@ export default {
           if(clearWeek === 6){
             this.showWeek[i] = false
           }
-          if (this.calendarData[i][j].date === '0') {
-            calenderArr.push(false)
-            clearWeek++;
-          } else {
-            calenderArr.push(true)
+          if(this.calendarData[i].length === 0){
+            clearWeek = 6
+          }else{
+             if (this.calendarData[i][j].date === '0') {
+              calenderArr.push(false)
+              clearWeek++;
+            } else {
+              calenderArr.push(true)
+            }
           }
+         
 
         }
         this.calendarInfo[i] = calenderArr
       }
     },
     setWeekAndAllSelect(){
+      
       for(var i = 0;i<7;i++){
-        if(this.calendarData[0][i].date != '0'){
-          this.firstWeekData.push(this.calendarData[0][i])
+        if(this.showWeek[0]){
+          if(this.calendarData[0][i].date != '0'){
+            this.firstWeekData.push(this.calendarData[0][i])
+          }
         }
       }
       for(var i = 0;i<7;i++){
-        if(this.calendarData[1][i].date != '0'){
-          this.secondWeekData.push(this.calendarData[1][i])
+        if(this.showWeek[1]){
+          if(this.calendarData[1][i].date != '0'){
+            this.secondWeekData.push(this.calendarData[1][i])
+          }
         }
       }
       for(var i = 0;i<7;i++){
-        if(this.calendarData[2][i].date != '0'){
-          this.thirdWeekData.push(this.calendarData[2][i])
+        if(this.showWeek[2]){
+          if(this.calendarData[2][i].date != '0'){
+            this.thirdWeekData.push(this.calendarData[2][i])
+          }
         }
       }
       for(var i = 0;i<7;i++){
-        if(this.calendarData[3][i].date != '0'){
-          this.fourthWeekData.push(this.calendarData[3][i])
+        if(this.showWeek[3]){
+          if(this.calendarData[3][i].date != '0'){
+            this.fourthWeekData.push(this.calendarData[3][i])
+          }
+        }
+        
+      }for(var i = 0;i<7;i++){
+        if(this.showWeek[4]){
+           if(this.calendarData[4][i].date != '0'){
+            this.fifthWeekData.push(this.calendarData[4][i])
+          }
         }
       }for(var i = 0;i<7;i++){
-        if(this.calendarData[4][i].date != '0'){
-          this.fifthWeekData.push(this.calendarData[4][i])
-        }
-      }for(var i = 0;i<7;i++){
-        if(this.calendarData[5][i].date != '0'){
-          this.sixthWeekData.push(this.calendarData[5][i]);
+        if(this.showWeek[5]){
+          if(this.calendarData[5][i].date != '0'){
+            this.sixthWeekData.push(this.calendarData[5][i]);
+          }
         }
       }
-      for(var i = 0;i<6;i++){
+      for(var i = 0;i<this.showWeek.length;i++){
         for(var j = 0;j<7;j++){
           if(this.calendarData[i][j].date != '0'){
             this.allData.push(this.calendarData[i][j]);
@@ -460,7 +507,24 @@ export default {
         }
       }
     },
-    CancleDeadline(){
+    arrangementSendData(){
+      this.sendData.push(...this.firstWeek)
+      this.sendData.push(...this.secondWeek);
+      this.sendData.push(...this.thirdWeek);
+      this.sendData.push(...this.fourthWeek);
+      if(this.showWeek[4]){
+        this.sendData.push(...this.fifthWeek);
+      }
+      if(this.showWeek[5]){
+        this.sendData.push(...this.sixthWeek);
+      }
+      console.log(this.sendData)
+    },
+    //------------------------------------------------------axios post 요청-------------------------------------------------------
+    async CancleDeadline(){
+      this.arrangementSendData();
+    
+
       var cancleData = []
       for(var i = 0;i<this.sendData.length;i++){
         if(this.sendData[i].isDeadline === '0') {
@@ -473,9 +537,22 @@ export default {
         }
       }
       console.log(this.sendData)
+
+      await axios.patch('api/deadline',cancleData,{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          alert('마감 처리가 완료되었습니다.')
+          await this.DeadlineRefresh();
+        }else{
+          alert(res.data.message);
+        }
+      })
       console.log(cancleData)
     },
-    ComfirmDeadline(){
+
+    async ComfirmDeadline(){
+      this.arrangementSendData();
+
       var confrimData = []
       for(var i = 0;i<this.sendData.length;i++){
         if(this.sendData[i].isDeadline === '1') {
@@ -485,16 +562,26 @@ export default {
         }
         confrimData.push(this.sendData[i].date)
       }
+      await axios.patch('api/deadline',confrimData,{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          alert('마감 처리가 완료되었습니다.')
+          await this.DeadlineRefresh();
+        }else{
+          alert(res.data.message);
+        }
+      })
       console.log(confrimData)
-    }
+    },
   },
+  // -------------------------------------- 해당 부분의 로직 수정 요망 --------------------------------
   computed:{
     firstWeekSelected:{
       get: function (){
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.firstWeekData: [];
+        return this.firstWeek = e ?  this.firstWeekData: [];
       },
     },
     secondWeekSelected:{
@@ -502,7 +589,7 @@ export default {
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.secondWeekData: [];
+        return this.secondWeek = e ?  this.secondWeekData: [];
       },
     },
     thirdWeekSelected:{
@@ -510,7 +597,7 @@ export default {
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.thirdWeekData: [];
+        return this.thirdWeek = e ?  this.thirdWeekData: [];
       },
     },
     fourthWeekSelected:{
@@ -518,7 +605,7 @@ export default {
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.fourthWeekData: [];
+        return this.fourthWeek = e ?  this.fourthWeekData: [];
       },
     },
     fifthWeekSelected:{
@@ -526,7 +613,7 @@ export default {
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.fifthWeekData: [];
+        return this.fifthWeek = e ?  this.fifthWeekData: [];
       },
     },
     sixthWeekSelected:{
@@ -534,14 +621,37 @@ export default {
       },
       //setter
       set: function (e){
-        return this.sendData = e ?  this.sixthWeekData: [];
+        return this.sixthWeek = e ?  this.sixthWeekData: [];
       },
     },
     allSelected:{
       get: function (){
       },
       set: function (e){
-        return this.sendData = e ?  this.allData: [];
+       if(e){
+        this.firstWeek = this.firstWeekData;
+        this.secondWeek = this.secondWeekData;
+        this.thirdWeek = this.thirdWeekData;
+        this.fourthWeek = this.fourthWeekData;
+        if(this.showWeek[4]){
+          this.fifthWeek = this.fifthWeekData;
+        }
+        if(this.showWeek[5]){
+          this.sixthWeek = this.sixthWeekData;
+        }
+       }else{
+        this.firstWeek = []
+        this.secondWeek = []
+        this.thirdWeek = [];
+        this.fourthWeek = [];
+        if(this.showWeek[4]){
+          this.fifthWeek = []
+        }
+        if(this.showWeek[5]){
+          this.sixthWeek = []
+        }
+       }
+       console.log(this.firstWeek)
       }
     }
   },

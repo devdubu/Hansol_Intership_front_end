@@ -72,39 +72,39 @@
               <!-- 1주차 월요일 -->
               <div class="relative calendar-interval bg-gray-100 box-border border-2" style="width:175px;">
                 <div class="flex">
-                  <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-gray-500':'bg-rose-500']" >
+                  <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']" >
                     <p class="mt-2 text-white">{{viewDate[index]}}</p>
                   </div>
-                  <div v-if="HolidayCheck[index]" class="grow mt-2">
+                  <div v-if="showCalenderData(index)" class="grow mt-2">
                     <p>{{ DayWorkTime[index] }}</p>
                   </div>
                 </div>
 
-                <div class="mt-5 relative calendar-interval">
+                <div v-if="showCalenderData(index)" class="mt-5 relative calendar-interval">
                   <div class="absolute ml-2" style="width: 400px;">
                     <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index]" >{{task}}</p>
                   </div>
                 </div>
                 <div v-if="confirm[index]" class="absolute bottom-3 ml-2 ">
-                  <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                  <div  v-if="showCalenderData(index)" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
                 </div>
                 <div v-if="approve[index]" class="absolute bottom-3 ml-2 ">
-                  <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
+                  <div  v-if="showCalenderData(index)" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
                 </div>
                 <div v-if="ended[index]" class="absolute bottom-3 ml-2 ">
-                  <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
+                  <div  v-if="showCalenderData(index)" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
                 </div>
                 <div class="absolute bottom-3 right-0 mr-2 ">
-                  <button v-if="HolidayCheck[index]" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                  <button  v-if="showCalenderData(index)" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                 </div>
               </div>
               <!--2주차 월요일-->
               <div class="relative calendar-interval bg-gray-100 box-border border-2 " style="width:175px">
                 <div class="flex">
-                  <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-gray-500':'bg-rose-500']">
+                  <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']">
                     <p class="mt-2 text-white">{{viewDate[index+7]}}</p>
                   </div>
-                  <div v-if="HolidayCheck[index+7]" class="grow mt-2">
+                  <div  v-if="showCalenderData(index)" class="grow mt-2">
                     <p>{{ DayWorkTime[index+7] }}</p>
                   </div>
                 </div>
@@ -115,19 +115,19 @@
                   </div>
                 </div>
                   <div v-if="confirm[index+7]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                    <div v-if="showCalenderData(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
                   </div>
                   <div v-if="approve[index+7]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
+                    <div v-if="showCalenderData(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-fuchsia-500">팀장</div>
                   </div>
                   <div v-if="ended[index+7]" class="absolute bottom-3 ml-2 ">
-                    <div v-if="HolidayCheck[index+7]" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
+                    <div v-if="showCalenderData(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
                   </div>
                   <div class="absolute bottom-3 right-0 mr-2 ">
-                    <button v-if="HolidayCheck[index+7]" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                    <button v-if="showCalenderData(index+7)" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                   </div>
                 <div v-if="viewDetailBtn" class="absolute bottom-3 right-0 mr-2 ">
-                  <button v-if="HolidayCheck[index+7]" @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                  <button v-if="showCalenderData(index+7)" @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                 </div>
               </div>
             </div>
@@ -188,6 +188,7 @@ export default {
     this.calApprovalTime()
     this.DistinguishStatus()
     this.calTotalWeekTime()
+    this.isDummyFunc()
   },
   data: function () {
     return {
@@ -229,8 +230,8 @@ export default {
       Date: [],// 완료
       DayOfData: [],//완료
       planDayOfDate:[],
-      HolidayCheck: [true,true,true,true,true,true,true,true,true,true,true,true,true,true],
-
+      HolidayCheck: [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+      isDummy:[false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 
       //표시 데이터 셋
       viewDate:[], //완료
@@ -263,9 +264,11 @@ export default {
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
             if(this.responseCode != 1000){
-              alert(this.backMessage)
-              this.$emit("Logout")
-              this.$router.push('/');
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
             }
           })
           .catch((response)=>{
@@ -371,6 +374,7 @@ export default {
     showViewModalEdit(){
       this.editModal = !this.editModal;
     },
+    // --------------------------------------- 날짜 데이터 구하는 함수, 윤년 포함해서 한달이 넘어가게 되면 자동으로 반영 -----------
     calDate_v2(date){
       //날짜를 데이터에 인풋
       if(this.selectYear === 0 && this.selectYear%100 != 0 || this.selectYear%400 === 0){
@@ -408,7 +412,7 @@ export default {
       this.viewDate = viewdate;
 
     },
-
+    //-----------------------------------------날짜 데이터를 구하는 함수 끝------------------------------
     //--------------------------------하루 당 데이터 구하는 함수 ------------------------------
     calDayOfData(){
       var perftindex = 0;
@@ -498,9 +502,10 @@ export default {
     DistinguishHoliday(){
       for(var i = 0;i<this.DayOfData.length;i++){
         if(this.DayOfData[i].isHoliday === "Y"){
-          this.HolidayCheck[i] = false;
-        }else{
           this.HolidayCheck[i] = true;
+          this.isDummy[i] = true
+        }else{
+          this.HolidayCheck[i] = false;
         }
       }
     },
@@ -524,6 +529,22 @@ export default {
       }
 
     },
+    //------------------------------content 를 보여줄지 말지에 대한 판단 함수 ---------------------------
+      isDummyFunc(){
+          for(var i = 0;i<this.DayOfData.length;i++){
+            if(this.DayOfData[i].seq === 0){
+              this.isDummy[i] = true
+            }
+          }
+          console.log(this.isDummy)
+      },
+      showCalenderData(index){
+        if(this.HolidayCheck[index] && this.isDummy[index]){//휴일 false, 더미 false일때만
+          return false;
+        }else{
+          return true; 
+        }
+      }
 
 
     //------------------------------------------------------------------------ 삭제 요망

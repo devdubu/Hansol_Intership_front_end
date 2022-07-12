@@ -62,47 +62,47 @@
                   <!-- 1주차 월요일 -->
                     <div class="relative calendar-interval bg-gray-100 box-border border-2" style="width:175px;">
                       <div class="flex">
-                        <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-gray-500':'bg-rose-500']" >
-                          <p class="mt-2 text-white">{{viewDate[index]}}</p>
+                        <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']" >
+                          <p class="mt-2 text-white">{{viewDate[index]}}</p><!-- 휴일 체크란 -->
                         </div>
-                        <div v-if="HolidayCheck[index]" class="grow mt-2">
+                        <div v-if="showCalenderData(index)" class="grow mt-2">
                           <p>{{ DayWorkTime[index] }}</p>
                         </div>
                       </div>
                         
-                      <div class="mt-5 relative calendar-interval">
+                      <div v-if="showCalenderData(index)" class="mt-5 relative calendar-interval">
                         <div class="absolute ml-2" style="width: 400px;">
-                          <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index]" >{{task}}</p>
+                          <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index]" >{{task}}</p><!--일일 과제란-->
                         </div>
                       </div>
                       <div v-if="status[index]" class="absolute bottom-3 right-3 ml-2 ">
-                        <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                        <div v-if="showCalenderData(index)"  class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
                       </div>
                       <div class="absolute bottom-3 right-0 mr-2 ">
-                        <button v-if="HolidayCheck[index]" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button v-if="showCalenderData(index)"  @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                   <!--2주차 월요일-->
                     <div class="relative calendar-interval bg-gray-100 box-border border-2 " style="width:175px">
                       <div class="flex">
-                        <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-gray-500':'bg-rose-500']">
+                        <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']">
                           <p class="mt-2 text-white">{{viewDate[index+7]}}</p>
                         </div>
-                        <div v-if="HolidayCheck[index+7]" class="grow mt-2">
+                        <div v-if="showCalenderData(index+7)" class="grow mt-2">
                           <p>{{ DayWorkTime[index+7] }}</p>
                         </div>
                       </div>
                         
-                      <div class="mt-5 relative calendar-interval">
+                      <div v-if="showCalenderData(index+7)" class="mt-5 relative calendar-interval">
                         <div class="absolute ml-2" style="width: 400px;">
                           <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index+7]" >{{task}}</p>
                         </div>
-                        </div>
+                      </div>
                       <div v-if="status[index+7]" class="absolute bottom-3 right-3 ml-2 ">
-                        <div v-if="HolidayCheck[index]" class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                        <div v-if="showCalenderData(index+7)"  class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
                       </div>
                       <div v-if="viewDetailBtn" class="absolute bottom-3 right-0 mr-2 ">
-                        <button v-if="HolidayCheck[index+7]" @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button v-if="showCalenderData(index+7)"  @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                 </div>
@@ -160,6 +160,7 @@ export default {
     this.DistinguishHoliday()
     this.calApprovalTime()
     this.DistinguishStatus()
+    this.isDummyFunc()
   },
   data: function () {
     return {
@@ -170,6 +171,7 @@ export default {
       searchWeekly: '', // AXIOS, twoWeekDtos 데이터 받는 부분 ------------------------------------------------>
       searchWeekYear: [],
 
+      EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
       copySearchWeekly: [],
 
       selectWeek: '',// AXIOS, startOfWeek 데이터 받는 부분 ------------------------------------------------>
@@ -199,7 +201,8 @@ export default {
       DayOfTheWeek: ['Mon', 'Tue', 'Web', 'Thu','Fri','Sat','Sun'],
       Date: [],// 완료
       DayOfData: [],//완료
-      HolidayCheck: [true,true,true,true,true,true,true,true,true,true,true,true,true,true],
+      HolidayCheck: [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+      isDummy:[false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 
 
       //표시 데이터 셋
@@ -209,6 +212,7 @@ export default {
       approvalTime: 0,
       status : [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
 
+      //------------------send register data --------------------
     }
   },
     methods:{
@@ -221,10 +225,13 @@ export default {
                 this.searchWeekly = res.data.result.twoWeeksDtos;
                 this.selectWeek = res.data.result.startOfWeek;
                 this.selectYear = this.selectWeek.slice(0,4);
-                console.log('주간 데이터',this.getWeekly)
+                console.log('시작날짜',this.selectWeek)
+                console.log('주간데이터', this.searchWeekly)
               }else{
-                alert(res.data.message);
-                this.$emit("Logout");
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
                 this.$router.push('/')
               }
             })
@@ -268,7 +275,7 @@ export default {
               console.error(res)
             })
       },
-      //------------------------------------ AXIOS -------------------------------------------
+      //------------------------------------ AXIOS ------------------------------------------- 
       calNowDate(){
         const date = new Date();
         const year = date.getFullYear();
@@ -337,11 +344,36 @@ export default {
       showViewModalEdit(){
         this.editModal = !this.editModal;
       },
+
+
       calDate_v2(startdate, date){
-        //날짜를 데이터에 인풋
-        for(var i = 0;i<this.twoWeek;i++){
-          this.Date[i] = startdate+i;
+        if(this.selectYear === 0 && this.selectYear%100 != 0 || this.selectYear%400 === 0){
+          this.EndDayOfMonth[1] = 29;
         }
+        var startMonth = parseInt((this.plan[0].planDay%10000)/100);
+        console.log(startMonth)
+        var EndDay = this.EndDayOfMonth[startMonth-1];
+
+        EndDay = parseInt(this.plan[0].planDay/100)*100+EndDay;
+        console.log(EndDay)
+
+        var newMonthDay = 0
+        var newDay = 0
+
+        // newDay = + parseInt(EndDay%10000) 
+        // newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+
+        // console.log('새로운 달력', newMonthDay)
+
+        for(var i = 0;i<this.twoWeek;i++){
+          date[i] = this.plan[0].planDay+i;
+          if(date[i] > EndDay){
+            newDay = + parseInt(EndDay%10000) 
+            newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+            date[i] = newMonthDay;
+          }
+        }
+
         //view 데이터에 인풋
         var viewdate = []
         for(var i = 0;i<this.twoWeek;i++){
@@ -357,7 +389,7 @@ export default {
       calDayOfData(){
         var index = 0;
         for(var i = 0; i<this.plan.length;i++){
-          if(this.plan[i].seq === 1 || this.plan[i] === 0){
+          if(this.plan[i].seq === 1 || this.plan[i].seq === 0){
             this.DayOfData[index] = this.plan[i];
             index++;
           }
@@ -399,15 +431,16 @@ export default {
           }
           this.DailyTask[i] = task;
         }
+        console.log(this.DailyTask)
       },
       //------------------------캘린더에 W, P 와 수행시간을 보여주는 함수 끝 ----------------------------
       DistinguishHoliday(){
         console.log('DayOfDate',this.DayOfData)
         for(var i = 0;i<this.DayOfData.length;i++){
           if(this.DayOfData[i].isHoliday === 'Y'){
-            this.HolidayCheck[i] = false;
-          }else{
             this.HolidayCheck[i] = true;
+          }else{
+            this.HolidayCheck[i] = false;
           }
         }
       },
@@ -424,7 +457,23 @@ export default {
            this.status[i] = true;
          }
         }
-      }
+      },
+      //------------------------------content 를 보여줄지 말지에 대한 판단 함수 ---------------------------
+      isDummyFunc(){
+          for(var i = 0;i<this.DayOfData.length;i++){
+            if(this.DayOfData[i].seq === 0){
+              this.isDummy[i] = true
+            }
+          }
+      },
+      showCalenderData(index){
+        if(this.HolidayCheck[index] && this.isDummy[index]){//휴일 false, 더미 false일때만
+          return false;
+        }else{
+          return true; 
+        }
+      },
+      
 
 
       //------------------------------------------------------------------------ 삭제 요망

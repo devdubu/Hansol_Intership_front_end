@@ -160,7 +160,8 @@ export default {
   props:{
     oneDayInfo: Object,
   },
-  mounted() {
+  async mounted() {
+    await this.getTask()
     this.SetData()
     this.SetTaskHour_v2()
     this.ClassifyTaskType()
@@ -174,8 +175,8 @@ export default {
       backMessage: '',
 
       //받는 데이터
-      taskType: taskType,
-      project:project,
+      taskType: [],
+      project: project,
       //변경 데이터에 대한 오류 여부
 
       //보내는 데이터
@@ -255,6 +256,26 @@ export default {
   },
   methods:{
 
+    /* ------------------------------------------ axios get 통신----------------------------------------------*/
+    async getTask(){
+      var testtask
+      await axios.get('/api/tasks',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.taskType = res.data.result;
+        }else{
+          alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+    },
+
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
     SetData(){
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
@@ -316,7 +337,7 @@ export default {
     },
     ClassifyProject(){
       for(var i = 0;i<this.project.length;i++){
-        this.mainGroup.push({groupMainId: this.project[i].project_code, groupSubId: 'TR002',codeMainNm: this.project[i].project_nm});
+        this.mainGroup.push({groupMainId: this.project[i].projectCode, groupSubId: 'TR002',codeMainNm: this.project[i].projectNm});
       }
     },
 
@@ -537,7 +558,8 @@ export default {
 
     },
     //================================ 데이터 보내기 ===================================
-    //axios
+
+    //------------------------------------ AXIOS -------------------------------------------
     async PostData(status){
       if(this.overtime === true && this.overtimeDetail === ''){
         alert('초과 근로 사유를 입력해주세요')
@@ -579,12 +601,14 @@ export default {
             }else if(this.responseCode === 1000 && status == '2'){
               alert('확정 처리가 되었습니다.')
               this.$router.push('/performance');
-            }
+            }//로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
           })
           .catch((res)=>{
             console.error(res)
           })
     }
+        //------------------------------------ AXIOS -------------------------------------------
+
     // onChangeTaskTime(event,index){
       //   var taskTime = event.target.value;
       //   if(taskTime< 0){

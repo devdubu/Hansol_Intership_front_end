@@ -296,7 +296,11 @@ export default {
             this.approval = res.data.result;
             if(this.responseCode != 1000){
               alert('로그인 후 이용해주세요')
-              this.$router.push('/');
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
             }
           })
           .catch((res)=>{
@@ -347,6 +351,8 @@ export default {
       sendDate = sendDate.replaceAll('-','')
       sendDate = Number(sendDate);
       this.selectDate = sendDate;
+
+      console.log(this.selectDate)
 
     },
     calDate(startdate){

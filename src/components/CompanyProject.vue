@@ -139,6 +139,10 @@ export default {
             console.log(this.proj)
             if(this.responseCode != 1000){
               alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
             }
           })
           .catch((res)=>{

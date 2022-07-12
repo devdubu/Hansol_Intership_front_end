@@ -71,7 +71,7 @@
       </div>
       <!--검색 부분 -->
       <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
-          <router-view :Grade="Grade" :Logout="Logout"/>
+          <router-view/>
       </div>
     </div>
   </div>
