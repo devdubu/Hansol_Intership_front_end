@@ -128,6 +128,7 @@ export default {
     await this.GetWeekData();
     this.SetStartWeek();
     await this.getTask();
+    await this.getMyProject();
     this.MountDataSet()
     this.ClassifyTaskType();
     this.MountSelect();
@@ -137,7 +138,7 @@ export default {
     return {
       //받는 데이터
       taskType: [],
-      project: registerProject,
+      project: [],
 
       searchWeekly:[],
       startDate : 0,
@@ -218,6 +219,23 @@ export default {
       })
       .catch((res)=>{
         console.error(res)
+      })
+    },
+    async getMyProject(){
+      await axios.get('/api/projects/me',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.project = res.data.result;
+        }else{
+           alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res);
       })
     },
     async GetWeekData(){

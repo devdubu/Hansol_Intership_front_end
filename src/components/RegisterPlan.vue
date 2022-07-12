@@ -84,8 +84,8 @@
       <div class="flex mt-4">
         <div class="grow"></div>
         <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">날짜별 세부 계획</button></router-link>
-        <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
-        <button @click="PostData('2')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">등록</button>
+        <button @click="PostData('0')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+        <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">등록</button>
         <div class="grow"></div>
       </div>
 
@@ -107,6 +107,7 @@ export default {
     await this.GetWeekData();
     this.SetStartWeek();
     await this.getTask();
+    await this.getMyProject();
 
     this.ClassifyTaskType();
     this.ClassifyProject();
@@ -117,7 +118,7 @@ export default {
     return {
       //받는 데이터
       taskType: [],
-      project: registerProject,
+      project: [],
       
       searchWeekly:[],
       startDate : 0,
@@ -133,6 +134,7 @@ export default {
         Week: "7월 1주차 ~ 7월 2주차",
         seq: 1,
         taskHour: 8,
+        dayHour: 8,
         started_hour: "0900",
         endedHour: "1800",
         groupMainId: "TR001",
@@ -155,7 +157,7 @@ export default {
       taskTime :[],
       renderTaskStartHour:[],
       renderTaskEndHour:[],
-      totalDayWorkTime: 0,
+      totalDayWorkTime: 8,
 
       startTime: [
         {text: "8:00", value: "0800"},
@@ -205,6 +207,23 @@ export default {
       })
       .catch((res)=>{
         console.error(res)
+      })
+    },
+    async getMyProject(){
+      await axios.get('/api/projects/me',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.project = res.data.result;
+        }else{
+           alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res);
       })
     },
     async GetWeekData(){
@@ -458,7 +477,8 @@ export default {
       for(var i = 0;i<14;i++){
         for(var j = 0; j<this.viewData.length;j++){
           this.sendData[index] = {
-            planDay: this.startDate+i,
+            planId: 0,
+            planDay: String(Number(this.startDate)+i),
             seq: this.viewData[j].seq,
             taskHour: this.viewData[j].taskHour,
             dayHour: this.viewData[j].dayHour,
@@ -481,8 +501,8 @@ export default {
         }
       }
       console.log(this.sendData)
-      if(status === '1'){
-        await axios.post('/api/drafts',this.sendData,{withCredentials: true})
+      if(status === '0'){
+        await axios.post('/api/plans/drafts',this.sendData,{withCredentials: true})
             .then((res)=>{
               if(res.data.code === 1000){
                 alert('계획이 등록 되었습니다.')

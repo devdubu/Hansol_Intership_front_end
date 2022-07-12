@@ -150,12 +150,9 @@ export default {
           })
     },
     async PostData(projectId){
-      await axios.post('/api/project',{
+      await axios.post('/api/projects/'+projectId,{
         memberId: localStorage.getItem('memberId')
-      },{
-        params:{
-          projectId: projectId,
-        },withCredentials:true})
+      },{withCredentials:true})
           .then((res)=>{
             if(res.data.code === 1000){
               alert('추가 되었습니다.')

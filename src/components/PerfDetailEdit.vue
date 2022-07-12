@@ -18,7 +18,7 @@
       <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-white bg 	">
         <div class="ml-3 mr-3"><p>{{perfDay}}</p></div>
-        <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="flex">
                   <div><div class="ml-3 mt-2">
-                    <input style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
+                    <input v-model="task.workDetail" style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
                   </div></div>
                   <div class="grow"></div>
                   <div  style="height:25px; width: 105px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
@@ -162,6 +162,8 @@ export default {
   },
   async mounted() {
     await this.getTask()
+    await this.getMyProject();
+
     this.SetData()
     this.SetTaskHour_v2()
     this.ClassifyTaskType()
@@ -176,7 +178,7 @@ export default {
 
       //받는 데이터
       taskType: [],
-      project: project,
+      project: [],
       //변경 데이터에 대한 오류 여부
 
       //보내는 데이터
@@ -227,8 +229,8 @@ export default {
       defaultGroupName: "주업무",
       defaultCodeName:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
       defaultWorkDetail: this.defaultGroupName,
-      defaultWfh_yn: "0",
-      defaultEnroll_yn:"0",
+      defaultwfhYn: "0",
+      defaultSignStatus:"1",
       defaultmemberId: "",
       defaultisHoliday:"N",
       defaultbreakTime: -1,
@@ -275,14 +277,30 @@ export default {
         console.error(res)
       })
     },
-
+    async getMyProject(){
+      await axios.get('/api/projects/me',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.project = res.data.result;
+        }else{
+           alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res);
+      })
+    },
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
     SetData(){
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
       for(var i = 0;i<this.oneDayInfo.length;i++){
         this.deleteBox.push(true);//삭제 버튼 활성화
         this.sendTaskData.push({
-          perf_id: this.oneDayInfo[i].perf_id,
+          perfId: this.oneDayInfo[i].perfId,
           seq: this.oneDayInfo[i].seq,
           taskHour: this.oneDayInfo[i].taskHour,
           perfDay: this.oneDayInfo[i].perfDay,
@@ -295,7 +313,7 @@ export default {
           codeMainNm: this.oneDayInfo[i].codeMainNm,
           codeSubNm: this.oneDayInfo[i].codeSubNm,
           workDetail: this.oneDayInfo[i].workDetail,
-          wfh_yn: this.oneDayInfo[i].wfhYn,
+          wfhYn: this.oneDayInfo[i].wfhYn,
           signStatus: this.oneDayInfo[i].signStatus,
           memberId: this.oneDayInfo[i].memberId,
           isHoliday: this.oneDayInfo[i].isHoliday,
@@ -306,6 +324,7 @@ export default {
       }
       var perfDay = String(this.oneDayInfo[0].perfDay)
       this.perfDay = [perfDay.slice(0,4),'년 ',perfDay.slice(4,6),'월 ',perfDay.slice(6,8),'일'].join('')
+      console.log(this.sendTaskData)
 
     },
     MountSelect() { // subTask 완성
@@ -351,7 +370,7 @@ export default {
     addTaskBox(){
       var index = this.sendTaskData.length;
       this.sendTaskData.push({
-        perf_id: "",
+        perfId: "",
         seq: index+1,//박스의 길이대로 순서 작성
         taskHour: 0,
         perfDay: this.oneDayInfo[0].perfDay,
@@ -364,8 +383,8 @@ export default {
         codeMainNm: this.defaultGroupName,
         codeSubNm: this.defaultCodeName,
         workDetail: "",
-        wfh_yn: this.defaultWfh_yn,
-        enroll_yn: this.defaultEnroll_yn,
+        wfhYn: this.defaultwfhYn,
+        signStatus: this.defaultSignStatus,
         memberId: this.defaultmemberId,
         isHoliday: this.defaultisHoliday,
         breakTime: this.defaultbreakTime,
@@ -442,13 +461,14 @@ export default {
 
     },
     // 데이터 보내는 메서드
-    saveData(status){
-      for(var i = 0; i<this.sendTaskData.length;i++){
-        this.sendTaskData[i].enroll_yn = status;
+    
+    workFromHome(){
+      if(this.sendTaskData[0].wfhYn === '0'){
+        return false;
+      }else{
+        return true;
       }
-
     },
-
     /*---------------------------------------- 경고 창 띄우는 메스드 -------------------------------------*/
     saveAlertFunc(){
       if(confirm('저장하시겠습니까?') == true){
@@ -587,18 +607,16 @@ export default {
       }
       console.log(this.sendTaskData)
       // 실적 수정 데이터
-      await axios.post('/api/performances/edit',{
+      await axios.patch('/api/performances/edit',this.sendTaskData,{
         params:{
-          day: this.oneDayInfo[0].perfDay,
+          day: String(this.sendTaskData[0].perfDay),
         }
-      },{withCredentials:true})
+      ,withCredentials:true})
           .then((res)=>{
-            this.responseCode = res.data.code;
-            this.backMessage = res.data.message;
-            if(this.responseCode === 1000 && status == '1'){
+            if(res.data.code === 1000 && status == '1'){
               alert("저장이 완료되었습니다.")
               this.$router.push('/performance');
-            }else if(this.responseCode === 1000 && status == '2'){
+            }else if(res.data.code === 1000 && status == '2'){
               alert('확정 처리가 되었습니다.')
               this.$router.push('/performance');
             }//로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
@@ -606,7 +624,25 @@ export default {
           .catch((res)=>{
             console.error(res)
           })
-    }
+    },
+    async confirmPost(){
+      await axios.patch('/api/performances/confirm',{},{
+        params:{
+          day : String(this.sendTaskData[0].perfDay)
+        }
+      })
+      .then((res)=>{
+        if(res.data.code === 1000){
+          alert('확정 처리 되었습니다.')
+          this.$router.push('/performance')
+        }else{
+          alert(res.data.message)
+        }
+      })
+      .catch((res)=>{
+        console.error(res)
+      })
+    },
         //------------------------------------ AXIOS -------------------------------------------
 
     // onChangeTaskTime(event,index){

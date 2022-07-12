@@ -6,7 +6,7 @@
   <div class="bg-slate-700 relative">
     <div class="modal bg-slate-600 rounded-lg absolute">
       <div class="modal-title bg-green-500 rounded-t-lg text-white flex">
-        <div><p class="ml-3 mt-3">실적</p></div>
+        <div><p class="ml-3 mt-3">계획</p></div>
         <div class="grow"></div>
         <!--실제 모달창 닫는 버튼-->
         <button @click="closeAlertFunc" class="mr-7 mt-1"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
@@ -16,7 +16,7 @@
       <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-white bg 	">
         <div class="ml-3 mr-3"><p>2022년 6월 21일</p></div>
-        <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
@@ -69,7 +69,7 @@
           <div class="text-white">
             <div class="mt-4">
               <div class="flex mb-2">
-                <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
+                <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">계획업무</p></div>
                 <div class="grow"></div>
                 <button @click="addTaskBox" class="rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
               </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="flex">
                   <div><div class="ml-3 mt-2">
-                    <input style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
+                    <input v-model="task.workDetail" style="width:300px; height: 30px;" class="mt-4 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
                   </div></div>
                   <div class="grow"></div>
                   <div  style="height:25px; width: 110px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
@@ -119,8 +119,8 @@
         </div>
         <div class="flex text-white mt-10 pb-10">
           <div class="grow"></div>
-          <button @click="PostData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
-          <button @click="PostData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
+          <button @click="PostData('0')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
+          <button @click="PostData('1')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
 
@@ -149,6 +149,8 @@ export default {
   },
   async mounted() {
     await this.getTask();
+    await this.getMyProject();
+
     this.SetData()
     this.SetTaskHour_v2()
     this.ClassifyTaskType()
@@ -159,7 +161,7 @@ export default {
     return{
       //받는 데이터
       taskType: [],
-      project:project,
+      project: [],
       //변경 데이터에 대한 오류 여부
 
       //보내는 데이터
@@ -251,7 +253,23 @@ export default {
         console.error(res)
       })
     },
-
+    async getMyProject(){
+      await axios.get('/api/projects/me',{withCredentials:true})
+      .then((res)=>{
+        if(res.data.code === 1000){
+          this.project = res.data.result;
+        }else{
+           alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }
+      })
+      .catch((res)=>{
+        console.error(res);
+      })
+    },
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
     SetData(){
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
@@ -277,6 +295,7 @@ export default {
           isHoliday: this.oneDayInfo[i].isHoliday
         });
       }
+      console.log(this.sendTaskData)
     },
     MountSelect() { // subTask 완성
       //MainTask - 완성
@@ -411,11 +430,17 @@ export default {
       }
 
     },
-
+    workFromHome(){
+      if(this.sendTaskData[0].wfhYn === '0'){
+        return false;
+      }else{
+        return true;
+      }
+    },
     /*---------------------------------------- 경고 창 띄우는 메스드 -------------------------------------*/
-    saveAlertFunc(){
+    async saveAlertFunc(){
       if(confirm('저장하시겠습니까?') == true){
-
+        
       }else{
         return false;
       }
@@ -540,12 +565,14 @@ export default {
         this.sendTaskData[i].endedHour = stringTaskEndHour;
         this.sendTaskData[i].enrollYn = status;
       }
-      console.log(sendTaskData)
-      axios.post('api/plans',{withCredentials : true})
+      console.log(this.sendTaskData)
+
+
+      axios.patch('api/plans',this.sendTaskData,{withCredentials : true})
       .then((res)=>{
-          if(res.data.code === 1000 && status === '1'){
+          if(res.data.code === 1000 && status === '0'){
             alert('수정된 데이터가 저장 처리 되었습니다.')
-          }else if(res.data.code === 1000 && status === '2'){
+          }else if(res.data.code === 1000 && status === '1'){
             alert('수정된 데이터가 확정 처리 되었습니다.')
           }else{
             alert(res.data.message);

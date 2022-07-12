@@ -538,15 +538,19 @@ export default {
       }
       console.log(this.sendData)
 
-      await axios.patch('api/deadline',cancleData,{withCredentials:true})
+      await axios.patch('/api/deadline',cancleData,{withCredentials:true})
       .then((res)=>{
         if(res.data.code === 1000){
           alert('마감 처리가 완료되었습니다.')
-          await this.DeadlineRefresh();
+          
         }else{
           alert(res.data.message);
         }
       })
+      .catch((res)=>{
+        console.error(res);
+      })
+      await this.DeadlineRefresh();
       console.log(cancleData)
     },
 
@@ -562,15 +566,18 @@ export default {
         }
         confrimData.push(this.sendData[i].date)
       }
-      await axios.patch('api/deadline',confrimData,{withCredentials:true})
+      await axios.patch('/api/deadline',confrimData,{withCredentials:true})
       .then((res)=>{
         if(res.data.code === 1000){
           alert('마감 처리가 완료되었습니다.')
-          await this.DeadlineRefresh();
         }else{
           alert(res.data.message);
         }
       })
+      .catch((res)=>{
+        console.error(res)
+      })
+      await this.DeadlineRefresh();
       console.log(confrimData)
     },
   },

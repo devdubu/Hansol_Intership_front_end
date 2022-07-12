@@ -97,8 +97,14 @@ import registerProject from '../assets/project.json'
 import axios from "axios";
 export default {
   name: 'ViewPlanDetail',
-  mounted() {
-    this.MountDataSet()
+  async mounted() {
+    await this.GetWeekData();
+    this.SetStartWeek();
+    await this.GetData();
+    this.MountDataSet();
+
+    
+
     this.SetTaskHour_v2();
   },
   data() {
@@ -106,11 +112,13 @@ export default {
       //받는 데이터
       taskType: registerTask,
       project: registerProject,
-      startDate : 20220704,
-      week: '06월 3주 ~07월 1주',
+      
+      searchWeekly:[],
+      startDate : 0,
+      week: '',
 
       //보내는 데이터
-      sendData: [],
+      getData: [],
 
       //화면에 뿌려주는 변수
       viewData: [[]],
@@ -137,24 +145,6 @@ export default {
       totalDayWorkTime: [],
       totalWeekWorkTime: 0,
 
-      startTime: [
-        {text: "8:00", value: "0800"},
-        {text: "8:30", value: "0830"},
-        {text: "9:00", value: "0900"},
-        {text: "9:30", value: "0930"},
-        {text: "10:00", value: "1000"}
-      ],
-      endTime: [
-        {text: "16:00", value: "1600"},
-        {text: "16:30", value: "1630"},
-        {text: "17:00", value: "1700"},
-        {text: "17:30", value: "0930"},
-        {text: "18:00", value: "1800"},
-        {text: "18:30", value: "1830"},
-        {text: "19:00", value: "1900"},
-        {text: "19:30", value: "1930"},
-        {text: "20:00", value: "2000"}
-      ],
 
       startWorkTimeView: [],
       endWorkTimeView: [],
@@ -168,32 +158,77 @@ export default {
     }
   },
   methods: {
-
-    MountDataSet(){
-      var arr = []
-      for(var i = 0;i<14;i++){
-         arr = [{
-          seq:1,
-          taskHour:8,
-          plan_day: this.startDate+i,
-          dayHour: 8,
-          started_hour:"0900",
-          endedHour: "1800",
-          groupMainId:"TR001",
-          groupSubId : "ZDUM1",
-          codeId : "Z001",
-          codeMainNm : "주업무",
-          codeSubNm:"R&D 및 내부 PJT (NonPJT코드) - 시장조사, 분석, 계획, 설계/개발/테스트/이행",
-          workDetail : "주업무",
-          wfhYn : "0",
-          enrollYn : "0",
-          isHoliday : "N"
-        }];
-        if(i === 5 || i === 6 || i === 12 || i === 13){
-          arr[0].isHoliday = "Y"
+    //---------------------------------------------------axios get -------------------------------------
+    async GetWeekData(){
+        await axios.get('/api/biweekly',{withCredentials: true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                this.searchWeekly = res.data.result.twoWeeksDtos;
+                this.startDate = res.data.result.startOfWeek;
+                console.log('시작날짜',this.selectWeek)
+                console.log('주간데이터', this.searchWeekly)
+              }else{
+                alert(this.backMessage);
+                localStorage.setItem('memberId', '0')
+                localStorage.setItem('memberNm','No');
+                localStorage.setItem('grade','GEUST');
+                this.$router.push('/')
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+      },
+    SetStartWeek(){ 
+      for(var i = 0;i<this.searchWeekly.length;i++){
+        if(this.searchWeekly[i].fromdt === this.startDate){
+          this.week = this.searchWeekly[i].content;
+          break;
         }
-        this.viewData[i] = arr;
       }
+    },
+    async GetData(){
+      await axios.get('/api/plans',{
+        params:{
+          day: this.startDate
+        },withCredentials:true
+      })
+      .then((res)=>{
+        if(res.data.code===1000){
+          this.getData = res.data.result;
+        }else if(res.data.code === 5006){
+          alert(this.backMessage);
+          localStorage.setItem('memberId', '0')
+          localStorage.setItem('memberNm','No');
+          localStorage.setItem('grade','GEUST');
+          this.$router.push('/')
+        }else{
+          this.$router.push('/plan');
+        }
+      })
+    },  
+    MountDataSet(){
+      
+      var start = Number(this.startDate)
+      var uniqe = 0
+      var date = [];
+      var DayOfDate = [];
+      for(var i = 0;i<14;i++){
+        date.push(start+i)
+      }
+      console.log(date)
+
+      for(var i = 0;i<14;i++){
+        var arr = []
+        for(var j = 0;j<this.getData.length;j++){
+          if(date[i] === this.getData[j].planDay){
+            arr.push(this.getData[i])
+          }
+        }
+        this.viewData[i] = arr
+      }
+      console.log(this.viewData)
+      
 
       //시간에 대한 변수의 2차원 배열 셋팅
 
@@ -230,7 +265,7 @@ export default {
       for(var j = 0; j<14;j++){
         var taskstart = [], taskend =[], tasktime =[];
         for(var i = 0;i<this.viewData[j].length;i++){
-           taskstart.push(Number(this.viewData[j][i].started_hour))
+           taskstart.push(Number(this.viewData[j][i].startedHour))
            taskend.push(Number(this.viewData[j][i].endedHour))
            tasktime.push(this.viewData[j][i].taskHour)
         }
@@ -240,7 +275,7 @@ export default {
       }
       for(var i = 0;i<14;i++){
         this.totalDayWorkTime[i] = this.viewData[i][0].dayHour;
-        this.StartWorkTime[i] = this.viewData[i][0].started_hour;
+        this.StartWorkTime[i] = this.viewData[i][0].startedHour;
       }
 
       for(var i = 0;i<this.totalDayWorkTime.length;i++){
@@ -337,7 +372,7 @@ export default {
             stringTaskEndHour = '0'+String(stringTaskEndHour);
           }
           this.viewData[i][j].dayHour = this.totalDayWorkTime[i];
-          this.viewData[i][j].started_hour = stringTaskStartHour;
+          this.viewData[i][j].startedHour = stringTaskStartHour;
           this.viewData[i][j].endedHour = stringTaskEndHour;
         }
       }
@@ -350,7 +385,7 @@ export default {
             seq: this.viewData[i][j].seq,
             taskHour: this.view[i][j].taskHour,
             dayHour: this.viewData[i][j].dayHour,
-            startedHour: this.viewData[i][j].started_hour,
+            startedHour: this.viewData[i][j].startedHour,
             endedHour: this.viewData[i][j].endedHour,
             groupMainId: this.viewData[i][j].groupMainId,
             groupSubId: this.viewData[i][j].groupSubId,

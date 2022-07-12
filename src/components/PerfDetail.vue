@@ -20,7 +20,7 @@
       <div class="flex text-white bg">
         <div class="ml-3">{{perfDay}}</div>
         <div class="ml-3 mr-3"><p>{{ selectDate }}</p></div>
-        <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome()" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-white ml-3 mr-3 text-lg">
@@ -80,7 +80,7 @@
                   <div v-if="ended[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-rose-500 rounded-xl"><p class="mt-0.5">마감</p></div>
                 </div>
                 <div class="flex">
-                  <div><p class="mt-3 ml-3">{{ data.detail }}</p></div>
+                  <div><p class="mt-3 ml-3">{{ data.worDetail }}</p></div>
                   <div class="grow"></div>
                   <div style="width: 100px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.taskHour }}</div>
                   <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{ taskHour[index] }}</div>
@@ -151,7 +151,7 @@ export default {
     //------------------------------------ AXIOS -------------------------------------------
     async ConfirmData(){
 
-      const perfConfirmDay = this.oneDayInfo[0].perfDay
+      const perfConfirmDay = this.oneDayInfo[0].signStatus
       console.log(perfConfirmDay)
 
       //axios 통신
@@ -166,6 +166,12 @@ export default {
             if(this.responseCode === 1000){
               alert('확정 처리 되었습니다.');
               this.$router.push('/performance');
+            }else if(res.data.code === 5006){
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
             }else{
               alert(this.backMessage)
               this.$router.push('/performance');
@@ -196,12 +202,12 @@ export default {
         if (this.oneDayInfo[i].signStatus === '2') {
           this.confirm[i] = true;
           this.approve[i] = false;
-        } else if(this.oneDayInfo[i].signStatus === '3') {
+        }else if(this.oneDayInfo[i].signStatus === '3') {
           this.confirm[i] = false;
           this.approve[i] = true;
         }else{
           this.confirm[i] = false;
-          this.approve[i] = true;
+          this.approve[i] = false;
         }
         if(this.oneDayInfo[i].isDeadline === '1'){
           this.confirm[i] = false;
@@ -214,8 +220,16 @@ export default {
       }
     },
     IsDeadline(){
-      if(this.oneDayInfo[0].isDeadline === '1'){
+      console.log(this.oneDayInfo[0].signStatus)
+      if(this.oneDayInfo[0].isDeadline === '1' || this.oneDayInfo[0].signStatus === '3'){
         this.showEditBtn = false;
+      }
+    },
+    workFromHome(){
+      if(this.oneDayInfo[0].wfhYn === '0'){
+        return false;
+      }else{
+        return true;
       }
     },
 

@@ -44,8 +44,7 @@
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
-                <router-link to="/registerplan"><button style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
-                <button style="width: 80px;" class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-red-600 active:bg-red-700 focus:outline-none"><p class="mt-0.5 ml-0.5">템플릿</p></button>
+                <router-link to="/registerplan" v-if="showRegister"><button  style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
                 <router-link to="/viewplandetail"><button style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">상세보기</p></button></router-link>
                 <button style="width: 80px;" class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획수정</p></button>
             </div>
@@ -161,6 +160,7 @@ export default {
     this.calApprovalTime()
     this.DistinguishStatus()
     this.isDummyFunc()
+    this.showRegisterBtn()
   },
   data: function () {
     return {
@@ -211,6 +211,7 @@ export default {
       DailyTask:[],
       approvalTime: 0,
       status : [false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+      showRegsiter: false,
 
       //------------------send register data --------------------
     }
@@ -453,7 +454,7 @@ export default {
       },
       DistinguishStatus(){
         for(var i = 0;i<this.DayOfData.length;i++){
-         if(this.DayOfData[i].enrollYn === "2"){
+         if(this.DayOfData[i].enrollYn === "1"){
            this.status[i] = true;
          }
         }
@@ -471,6 +472,17 @@ export default {
           return false;
         }else{
           return true; 
+        }
+      },
+      showRegisterBtn(){
+        var DummyData = 0
+        for(var i = 0;i<this.DayOfData.length;i++){
+          if(this.DayOfData[i].seq === 1){
+            DummyData++;
+          }
+        }
+        if(DummyData === 0){
+          this.showRegsiter = true
         }
       },
       

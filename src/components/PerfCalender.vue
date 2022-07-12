@@ -527,7 +527,6 @@ export default {
           this.ended[i] = true;
         }
       }
-
     },
     //------------------------------content 를 보여줄지 말지에 대한 판단 함수 ---------------------------
       isDummyFunc(){

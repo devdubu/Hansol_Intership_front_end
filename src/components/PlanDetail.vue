@@ -22,7 +22,7 @@
       <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-white bg 	">
         <div class="ml-3 mr-3"><p>{{ selectDate }}</p></div>
-        <div class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-white ml-3 mr-3 text-lg">
@@ -110,6 +110,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 /* add some free styles */
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {faPlus} from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
 
 /* add each imported icon to the library */
 library.add(faXmark, faPlus)
@@ -151,7 +152,7 @@ export default {
     DistinguishDetailStatus(){
       this.TaskNum = this.oneDayInfo.length;
       for(var i = 0;i<this.TaskNum;i++) {
-        if (this.oneDayInfo[i].enrollYn === '2') {
+        if (this.oneDayInfo[i].enrollYn === '1') {
           this.status[i] = true;
         } else {
           this.status[i] = false;
@@ -175,12 +176,28 @@ export default {
       }
 
     },
-    ConfirmData(){
-        
-        const sendData = this.oneDayInfo[0].planDay
+    async ConfirmData(){
+        const sendDate = this.oneDayInfo[0].planDay
+        var sendData = this.oneDayInfo;
+        for(var i = 0;i<sendData.length;i++){
+          sendData[i].enrollYn = '1'
+        }
+
+        axios.patch('/api/plans',sendData,{
+          params:{
+            day: String(sendDate)
+          }
+        })
         console.log(sendData)
     }
   },
+  workFromHome(){
+      if(this.sendTaskData[0].wfhYn === '0'){
+        return false;
+      }else{
+        return true;
+      }
+    },
   
   components: {
   }
