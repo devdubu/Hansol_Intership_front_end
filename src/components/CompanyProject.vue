@@ -41,28 +41,7 @@
 
             </div>
             <div class="grow"></div>
-            <div class="text-white flex mr-8 mt-4" style="max-width:1294px">
-                <div class="flex h-8">
-                    <div class="mr-2 w-10 bg-green-500 rounded-xl"><p class="mt-1">확정</p></div>
-                    <div><p class="mt-1">확정</p></div>
-                </div>
-                <div class="flex ml-3 h-8">
-                    <div class="mr-2 w-10 bg-sky-500 rounded-xl"><p class="mt-1">PM</p></div>
-                    <div><p class="mt-1">PM승인</p></div>
-                </div>
-                <div class="flex ml-3 h-8">
-                    <div class="mr-2 w-10 bg-fuchsia-500 rounded-xl"><p class="mt-1">팀장</p></div>
-                    <div><p class="mt-1">팀장승인</p></div>
-                </div>
-                <div class="flex ml-3 h-8">
-                    <div class="mr-2 w-12 bg-indigo-500 rounded-xl"><p class="mt-1">사업부</p></div>
-                    <div><p class="mt-1">사업부승인</p></div>
-                </div>
-                <div class="flex ml-3 h-8">
-                    <div class="mr-2 w-10 bg-rose-500 rounded-xl"><p class="mt-1">마감</p></div>
-                    <div><p class="mt-1">마감</p></div>
-                </div>
-            </div>
+            
               <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <!-- 컨텐츠 부분 -->
