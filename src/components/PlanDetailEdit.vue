@@ -165,7 +165,9 @@ export default {
       //변경 데이터에 대한 오류 여부
 
       //보내는 데이터
+      DeleteData: [],
       sendTaskData:[],
+      sendDeleteData:[],
       //보여주는 데이터
       default_value : 'selected',
       startTime:[
@@ -363,7 +365,15 @@ export default {
       this.addSelectMain(index)
     },
     removeTaskBox(){
-      this.sendTaskData.pop();
+      var delData = this.sendTaskData.pop()
+     
+      var data = delData.planId
+      this.DeleteData.push(data)
+
+      let arr = Object.values(this.DeleteData);
+
+      console.log(arr);
+      this.sendDeleteData = [...arr];
       this.deleteBox.pop();
       //삭제시에 보내는 데이터 senddata 삭제
     },
@@ -544,7 +554,7 @@ export default {
     //================================ 데이터 보내기 ===================================
     // ------------------------------------------------------AXIOS POST 통신 ------------------------------------------------------ 
 
-    PostData(status){
+    async PostData(status){
       for(var i = 0;i<this.sendTaskData.length;i++){
         var stringTaskStartHour = this.taskStartHour[i]
         var stringTaskEndHour = this.taskEndHour[i]
@@ -568,7 +578,7 @@ export default {
       console.log(this.sendTaskData)
 
 
-      axios.patch('api/plans',this.sendTaskData,{withCredentials : true})
+      await axios.patch('api/plans',this.sendTaskData,{withCredentials : true})
       .then((res)=>{
           if(res.data.code === 1000 && status === '0'){
             alert('수정된 데이터가 저장 처리 되었습니다.')
@@ -582,6 +592,19 @@ export default {
       .catch((res)=>{
         console.error(res)
       })
+
+      await axios.delete('api/plans/delete',this.sendDeleteData,{
+        params:{
+          day: String(this.sendTaskData[0].planDay)
+        },withCredentials:true})
+        .then((res)=>{
+          if(res.data.code != 1000){
+            alert(res.data.message)
+          }
+        })
+        .catch((res)=>{
+          console.error(res)
+        })
     }
     // onChangeTaskTime(event,index){
       //   var taskTime = event.target.value;

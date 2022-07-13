@@ -180,9 +180,12 @@ export default {
       taskType: [],
       project: [],
       //변경 데이터에 대한 오류 여부
+      DeleteData:[],
 
       //보내는 데이터
       sendTaskData:[],
+      sendDeleteData:[],
+
       //보여주는 데이터
       default_value : 'selected',
       startTime:[
@@ -283,7 +286,7 @@ export default {
         if(res.data.code === 1000){
           this.project = res.data.result;
         }else{
-           alert(this.backMessage);
+          alert(this.backMessage);
           localStorage.setItem('memberId', '0')
           localStorage.setItem('memberNm','No');
           localStorage.setItem('grade','GEUST');
@@ -400,7 +403,15 @@ export default {
 
     },
     removeTaskBox(){
-      this.sendTaskData.pop();
+      var delData = this.sendTaskData.pop()
+      console.log(typeof(delData.perfId))
+      var data = delData.perfId
+      this.DeleteData.push(data)
+
+      let arr = Object.values(this.DeleteData);
+
+      console.log(arr);
+      this.sendDeleteData = [...arr];
       this.deleteBox.pop();
       //삭제시에 보내는 데이터 senddata 삭제
     },
@@ -606,20 +617,27 @@ export default {
         this.sendTaskData[i].overtimeDetail = this.overtimeDetail;
       }
       console.log(this.sendTaskData)
-      // 실적 수정 데이터
+      await axios.delete('/api/performances/delete',this.sendDeleteData,{
+        withCredentials:true
+      })
+      .then((res)=>{
+        if(res.data.code!=1000){
+          alert(res.data.message);
+        }
+      })
+      .catch((res)=>{
+        console.error(res);
+      })      // 실적 수정 데이터
       await axios.patch('/api/performances/edit',this.sendTaskData,{
         params:{
           day: String(this.sendTaskData[0].perfDay),
         }
       ,withCredentials:true})
           .then((res)=>{
-            if(res.data.code === 1000 && status == '1'){
+            if(res.data.code === 1000 && status === '1'){
               alert("저장이 완료되었습니다.")
               this.$router.push('/performance');
-            }else if(res.data.code === 1000 && status == '2'){
-              alert('확정 처리가 되었습니다.')
-              this.$router.push('/performance');
-            }//로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
+            }
           })
           .catch((res)=>{
             console.error(res)
@@ -629,8 +647,7 @@ export default {
       await axios.patch('/api/performances/confirm',{},{
         params:{
           day : String(this.sendTaskData[0].perfDay)
-        }
-      })
+        },withCredentials:true})
       .then((res)=>{
         if(res.data.code === 1000){
           alert('확정 처리 되었습니다.')

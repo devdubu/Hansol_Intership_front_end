@@ -127,7 +127,7 @@
               <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" v-for="(member,index) in viewApprovalTable">
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
-                        <div class=" pt-2" style="width:50%"><p>{{ member[0].memberName }}</p></div>
+                        <div class=" pt-2" style="width:50%"><p>{{ member[0].memberNm }}</p></div>
                         <div class=" pt-2 border-l" style="width:50%"><input v-model="checkOutMember" :value="teamMember[index]" type="checkbox"> </div><!--멤버별 승인 제외 index로 구분한다.-->
                     </div>
                     <div class="flex sub-interval border-r" >
@@ -328,7 +328,7 @@ export default {
         this.CopyApprovalDate.push({
           perfDay : this.approval[i].perfDay,
           memberId: this.approval[i].memberId,
-          memberName : this.approval[i].memberName,
+          memberNm : this.approval[i].memberNm,
           signStatus: this.approval[i].signStatus,
           totalTime : this.approval[i].totalTime,
           dayHour: this.approval[i].dayHour,
@@ -455,11 +455,11 @@ export default {
 
       if(this.copySendData.days.length === 0){
         alert('날짜를 선택 해주세요')
-        return
+        return false;
       }
       if(this.copySendData.memberIds.length === 0){
         alert('팀원을 선택 해주세요')
-        return;
+        return false;
       }
       console.log(this.checkDate)
       for(var i = 0;i<this.checkDate.length;i++){
@@ -490,10 +490,10 @@ export default {
           for(var j = 0;j<this.checkDate.length;j++){
             if(this.checkStatus[i][this.checkDate[j].index].signStatus === '1'){
               alert('확정되지 않는 실적입니다.')
-              return;
+              return c;
             }else if(this.checkStatus[i][this.checkDate[j].index].signStatus === '3'){
               alert('이미 처리된 실적입니다.')
-              return;
+              return false;
             }
           }
         }
@@ -502,7 +502,7 @@ export default {
           for(var j = 0;j<this.checkDate.length;j++){
             if(this.checkStatus[i][this.checkDate[j].index].signStatus === '1' || this.checkStatus[i][this.checkDate[j].index].signStatus === '2'){
               alert('승인되지 않은 데이터 입니다.')
-              return;
+              return false;
             }
           }
         }
@@ -511,7 +511,7 @@ export default {
           for(var j = 0;j<this.checkDate.length;j++){
             if(this.checkStatus[i][this.checkDate[j].index].signStatus === '2' || this.checkStatus[i][this.checkDate[j].index].signStatus === '1'){
               alert('반려 할 수 없는 데이터 입니다.')
-              return;
+              return false;
             }
           }
         }
@@ -538,8 +538,11 @@ export default {
     },
     async ConfirmApprovalFunc(){
       //시작 날짜도 보내야함
-      await this.SendApprovalData('2','3')
-
+      const SendYN = await this.SendApprovalData('2','3')
+      if(!SendYN){
+        console.log('정상적으로 튕김')
+        return;
+      }
       
 
       var days = [],memberIds = [];
@@ -571,7 +574,12 @@ export default {
     },
     async CancelApprovalFunc(){
       
-      await this.SendApprovalData('3','1')
+      const SendYN = await this.SendApprovalData('3','1')
+
+      if(!SendYN){
+        console.log('정상적으로 튕김')
+        return;
+      }
 
       var days = [],memberIds = [];
 
@@ -600,7 +608,12 @@ export default {
     },
     async ResetApprovalFunc(){
 
-      await this.SendApprovalData('2','1')
+      const SendYN = await this.SendApprovalData('2','1')
+
+      if(!SendYN){
+        console.log('정상적으로 튕김')
+        return;
+      }
 
       var days = [],memberIds = [];
 

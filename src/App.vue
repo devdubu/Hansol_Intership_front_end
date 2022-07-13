@@ -109,7 +109,7 @@ export default {
       pageIndex: 0,
       memberNm : '',
       grade: '',
-      is_logined: true,
+      is_logined: false,
       is_employee : false,
       is_leader : false,
       is_manager : false,

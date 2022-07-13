@@ -244,7 +244,7 @@ export default {
       async GetData(){
           await axios.get("api/plans",{
             params:{
-              day: this.selectDay,
+              day: this.selectWeek,
             },withCredentials : true})
           .then((res)=>{
             if(res.data.code === 1000){

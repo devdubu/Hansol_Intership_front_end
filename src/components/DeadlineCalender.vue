@@ -316,20 +316,6 @@ export default {
     async SearchDate(){
       await this.getDeadline();
     },
-    async DeadlineRefresh(){
-      this.SetNowDate();
-
-      await this.GetWeekData();
-      this.calSelectYear();
-      await this.getDeadline();
-    
-      this.SetCalender()
-
-      this.SetCalenderData()
-      this.SetCalenderInfo()
-      this.setWeekAndAllSelect()
-
-    },
     //------------------------------------ AXIOS -------------------------------------------
     SetNowDate(){
       const date = new Date();
@@ -525,7 +511,9 @@ export default {
       this.arrangementSendData();
     
 
-      var cancleData = []
+      var cancleData = {
+        days:[]
+      }
       for(var i = 0;i<this.sendData.length;i++){
         if(this.sendData[i].isDeadline === '0') {
           var warningDate = [this.sendData[i].date.slice(4, 6), '월', this.sendData[i].date.slice(6, 8), '일'].join('')
@@ -533,7 +521,7 @@ export default {
           return;
         }else{
           console.log('push')
-          cancleData.push(this.sendData[i].date)
+          cancleData.days.push(this.sendData[i].date)
         }
       }
       console.log(this.sendData)
@@ -541,8 +529,8 @@ export default {
       await axios.patch('/api/deadline',cancleData,{withCredentials:true})
       .then((res)=>{
         if(res.data.code === 1000){
-          alert('마감 처리가 완료되었습니다.')
-          
+          alert('마감 철회가 완료되었습니다.')
+          this.$router.go(0)
         }else{
           alert(res.data.message);
         }
@@ -550,26 +538,31 @@ export default {
       .catch((res)=>{
         console.error(res);
       })
-      await this.DeadlineRefresh();
       console.log(cancleData)
+
+      this.$forceUpdate();
+
     },
 
     async ComfirmDeadline(){
       this.arrangementSendData();
 
-      var confrimData = []
+      var confrimData = {
+        days:[]
+      }
       for(var i = 0;i<this.sendData.length;i++){
         if(this.sendData[i].isDeadline === '1') {
           var warningDate = [this.sendData[i].date.slice(4, 6), '월', this.sendData[i].date.slice(6, 8), '일'].join('')
           alert(warningDate + ' 은 이미 마감된 날짜 입니다.');
           return;
         }
-        confrimData.push(this.sendData[i].date)
+        confrimData.days.push(this.sendData[i].date)
       }
       await axios.patch('/api/deadline',confrimData,{withCredentials:true})
       .then((res)=>{
         if(res.data.code === 1000){
           alert('마감 처리가 완료되었습니다.')
+          this.$router.go(0)
         }else{
           alert(res.data.message);
         }
@@ -577,8 +570,9 @@ export default {
       .catch((res)=>{
         console.error(res)
       })
-      await this.DeadlineRefresh();
       console.log(confrimData)
+
+      
     },
   },
   // -------------------------------------- 해당 부분의 로직 수정 요망 --------------------------------
