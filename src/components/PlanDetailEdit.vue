@@ -277,6 +277,7 @@ export default {
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
       for(var i = 0;i<this.oneDayInfo.length;i++){
         this.deleteBox.push(true);//삭제 버튼 활성화
+        console.log(this.deleteBox)
         this.sendTaskData.push({
           planId: this.oneDayInfo[i].planId,
           seq: this.oneDayInfo[i].seq,
@@ -342,6 +343,7 @@ export default {
     addTaskBox(){
       var index = this.sendTaskData.length;
       this.sendTaskData.push({
+        perfId: "",
         seq: index+1,//박스의 길이대로 순서 작성
         taskHour: 0,
         planDay: this.oneDayInfo[0].planDay,
@@ -359,6 +361,8 @@ export default {
         memberId: this.defaultmemberId,
         isHoliday: this.defaultisHoliday
       });
+      this.deleteBox.push(true);
+
       this.taskStartHour.push(Number(this.sendTaskData[index].startedHour));
       this.taskEndHour.push(Number(this.sendTaskData[index].endedHour));
 
@@ -593,9 +597,12 @@ export default {
         console.error(res)
       })
 
-      await axios.delete('api/plans/delete',this.sendDeleteData,{
+      await axios.delete('api/plans/',{
+        data:{
+          deleteId:this.sendDeleteData,
+        },
         params:{
-          day: String(this.sendTaskData[0].planDay)
+          day: String(this.sendTaskData[0].perfDay)
         },withCredentials:true})
         .then((res)=>{
           if(res.data.code != 1000){

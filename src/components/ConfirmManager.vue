@@ -124,6 +124,7 @@
                     </div>
                 </div>
             <!-- 실제 데이터 인풋 -->
+            <div class="member-view">
               <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" v-for="(member,index) in viewApprovalTable">
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
@@ -213,9 +214,7 @@
                 </div>
               </div>
             </div>
-            <p>{{ checkOutMember }}</p>
-            <p>{{checkDate}}</p>
-            <p>{{ searchDay }}</p>
+            </div>
           </div>
       </div>
 
@@ -680,5 +679,19 @@ export default {
 .blind{
   display: none;
 }
-
+.member-view{
+  width: 1240px;
+  height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.member-view::-webkit-scrollbar{
+  width: 10px;
+  border-radius: 5px;
+  background-color: rgb(30 41 59);
+}
+.member-view::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+  background-color: rgb(100 116 139);
+}
 </style>

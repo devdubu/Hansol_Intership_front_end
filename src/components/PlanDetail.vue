@@ -176,6 +176,7 @@ export default {
       }
 
     },
+    //--------------------------------AXIOS------------------------------------------
     async ConfirmData(){
         const sendDate = this.oneDayInfo[0].planDay
         var sendData = this.oneDayInfo;
@@ -187,6 +188,24 @@ export default {
           params:{
             day: String(sendDate)
           }
+        })
+        .then((res)=>{
+          if(res.data.code === 1000){
+            alert('확정 처리가 완료되었습니다.')
+            this.$router.go(0)
+          }else if(res.data.code === 5006){
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
+            }else{
+              alert(this.backMessage)
+              this.$router.push('/performance');
+            } //로그인이 아닌 경우는 이곳에서 else if로 튕겨주기
+        })
+        .catch((res)=>{
+          console.error(res);
         })
         console.log(sendData)
     }

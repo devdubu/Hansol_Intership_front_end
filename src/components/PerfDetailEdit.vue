@@ -394,6 +394,7 @@ export default {
         overtimeDetail: this.defaultovertimeDetail,
         isDeadline: this.defaultisDeadline,
       });
+      this.deleteBox.push(true);
       this.taskStartHour.push(Number(this.sendTaskData[index].startedHour));
       this.taskEndHour.push(Number(this.sendTaskData[index].endedHour));
 
@@ -617,8 +618,13 @@ export default {
         this.sendTaskData[i].overtimeDetail = this.overtimeDetail;
       }
       console.log(this.sendTaskData)
-      await axios.delete('/api/performances/delete',this.sendDeleteData,{
-        withCredentials:true
+      await axios.delete('/api/performances/',{
+        data:{
+          deleteId:this.sendDeleteData,
+        },
+        params:{
+          day:String(this.sendTaskData[0].perfDay)
+        },withCredentials:true
       })
       .then((res)=>{
         if(res.data.code!=1000){
@@ -636,7 +642,7 @@ export default {
           .then((res)=>{
             if(res.data.code === 1000 && status === '1'){
               alert("저장이 완료되었습니다.")
-              this.$router.push('/performance');
+              this.$router.go(0)
             }
           })
           .catch((res)=>{
@@ -651,7 +657,7 @@ export default {
       .then((res)=>{
         if(res.data.code === 1000){
           alert('확정 처리 되었습니다.')
-          this.$router.push('/performance')
+          this.$router.go(0)
         }else{
           alert(res.data.message)
         }

@@ -283,12 +283,11 @@ export default {
           }, withCredentials:true
         })
             .then((res)=>{
-              this.responseCode = res.data.code;
-              this.backMessage = res.data.message;
               this.deadline = res.data.result;
               console.log(res)
-              if(this.responseCode != 1000){
-                alert(this.backMessage);
+              console.log(this.deadline)
+              if(res.data.code != 1000){
+                alert(res.data.message);
               localStorage.setItem('memberId', '0')
               localStorage.setItem('memberNm','No');
               localStorage.setItem('grade','GEUST');
@@ -314,7 +313,26 @@ export default {
           })
     },
     async SearchDate(){
+
+      this.processingCalenderData =[];
+      this.firstWeekData = []
+      this.secondWeekData = []
+      this.thirdWeekData = []
+      this.fourthWeekData = []
+      this.sixthWeekData = []
+      this.sixthWeekData = []
+      this.allData = []
+
+      await this.GetWeekData();
+      this.calSelectYear();
       await this.getDeadline();
+      
+      this.SetCalender()
+
+      this.SetCalenderData()
+      this.SetCalenderInfo()
+      console.log('안넘어감?')
+      this.setWeekAndAllSelect()
     },
     //------------------------------------ AXIOS -------------------------------------------
     SetNowDate(){
@@ -402,7 +420,6 @@ export default {
                 isDeadline: this.processingCalenderData[index].isDeadline,
               })
               index++;
-              console.log(index)
             } else{
               week.push({
                 date : '0',
@@ -429,7 +446,8 @@ export default {
           if(this.calendarData[i].length === 0){
             clearWeek = 6
           }else{
-             if (this.calendarData[i][j].date === '0') {
+             if(this.calendarData[i][j].date === '0') {
+              console.log('데이터가 0인경우',i,j)
               calenderArr.push(false)
               clearWeek++;
             } else {
@@ -492,6 +510,7 @@ export default {
           }
         }
       }
+      console.log(this.firstWeekData)
     },
     arrangementSendData(){
       this.sendData.push(...this.firstWeek)

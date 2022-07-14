@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="mr-5 mt-5 text-white">
-              <p>2주 총 실적 : <span class="text-rose-500">{{ FirstPlanTotalHour+SecondPlanTotalHour }}Hr</span></p>
+              <p>2주 총 실적 : <span class="text-rose-500">{{ FirstPerfTotalHour+SecondPerfTotalHour }}Hr</span></p>
             </div>
               <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
@@ -76,7 +76,7 @@
                     <p class="mt-2 text-white">{{viewDate[index]}}</p>
                   </div>
                   <div v-if="showCalenderData(index)" class="grow mt-2">
-                    <p>{{ DayWorkTime[index] }}</p>
+                    <p >{{ DayWorkTime[index] }}</p>
                   </div>
                 </div>
 
@@ -104,7 +104,7 @@
                   <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']">
                     <p class="mt-2 text-white">{{viewDate[index+7]}}</p>
                   </div>
-                  <div  v-if="showCalenderData(index)" class="grow mt-2">
+                  <div  v-if="showCalenderData(index+7)" class="grow mt-2">
                     <p>{{ DayWorkTime[index+7] }}</p>
                   </div>
                 </div>
@@ -122,9 +122,6 @@
                   </div>
                   <div v-if="ended[index+7]" class="absolute bottom-3 ml-2 ">
                     <div v-if="showCalenderData(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-rose-500">마감</div>
-                  </div>
-                  <div class="absolute bottom-3 right-0 mr-2 ">
-                    <button v-if="showCalenderData(index+7)" @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                   </div>
                 <div v-if="viewDetailBtn" class="absolute bottom-3 right-0 mr-2 ">
                   <button v-if="showCalenderData(index+7)" @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
@@ -258,6 +255,7 @@ export default {
             day: this.selectWeek
           },withCredentials : true})
           .then((res)=>{
+            console.log('보내주는 위크',this.selectWeek)
             console.log(res)
             this.perf = res.data.result;
             console.log(this.perf)
@@ -295,17 +293,23 @@ export default {
     // 상단 검색 버튼을 누르면 실행되는 메서드
     async SearchDate(){
       
-        await this.GetServer
+      await this.GetServer();
 
-        this.calDate_v2(this.Date)
-        this.calDayOfData()
-        this.calDayWorkTime_v2()
-        this.printPrevWorkType(this.perf)
-        this.DistinguishHoliday()
-        this.calApprovalTime()
-        this.DistinguishStatus()
-        this.calTotalWeekTime()
-
+      this.SecondPlanTotalHour = 0;
+      this.FirstPlanTotalHour = 0;
+      this.FirstPerfTotalHour = 0;
+      this.SecondPerfTotalHour = 0;
+        
+      this.calDate_v2(this.Date)
+      this.calDayOfData()
+      this.calDayWorkTime_v2()
+      this.printPrevWorkType(this.perf)
+      this.DistinguishHoliday()
+      this.calApprovalTime()
+      this.DistinguishStatus()
+      this.calTotalWeekTime()
+      this.isDummyFunc()
+       
       
     },
     //------------------------------------ AXIOS -------------------------------------------
@@ -394,13 +398,14 @@ export default {
       // newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
 
       // console.log('새로운 달력', newMonthDay)
-
+      var newMonth = 0;
       for(var i = 0;i<this.twoWeek;i++){
         date[i] = this.perf[0].perfDay+i;
         if(date[i] > EndDay){
           newDay = + parseInt(EndDay%10000) 
           newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
-          date[i] = newMonthDay;
+          date[i] = newMonthDay+newMonth;
+          newMonth++;
         }
       }
       //view 데이터에 인풋
@@ -429,7 +434,7 @@ export default {
 
       var planindex = 0;
       for(var i =0;i<this.plan.length;i++){
-        if(this.perf[i].seq === 1 || this.perf[i].seq === 0){
+        if(this.plan[i].seq === 1 || this.plan[i].seq === 0){
           this.planDayOfDate[planindex] = this.plan[i];
           planindex++
         }
@@ -536,9 +541,10 @@ export default {
             }
           }
           console.log(this.isDummy)
+          console.log(this.HolidayCheck);
       },
       showCalenderData(index){
-        if(this.HolidayCheck[index] && this.isDummy[index]){//휴일 false, 더미 false일때만
+        if(this.HolidayCheck[index] || this.isDummy[index]){//휴일 false, 더미 false일때만
           return false;
         }else{
           return true; 

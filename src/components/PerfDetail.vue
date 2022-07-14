@@ -165,7 +165,7 @@ export default {
             this.backMessage = res.data.message;
             if(this.responseCode === 1000){
               alert('확정 처리 되었습니다.');
-              this.$router.push('/performance');
+              this.$router.go(0)
             }else if(res.data.code === 5006){
               alert(this.backMessage);
               localStorage.setItem('memberId', '0')
