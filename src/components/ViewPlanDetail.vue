@@ -313,6 +313,8 @@ export default {
       }
     },
     RenderTime_v2(dateIndex){
+      var config = 0;
+
       for(var i = 0;i<this.taskStartHour[dateIndex].length;i++){
         var start = this.taskStartHour[dateIndex][i];
         var end = this.taskEndHour[dateIndex][i];
