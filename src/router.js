@@ -10,6 +10,7 @@ import RegisterPlan from "./components/RegisterPlan.vue";
 import RegisterPlanDetail from "./components/RegisterPlanDetail.vue";
 import ViewPlanDetail from "./components/ViewPlanDetail.vue";
 import LoginForm from "./components/LoginForm.vue"
+import RegisterPlanWeek from "./components/RegisterPlanWeek.vue";
 import {createApp} from "vue";
 
 
@@ -54,6 +55,10 @@ const routes = [
   {
     path: "/registerplan",
     component: RegisterPlan,
+  },
+  {
+    path: '/registerplanweek',
+    component: RegisterPlanWeek,
   },
   {
     path: "/registerplandetail",

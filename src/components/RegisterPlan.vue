@@ -83,7 +83,8 @@
 
       <div class="flex mt-4">
         <div class="grow"></div>
-        <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">날짜별 세부 계획</button></router-link>
+        <router-link to="/registerplanweek"><button style="width: 150px" class="text-white bg-teal-500 rounded">주간 별 계획</button></router-link>
+        <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">요일 별 계획</button></router-link>
         <button @click="PostData('0')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
         <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">등록</button>
         <div class="grow"></div>

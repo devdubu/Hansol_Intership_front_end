@@ -19,6 +19,7 @@ module.exports = {
       './src/components/PerfDetailEdit.vue',
       './src/components/ViewPlanDetail.vue',
       './src/components/LoginForm.vue',
+      './src/components/RegisterPlanWeek.vue'
 
   ],
   theme: {
