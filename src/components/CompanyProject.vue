@@ -9,12 +9,12 @@
 -->
 <template>
       <!--검색 부분 -->
-      <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">
-          <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1294px">
+      <div class="grow bg-gray-800	rounded-lg ml-2 mt-5">
+          <div class="rounded-lg h-16 bg-gray-700 ml-5 flex" style="max-width:1294px">
             <div class="h-8 place-self-center flex">
                 <div class="flex">
                     <div class="mt-1.5">
-                        <span class="ml-4 text-white">주 시작일</span>
+                        <span class="ml-4 text-gray-200">주 시작일</span>
                     </div>
                     <div class="mt-1.5 ml-4">
                         <select>
@@ -31,7 +31,7 @@
                 
                 <div class="flex">
                     <div class="mt-1.5">
-                        <p class="ml-4 text-white" style="width:100px">성명/사번</p>
+                        <p class="ml-4 text-gray-200" style="width:100px">성명/사번</p>
                     </div>
                     <div class="">
                         <input class="h-8 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search"/> 
@@ -42,13 +42,13 @@
             </div>
             <div class="grow"></div>
             
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button class="w-10 h-8 place-self-center mr-5 text-gray-200 rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <!-- 컨텐츠 부분 -->
-          <div class="ml-5 mt-10 text-white project-table" style="width: 1294px; height: 600px;">
+          <div class="ml-5 mt-10 text-gray-200 project-table" style="width: 1294px; height: 600px;">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg table-size">
+            <div class=" bg-gray-700 h-10 mr-16 rounded-tl-lg rounded-tr-lg table-size">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5" style="width:150px"><p>프로젝트 코드</p></div>
                 <div class="pt-2 border-l" style="width:480px"><p>프로젝트 명</p></div>
@@ -61,7 +61,7 @@
            
             <!-- 실제 데이터 인풋 -->
             <div style="width:1294px; overflow: hidden">
-              <div class="bg-slate-600 mr-16 border-t" v-for="(project,index) in proj" >
+              <div class=" bg-gray-600 mr-16 border-t" v-for="(project,index) in proj" >
                 <div class="flex table-size">
                   <div class="mr-3 pt-2 ml-5 " style="width:150px"><p>{{ project.projectCode }}</p></div>
                   <div class="pt-2 textover border-l" style="height:40px; width: 480px;">
@@ -73,8 +73,8 @@
                   <!--영업 사원 이름 ajax 통신에는 교체 요망-->
                   <!--SAP에 등록 날짜 임으로 ajax 요청 후에 교체 요망-->
                   <!---->
-                  <div class="interval bg-slate-600  border-l" style="width:120px;">
-                    <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-4 mt-2 text-white rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
+                  <div class="interval  bg-gray-600  border-l" style="width:120px;">
+                    <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-4 mt-2 text-gray-200 rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
                   </div>
                 </div>
               </div>
@@ -118,10 +118,7 @@ export default {
             console.log(this.proj)
             if(this.responseCode != 1000){
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }
           })
           .catch((res)=>{
@@ -129,21 +126,25 @@ export default {
           })
     },
     async PostData(projectId){
-      await axios.post('/api/projects/'+projectId,{
-        memberId: localStorage.getItem('memberId')
-      },{withCredentials:true})
-          .then((res)=>{
-            if(res.data.code === 1000){
-              alert('추가 되었습니다.')
-            }else{
-              alert(res.data.message);
-            }
-          })
-          .catch((res)=>{
-            console.error(res);
-          })
-      await this.GetProject();
-      this.writeDate();
+      if(confirm('추가하시겠습니까?') == true){
+        await axios.post('/api/projects/'+projectId,{
+          memberId: localStorage.getItem('memberId')
+        },{withCredentials:true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                alert('추가 되었습니다.')
+              }else{
+                alert(res.data.message);
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+        await this.GetProject();
+        this.writeDate();
+      }else{
+        return false;
+      }
     },
     writeDate(){
      for(var i = 0; i<this.proj.length;i++){
@@ -158,6 +159,13 @@ export default {
       return true;
     }
    },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
+    },
 
 
   },
@@ -190,7 +198,8 @@ export default {
   text-overflow: ellipsis;
 }
 .project-table{
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .project-table::-webkit-scrollbar{
   width: 5px;

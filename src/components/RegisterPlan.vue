@@ -9,13 +9,13 @@
 -->
 <template>
   <!--검색 부분 -->
-  <div class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white">
-    <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+  <div class="grow bg-gray-800 rounded-lg ml-2 mt-5 text-white">
+    <div class="rounded-lg bg-gray-600	ml-5 flex" style="height:50px; max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
         <p>계획 정보 : {{ week }}</p><!--오늘 데이터를 전달 받아야함 props로 해결하면 될듯-->
       </div>
       <div class="grow"></div>
-      <div class="mt-5 mr-3"><p>평일 {{ WeekWorkTime }}시간</p></div>
+      <div class="mt-3 mr-3"><p>평일 {{ WeekWorkTime }}시간</p></div>
     </div>
     <div class="flex mt-4" style="width: 1270px">
       <div class="grow"></div>
@@ -27,7 +27,7 @@
       <!-- 표 만들기 -->
 
       <!-- 실제 데이터 인풋 -->
-      <div v-for="(Task,index) in viewData" class="bg-slate-600 mr-16 rounded-xl mb-4" style="height: 120px">
+      <div v-for="(Task,index) in viewData" class="bg-gray-600 mr-16 rounded-xl mb-4" style="height: 120px">
         <div class="flex">
           <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
             <p class="mr-3">{{ Task.Week }}</p>
@@ -42,8 +42,9 @@
                 {{ EndWorkTime }}
               </div>
             </div>
-            <div class="mt-2 mr-4">
-              <p>재택근무<span><input type="checkbox"></span></p>
+            <div class="mt-2 mr-4 flex">
+              <p class="ml-10">재택근무</p>
+              <div class="ml-3"><input type="checkbox"></div>
             </div>
           </div>
             <div class="ml-3 mt-5 pt-2" style="height:100px; width: 800px;">
@@ -71,7 +72,7 @@
                   <p>시간 :</p>
                 </div>
                 <div class="pb-1">
-                  <input @change="onChangeTaskHour_v2($event,index)" min="0" v-model="Task.taskHour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                  <input @change="onChangeTaskHour_v2($event,index)" min="1" v-model="Task.taskHour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
                 </div>
               </div>
               <div class="mt-4 mr-4 ">
@@ -83,10 +84,10 @@
 
       <div class="flex mt-4">
         <div class="grow"></div>
-        <router-link to="/registerplanweek"><button style="width: 150px" class="text-white bg-teal-500 rounded">주간 별 계획</button></router-link>
-        <router-link to="/registerplandetail"><button style="width: 150px" class="text-white bg-teal-500 rounded">요일 별 계획</button></router-link>
-        <button @click="PostData('0')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
-        <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">등록</button>
+        <router-link to="/registerplanweek"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">주간 별 계획</button></router-link>
+        <router-link to="/registerplandetail"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">요일 별 계획</button></router-link>
+        <button @click="PostData('0')" style="width: 50px" class="ml-4 text-white bg-gray-500 rounded">저장</button>
+        <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded">등록</button>
         <div class="grow"></div>
       </div>
 
@@ -200,10 +201,7 @@ export default {
           this.taskType = res.data.result;
         }else{
           alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -217,10 +215,7 @@ export default {
           this.project = res.data.result;
         }else{
            alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -237,10 +232,7 @@ export default {
                 console.log('주간데이터', this.searchWeekly)
               }else{
                 alert(this.backMessage);
-                localStorage.setItem('memberId', '0')
-                localStorage.setItem('memberNm','No');
-                localStorage.setItem('grade','GEUST');
-                this.$router.push('/')
+                this.logout();
               }
             })
             .catch((res)=>{
@@ -509,10 +501,7 @@ export default {
                 alert('계획이 등록 되었습니다.')
               }else if(res.data.code === 5006){
                 alert(this.backMessage);
-                localStorage.setItem('memberId', '0')
-                localStorage.setItem('memberNm','No');
-                localStorage.setItem('grade','GEUST');
-                this.$router.push('/')
+                this.logout();
               }else{
                 alert(res.data.message)
               }
@@ -521,7 +510,14 @@ export default {
               console.error(res);
             })
       }
-    }
+    },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
+    },
 
   }
 }

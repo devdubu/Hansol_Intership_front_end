@@ -1,12 +1,12 @@
 <!-- 완성 -->
 <template>
       <!--검색 부분 -->
-      <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">
-          <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+      <div class="grow bg-gray-800	rounded-lg ml-2 mt-5">
+          <div class="rounded-lg h-16 bg-gray-700 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
                 <div class="flex">
                     <div class="mt-1.5">
-                        <span class="ml-4 text-white">주 시작일</span>
+                        <span class="ml-4 text-gray-200">주 시작일</span>
                     </div>
                     <div class="mt-1.5 ml-4">
                         <input v-model="searchDay" @change="SearchDay()" type="date"/>
@@ -16,7 +16,7 @@
                 
                 <div class="flex">
                     <div class="mt-1.5">
-                        <p class="ml-4 text-white" style="width:100px">성명/사번</p>
+                        <p class="ml-4 text-gray-200" style="width:100px">성명/사번</p>
                     </div>
                     <div class="">
                         <input class="h-8 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search"/> 
@@ -26,9 +26,9 @@
 
             </div>
             <div class="grow"></div>
-            <div class="text-white flex mr-8 mt-4" style="max-width:1200px">
+            <div class="text-gray-200 flex mr-8 mt-4" style="max-width:1200px">
                 <div class="flex h-8">
-                    <div class="mr-2 w-10 bg-green-500 rounded-xl"><p class="mt-1">확정</p></div>
+                    <div class="mr-2 w-10 bg-emerald-500 rounded-xl"><p class="mt-1">확정</p></div>
                     <div><p class="mt-1">확정</p></div>
                 </div>
                 <div class="flex ml-3 h-8">
@@ -48,11 +48,11 @@
                     <div><p class="mt-1">마감</p></div>
                 </div>
             </div>
-              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-gray-200 rounded-lg bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-500 focus:outline-none ">검색</button>
           </div>
-          <div class="flex text-white" style="max-width:1265px">
+          <div class="flex text-gray-200" style="max-width:1265px">
             <div class="ml-7 mt-7 text-xl">
-                <p>DT개발팅 Web R&D 파트</p>
+                <p>{{departmentName}}</p>
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
@@ -65,10 +65,10 @@
           <!-- 상단 검색 부분 끝 -->
           
           <!-- 컨텐츠 부분 -->
-          <div class="ml-5 mt-5 text-white">
+          <div class="ml-5 mt-5 text-gray-200">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-16 rounded-tl-lg rounded-tr-lg" style="max-width:1230px">
+            <div class="bg-gray-700 h-16 rounded-tl-lg rounded-tr-lg" style="max-width:1230px">
               <div class="flex">
                 <div class="pt-2 border-r" style="width:180px;"><p class="mt-3">구분</p></div>
                 <div class="pt-2 main-interval border-r" ><p>Mon <span><input v-model="checkDate" :value="SendDate[0]" type="checkbox"></span></p><p>{{viewDate[0]}}</p></div><!--0~6번 째로 해당 주차의 status를 구분한다.-->
@@ -85,7 +85,7 @@
             
            
             <!-- 서브 메뉴 -->
-            <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" >
+            <div class="bg-gray-700 h-10 border-t" style="max-width:1230px" >
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
                         <div class=" pt-2" style="width:50%"><p>팀원</p></div>
@@ -125,7 +125,7 @@
                 </div>
             <!-- 실제 데이터 인풋 -->
             <div class="member-view">
-              <div class="bg-slate-600 h-10 border-t" style="max-width:1230px" v-for="(member,index) in viewApprovalTable">
+              <div class="bg-gray-600 h-10 border-t" style="max-width:1230px" v-for="(member,index) in viewApprovalTable">
                 <div class="flex">
                     <div class="border-r flex" style="width:180px;">
                         <div class=" pt-2" style="width:50%"><p>{{ member[0].memberNm }}</p></div>
@@ -236,7 +236,7 @@ export default {
       //원본 데이터 파일
       approval: [], // ----------------------------------------------> axios get 요청 데이터를 받는 곳
       //화면이 보여주는 영역
-
+      departmentName:'',
       Date: [],
       viewDate: [],
       teamMember: [],
@@ -296,10 +296,7 @@ export default {
             if(this.responseCode != 1000){
               alert('로그인 후 이용해주세요')
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }
           })
           .catch((res)=>{
@@ -323,6 +320,7 @@ export default {
       
     },
     SetCopyData(){
+      this.departmentName = localStorage.getItem('deptNm')
       for(var i = 0;i<this.approval.length;i++){
         this.CopyApprovalDate.push({
           perfDay : this.approval[i].perfDay,
@@ -638,7 +636,14 @@ export default {
           .catch((res)=>{
             console.error(res);
           })
-    }
+    },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
+    },
 
   },
   components: {

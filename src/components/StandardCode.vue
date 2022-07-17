@@ -1,7 +1,7 @@
 <template>
       <!--검색 부분 -->
-     <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">
-          <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+     <div class="grow bg-gray-800	rounded-lg ml-2 mt-5">
+          <div class="rounded-lg h-16 bg-gray-700 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
                 <div class="flex">
                     <div class="mt-1.5">
@@ -37,7 +37,7 @@
 
             </div>
             <div class="grow"></div>
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-500 focus:outline-none ">검색</button>
           </div>
           <!--상단 버튼 부분 -->
           <div class="flex up-btn">
@@ -51,7 +51,7 @@
           <div class="ml-5 mt-5 text-white">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-10 rounded-tl-lg rounded-tr-lg  table-size">
+            <div class="bg-gray-700 h-10 rounded-tl-lg rounded-tr-lg  table-size">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 middle-table"><p>그룹</p></div>
                 <div class="pt-2 border-l long-table"><p>그룹 명</p></div>
@@ -66,7 +66,7 @@
             </div>
            
             <!-- 실제 데이터 인풋 -->
-             <div class="bg-slate-600 h-10 border-t table-size" v-for="(standardcode,index) in standardcode">
+             <div class="bg-gray-600 h-10 border-t table-size" v-for="(standardcode,index) in standardcode">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 middle-table"><p>{{ standardcode.group }}</p></div>
                 <div class="pt-2 border-l long-table"><p>{{ standardcode.group_name }}</p></div>

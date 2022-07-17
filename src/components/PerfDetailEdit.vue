@@ -5,18 +5,18 @@
   1. memberId를 추가 값에서는 넣어주기(addTask에서)
 -->
 <template>
-  <div class="bg-slate-700 relative">
-    <div class="modal bg-slate-600 rounded-lg absolute">
-      <div class="modal-title bg-green-500 rounded-t-lg text-white flex">
+  <div class="relative">
+    <div class="modal bg-gray-700 rounded-lg absolute">
+      <div class="modal-title bg-emerald-500 rounded-t-lg text-gray-200 flex">
         <div><p class="ml-3 mt-3">실적</p></div>
         <div class="grow"></div>
         <!--실제 모달창 닫는 버튼-->
-        <button @click="closeAlertFunc" class="mr-7 mt-1"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+        <button @click="closeAlertFunc"  style="width: 30px; height: 30px;" class="hover:bg-rose-500 active:bg-rose-600 focus:outline-none rounded mr-5 mt-3"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
       </div>
 
       <!--상단 근로 시간 표시 부분-->
-      <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
-      <div class="flex text-white bg 	">
+      <div class="modal-total-time bg-gray-600 mt-3 pt-3 rounded-md" style="margin-top:10px">
+      <div class="flex text-gray-200">
         <div class="ml-3 mr-3"><p>{{perfDay}}</p></div>
         <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
@@ -29,11 +29,11 @@
         <div>~</div>
         <!--끝나는 시간-->
         <div class="text-black ml-3 mr-3">
-          <p class="text-base text-white">{{ EndWorkTime }}</p>
+          <p class="text-base text-gray-200">{{ EndWorkTime }}</p>
         </div>
         <div class="mr-4"><p>총 <span class="text-rose-400">{{ totalDayWorkTime }}</span>시간</p></div><!--데이터 실시간 변경-->
       </div>
-      <div class="flex mt-3 ml-3 text-white">
+      <div class="flex mt-3 ml-3 text-gray-200">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
           <span class="text-rose-400">단, 휴일 및 휴일은 4시간당, 30분씩 휴게시간이 제외되어 다빈치에 반영됩니다.</span></p></div>
           <div class="grow"></div>
@@ -44,9 +44,9 @@
 
      <div class="flex">
       <div class="grow"></div>
-        <div class="text-white flex mr-8 mt-4 text-xs">
+        <div class="text-gray-200 flex mr-8 mt-4 text-xs">
                 <div class="flex h-6">
-                    <div class="mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-1">확정</p></div>
+                    <div class="mr-2 w-8 bg-emerald-500 rounded-xl"><p class="mt-1">확정</p></div>
                     <div><p class="mt-1">확정</p></div>
                 </div>
                 <div class="flex ml-3 h-6">
@@ -68,15 +68,16 @@
             </div>
         </div>
           <!-- 프로젝트 작성 란-->
-          <div class="text-white">
-            <div class="mt-4">
+          <div class="text-gray-200">
+            <div class="mt-4 perf-box rounded">
               <div class="flex mb-2">
-                <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
+                <div class="ml-2 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
                 <div class="grow"></div>
-                <button @click="addTaskBox" class="rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
+                <button v-if="deleteBox" @click="removeTaskBox" class="mr-2 bg-rose-500 w-6 rounded-md hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+                <button @click="addTaskBox" class="pt-0.5 rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
               </div>
               <!-- 데이터 반복 구간-->
-              <div v-for="(task,index) in sendTaskData" class="border-2 modal-content rounded"  style="margin-bottom:10px">
+              <div v-for="(task,index) in sendTaskData"  class="border-2 modal-content rounded"  style="width: 99%; margin-bottom:10px">
                 <div class="flex">
 
                   <div class="mt-3 ml-3 select-option rounded" style="width: 300px;">
@@ -93,36 +94,33 @@
 
                   <div class="grow"></div>
 
-                  <button v-if="deleteBox[index]" @click="removeTaskBox" class="mr-4 mt-3 bg-rose-500 w-6 rounded"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
                 </div>
                 <div class="flex">
                   <div><div class="ml-3 mt-2">
-                    <input v-model="task.workDetail" style="width:300px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/> 
+                    <input v-model="task.workDetail" style="width:300px; height: 25px;" class="mt-4 h-6 placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="기타사항을 입력하세요" type="text" name="search"/>
                   </div></div>
                   <div class="grow"></div>
-                  <div  style="height:25px; width: 105px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded flex">
+                  <div  style="height:25px; width: 105px;" class="mt-3 mr-3 w-16 rounded flex">
                     <p class="pl-1">시간 :</p>
                     <div>
-                      <input v-model="task.taskHour" @change="onChangeTaskHour_v2($event, index) " type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
+                      <input v-model="task.taskHour" @change="onChangeTaskHour_v2($event, index)" min="1" type="number" class="ml-3 form-control text-sm h-6 block w-12 pl-2 text-base font-normal text-gray-700 bg-white text-black bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" />
                     </div>
                   </div>
-                  <div style="height:25px;" class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{renderTaskStartHour[index]}} ~
+                  <div style="height:25px;" class="mt-3 mr-3 bg-gray-500 w-28 rounded">{{renderTaskStartHour[index]}} ~
                     {{ renderTaskEndHour[index] }}</div><!--시간 데이터 실시간 변경점-->
                 </div>
               </div>
                 <!-- 업무 반복 구현 끝-->
-              <div v-if="overtime" class="ml-5 mt-10 pt-5 flex border-t-2" style="width: 1150px;">
+              <div v-if="overtime" class="mt-10 pt-5 flex border-t-2" style="width: 99%;">
                 <div>
-                  <div  class="" style="width: 120px">
+                  <div class="" style="width: 120px">
                     <p>초과 근로 사유</p>
                   </div>
                   <div class="mt-1 text-black" style="width: 600px">
-                    <input v-model="overtimeDetail" type="text" style="width: 600px" class="rounded">
+                    <input v-model="overtimeDetail" type="text" style="width: 600px; height: 30px;" class="ml-1 rounded">
                   </div>
 
                 </div>
-
-
               </div>
                 
                
@@ -131,7 +129,7 @@
 
           </div>
         </div>
-        <div class="flex text-white mt-10 pb-10">
+        <div class="flex text-gray-200 mt-10 pb-10">
           <div class="grow"></div>
           <button @click="PostData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
           <button @click="PostData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
@@ -244,7 +242,7 @@ export default {
 
       //데이터 상자
       TaskBox: [],
-      deleteBox: [false],
+      deleteBox: false,
 
 
       // =============== 시간에 대한 알고리즘 ================
@@ -270,10 +268,7 @@ export default {
           this.taskType = res.data.result;
         }else{
           alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -287,10 +282,7 @@ export default {
           this.project = res.data.result;
         }else{
           alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -299,9 +291,13 @@ export default {
     },
     /*------------------------------------------ 마운트 시에 일어나야할 이벤트 -----------------------------------*/
     SetData(){
+
+      if(this.oneDayInfo.length > 1){
+        this.deleteBox = true;//삭제 버튼 활성화
+      }
+
       //각 Task가 순서대로 올 때를 가정하고 함수를 진행한다.
       for(var i = 0;i<this.oneDayInfo.length;i++){
-        this.deleteBox.push(true);//삭제 버튼 활성화
         this.sendTaskData.push({
           perfId: this.oneDayInfo[i].perfId,
           seq: this.oneDayInfo[i].seq,
@@ -394,7 +390,7 @@ export default {
         overtimeDetail: this.defaultovertimeDetail,
         isDeadline: this.defaultisDeadline,
       });
-      this.deleteBox.push(true);
+      this.deleteBox = true;
       this.taskStartHour.push(Number(this.sendTaskData[index].startedHour));
       this.taskEndHour.push(Number(this.sendTaskData[index].endedHour));
 
@@ -413,7 +409,9 @@ export default {
 
       console.log(arr);
       this.sendDeleteData = [...arr];
-      this.deleteBox.pop();
+      if(this.sendTaskData.length < 2){
+        this.deleteBox = false;
+      }
       //삭제시에 보내는 데이터 senddata 삭제
     },
     addSelectMain(index){
@@ -529,7 +527,9 @@ export default {
       }
       this.totalDayWorkTime = sumTime
       if(this.totalDayWorkTime > 9){
-        this.overtime = true
+        this.overtime = true;
+      }else{
+        this.overtime = false;
       }
 
       this.calTime_v2();
@@ -665,6 +665,13 @@ export default {
       .catch((res)=>{
         console.error(res)
       })
+    },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
     },
         //------------------------------------ AXIOS -------------------------------------------
 
@@ -823,5 +830,10 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
+.perf-box{
+  width: 1150px;
+  margin: 10px 20px 0 23px;
+  padding: 10px;
+  background-color: rgb(75 85 99);
+}
 </style>

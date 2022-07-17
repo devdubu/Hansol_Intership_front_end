@@ -76,24 +76,25 @@
                 <div class="pt-2 interval border-l middle-table"><p class="">사원명</p></div>
                 <div class="pt-2 interval border-l middle-table"><p class="">핸드폰 번호</p></div>
                 <div class="pt-2 name-interval border-l short-table"><p class="">모바일타입</p></div>
-                <div class="pt-2 border-l no-enter-boxs "><p class="pr-2 no-enter-box">미입력일</p></div>
+                <div class="pt-2 border-l no-enter-box"><p class="pr-2 no-enter-box">미입력일</p></div>
               </div>
             </div>
            
             <!-- 실제 데이터 인풋 -->
-            <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
-              <div class="flex table-size">
-                <div class="mr-3 pt-2 ml-5 short-table"><p>{{ noenter.deptCode }}</p></div>
-                <div class="pt-2 border-l middle-table">
-                  <p>{{ noenter.deptNm }}</p>
+            <div class="noenter-table">
+              <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
+                <div class="flex table-size ">
+                  <div class="mr-3 pt-2 ml-5 short-table"><p>{{ noenter.deptCode }}</p></div>
+                  <div class="pt-2 border-l middle-table">
+                    <p>{{ noenter.deptNm }}</p>
+                  </div>
+                  <div class="pt-2 interval border-l middle-table memberNameText-box"><p class="memberNameText">{{ noenter.memberNm }}</p></div>
+                  <div class="pt-2 interval border-l middle-table"><p class="text-sm">{{ noenter.phoneNumber }}</p></div>
+                  <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobileType }}</p></div>
+                  <div class="pt-2 border-l no-enter-box">
+                    <p class=" ml-4 no-enter-day text-left text-sm">{{ noenter.noEnterDays }}</p>
+                  </div>
                 </div>
-                <div class="pt-2 interval border-l middle-table memberNameText-box"><p class="memberNameText">{{ noenter.memberNm }}</p></div>
-                <div class="pt-2 interval border-l middle-table"><p class="text-sm">{{ noenter.phoneNumber }}</p></div>
-                <div class="pt-2 name-interval border-l short-table"><p class="pr-2">{{ noenter.mobileType }}</p></div>
-                <div class="pt-2 border-l no-enter-box">
-                  <p class=" ml-4 no-enter-day text-left text-sm">{{ noenter.noEnterDays }}</p>
-                </div>
-                
               </div>
             </div>
           </div>
@@ -158,10 +159,7 @@ export default {
             console.log(this.getNoEnter)
           }else{
               alert(res.data.code);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
            }
          })
          .catch((res)=>{
@@ -208,6 +206,14 @@ export default {
         }
       }
     },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
+    },
+
   },
   components: {
   }
@@ -254,7 +260,7 @@ export default {
 }
 .no-enter-box{
   width:660px;
-  height: 40px; 
+  height: 40px;
   overflow-y: hidden;
   overflow-x: scroll;
 }
@@ -267,5 +273,21 @@ export default {
 }
 .memberNameText-box{
   overflow: hidden;
+}
+.noenter-table{
+  width: 1230px;
+  height: 550px;
+  overflow-y:scroll;
+  overflow-x: hidden;
+}
+.noenter-table::-webkit-scrollbar{
+  width: 10px;
+  border-radius: 5px;
+  background-color: rgb(55 65 81);
+}
+.noenter-table::-webkit-scrollbar-thumb{
+
+  background-color: rgb(31 41 55);
+
 }
 </style>

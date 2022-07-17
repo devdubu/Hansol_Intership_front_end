@@ -1,37 +1,44 @@
 <template>
   <!-- 상단 메뉴 바-->
-  <div class="bg-slate-700 relative">
+  <div class="bg-gray-800 relative ">
 
     <div class="flex" style="width:100vw;">
-      <div class="bg-green-300 w-44 h-8">
-        <img class="mt-2 ml-3 w-40" src="../public/hansol-timereport-logo.png">
+      <div class="bg-emerald-800 w-44 h-8">
+        <router-link to="/">
+          <img class="mt-2 ml-3 w-40" src="../public/hansol-timereport-logo.png">
+        </router-link>
       </div>
-      <div class="grow bg-emerald-400 flex divide-x divide-dash ">
+      <div class="grow bg-emerald-800 flex ">
         <div class="grow"></div>
-        <div v-if="is_logined" class="flex-none w-40 mt-1">
+        <div v-if="is_logined" style="height: 23px; width: 100px;" class="flex-none rounded w-40 mt-1 bg-emerald-600 text-gray-200 mr-10 shadow">
+          <p>{{ memberNm }} 님</p>
+        </div>
+        <div v-if="is_logined" style="height: 23px; width: 100px;" class="flex-none rounded w-40 mt-1 bg-emerald-600 text-gray-200 mr-10 shadow">
           <button @click="Logout()">Logout</button>
         </div>
       </div>
     </div>
     <!--내용 부분-->
     <div class="flex" style="height: 800px">
-      <div class="flex-none w-44 bg-green-400 text-left ">
-        <div v-if="is_employee"  class="mt-4">
-          <div class="text-lg bg-green-300 w-44 pl-3" @click="smallMenuToggle('manour')">맨아워관리</div>
+      <div class="flex-none w-44 bg-emerald-800 text-left text-gray-300 ">
+        <div v-if="is_employee"  class="mt-4 shadow mb-1 mt-1 side-menu-bar">
+          <div class="text-lg bg-emerald-700 pl-2 rounded-t side-menu-bar">
+            <button @click="smallMenuToggle('manour')">맨아워관리</button>
+          </div>
           <!--맨아워관리 폴더-->
           
-            <ul v-if="LM_manoutToggle" class="text-left ml-8">
+            <ul v-if="LM_manoutToggle" class="text-left text-gray-300 bg-emerald-600 pb-1 rounded-b">
               <div>
-                <div><p @click="smallMenuToggle('plan')" class="text-base">계획</p></div>
-                  <ul v-if="LM_planToggle" class="ml-5 text-sm">
-                    <router-link to="/plan"><li>계획관리</li></router-link>
+                <div class=""><button @click="smallMenuToggle('plan')" class="text-base ml-2">계획</button></div>
+                  <ul v-if="LM_planToggle" class="bg-emerald-500 ml-3 text-sm rounded shadow mr-1">
+                    <router-link to="/plan"><button class="ml-2 mt-0.5">계획관리</button></router-link>
                   </ul>
               </div>
 
               <div>
-                <div><p @click="smallMenuToggle('performance')" class="text-base">실적</p></div>
-                <ul v-if="LM_performanceToggle" class="ml-5 text-sm">
-                  <router-link to="/performance"><li>실적관리</li></router-link>
+                <div><button @click="smallMenuToggle('performance')" class="text-base ml-2">실적</button></div>
+                <ul v-if="LM_performanceToggle" class="bg-emerald-500 ml-3 text-sm rounded shadow mr-1">
+                  <router-link to="/performance"><button class="ml-2 mt-0.5 ">실적관리</button></router-link>
                 </ul>
               </div>
 
@@ -40,37 +47,50 @@
         <!--맨아워관리 폴더-->
 
         <!--프로젝트 관리 폴더-->
-          <div v-if="is_employee">
-            <div @click="smallMenuToggle('project')" class="text-lg bg-green-300 w-44 pl-3">프로젝트 관리</div>
-            <ul v-if="LM_projectToggle" class="ml-8 text-sm">
-              <a href="/project"><li>내 프로젝트</li></a>
-            </ul>
+          <div v-if="is_employee" class="mb-1 shadow side-menu-bar">
+            <div class="text-lg bg-emerald-700 pl-2 rounded-t">
+              <button @click="smallMenuToggle('project')">프로젝트 관리</button>
+            </div>
+            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+              <ul v-if="LM_projectToggle" class="text-sm rounded bg-emerald-500 ml-3 mt-0.5 shadow mr-1">
+                <router-link to="/project"><button class="ml-2 mt-0.5">내 프로젝트</button></router-link>
+              </ul>
+            </div>
           </div>
         <!--프로젝트 관리 폴더-->
 
         <!--승인 관리 폴더-->
-          <div v-if="is_leader">
-            <div @click="smallMenuToggle('approve')" class="text-lg bg-green-300 w-44 pl-3">승인관리</div>
-              <ul v-if="LM_approveToggle" class="ml-10 text-sm">
-                <router-link to="/confirm"><li>실적 팀장 승인</li></router-link>
-                <router-link to="/non-enter"><li>미입력자 관리</li></router-link>
-                <router-link to="/deadline" v-if="is_manager"><li>마감 관리</li></router-link>
+          <div v-if="is_leader" class="mb-1 shadow side-menu-bar">
+            <div  class="text-lg bg-emerald-700 rounded-t pl-2">
+              <button @click="smallMenuToggle('approve')">승인관리</button>
+            </div>
+            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+              <ul v-if="LM_approveToggle" >
+                <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/confirm"><button class="ml-2 mt-0.5">실적 팀장 승인</button></router-link></li>
+                <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/non-enter"><button class="ml-2 mt-0.5">미입력자 관리</button></router-link></li>
+                <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/deadline" v-if="is_manager"><button class="ml-2 mt-0.5">마감 관리</button></router-link></li>
               </ul>
+            </div>
+
           </div>
           
           <!--승인 관리 폴더-->
           <!--관리자 폴더-->
-          <div v-if="is_manager">
-            <div @click="smallMenuToggle('manager')" class="text-lg bg-green-300 w-44 pl-3">관리자</div>
-            <ul v-if="LM_managerToggle" class="ml-10 text-sm">
-              <router-link to="/standard"><li>공통 코드 관리</li></router-link>
-            </ul>
+          <div v-if="is_manager" class="mb-1 shadow side-menu-bar">
+            <div class="text-lg bg-emerald-700 rounded-t pl-2">
+              <button @click="smallMenuToggle('manager')">관리자</button>
+            </div>
+            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+              <ul v-if="LM_managerToggle" class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1">
+                <router-link to="/standard"><button class="ml-2 mt-0.5">공통 코드 관리</button></router-link>
+              </ul>
+            </div>
           </div>
           
           <!--관리자 폴더-->
       </div>
       <!--검색 부분 -->
-      <div class="grow bg-slate-700	rounded-lg ml-2 mt-5" style="width:100vw;">
+      <div class="grow bg-gray-800	rounded-lg ml-2 mt-5" style="width:100vw;">
           <router-view/>
       </div>
     </div>
@@ -126,7 +146,7 @@ export default {
   methods:{
     Grade(){
       this.grade = localStorage.getItem('grade')
-
+      this.memberNm = localStorage.getItem('memberNm')
       switch(this.grade){
         case 'ADMIN':
           this.is_manager = true;
@@ -155,9 +175,11 @@ export default {
 
     },
     async Logout(){
-      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberId', '0');
       localStorage.setItem('memberNm','No');
       localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+
       this.Grade()
       var memberId = localStorage.getItem('memberId')
       axios.post('/api/members/logout',memberId,{withCredentials: true})
@@ -245,6 +267,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.side-menu-bar{
+  width: 160px;
+  margin: auto;
+}
+.shadow{
+  box-shadow: 20px 20px 30px 10px black;
 }
 
 

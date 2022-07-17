@@ -6,29 +6,29 @@
   overtimeDetail 추가하기
 -->
 <template>
-  <div class="bg-slate-700 relative">
-    <div class="modal bg-slate-600 rounded-lg absolute">
-      <div class="modal-title bg-green-500 rounded-t-lg text-white flex">
+  <div class="relative">
+    <div class="modal bg-gray-700 rounded-lg absolute">
+      <div class="modal-title bg-emerald-500 rounded-t-lg text-gray-200 flex">
         <div><p class="ml-3 mt-3">실적</p></div>
         <div class="grow"></div>
-        <button @click="$emit('closeModal')" class="mr-7 mt-1"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
+        <button @click="$emit('closeModal')" style="width: 30px; height: 30px;" class="hover:bg-rose-500 active:bg-rose-600 focus:outline-none rounded mr-5 mt-3"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
       </div>
 
       <!--상단 근로 시간 표시 부분-->
-      <div class="modal-total-time bg-slate-500 mt-3 pt-3 rounded-md" style="margin-top:10px">
+      <div class="modal-total-time bg-gray-600 mt-3 pt-3 rounded-md" style="margin-top:10px">
 
-      <div class="flex text-white bg">
+      <div class="flex text-gray-200">
         <div class="ml-3">{{perfDay}}</div>
         <div class="ml-3 mr-3"><p>{{ selectDate }}</p></div>
         <div v-if="workFromHome()" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
-        <div class="text-white ml-3 mr-3 text-lg">
+        <div class="text-gray-200 ml-3 mr-3 text-lg">
           <p class="">{{ DayWorkTime }}</p>
         </div>
         <div class="mr-4"><p>총 <span class="text-rose-400">{{ oneDayInfo[0].dayHour }}</span>시간</p></div>
       </div>
-      <div class="flex mt-2 ml-3 text-white">
+      <div class="flex mt-2 ml-3 text-gray-200">
         <div class="text-sm mt-1"><p><span class="text-rose-400">12:00 ~ 13:00</span> 시간은 <span class="text-sky-400">점심시간(휴게시간)</span>으로 계산 됩니다. 
           <span class="text-rose-400">단, 휴일 및 휴일은 4시간당, 30분씩 휴게시간이 제외되어 다빈치에 반영됩니다.</span></p></div>
           <div class="grow"></div>
@@ -39,9 +39,9 @@
 
      <div class="flex">
       <div class="grow"></div>
-        <div class="text-white flex mr-8 mt-4 text-xs">
+        <div class="text-gray-200 flex mr-8 mt-4 text-xs">
                 <div class="flex h-6">
-                    <div class="mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-1">확정</p></div>
+                    <div class="mr-2 w-8 bg-emerald-500 rounded-xl"><p class="mt-1">확정</p></div>
                     <div><p class="mt-1">확정</p></div>
                 </div>
                 <div class="flex ml-3 h-6">
@@ -63,14 +63,14 @@
             </div>
         </div>
           <!-- 프로젝트 작성 란-->
-          <div class="text-white">
-            <div class="mt-4">
+          <div class="text-gray-200">
+            <div class="mt-4 perf-box rounded">
               <div class="flex mb-2">
-                <div class="ml-5 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
+                <div class="ml-2 border-l border-emerald-400 ml-3"><p class="ml-3">실적업무</p></div>
                 <div class="grow"></div><!--여기다가 그거 확정 넣어야함-->
               </div>
               <!-- 데이터 반복 구간-->
-              <div class="border-2 modal-content rounded"  style="margin-bottom:10px" v-for="(data,index) in oneDayInfo">
+              <div class="border-2 modal-content rounded" style="width: 99%; margin-bottom:10px" v-for="(data,index) in oneDayInfo">
                 <div class="flex">
                   <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.codeMainNm }}</p></div>
                   <div class="mt-3 ml-3"><p>{{ data.codeSubNm }}</p></div>
@@ -82,8 +82,8 @@
                 <div class="flex">
                   <div><p class="mt-3 ml-3">{{ data.worDetail }}</p></div>
                   <div class="grow"></div>
-                  <div style="width: 100px;" class="mt-3 mr-3 bg-teal-500 w-16 rounded">시간 : {{ data.taskHour }}</div>
-                  <div class="mt-3 mr-3 bg-teal-500 w-28 rounded">{{ taskHour[index] }}</div>
+                  <div style="width: 80px;" class="mt-3 mr-3 bg-gray-500 w-16 rounded">시간 : {{ data.taskHour }}</div>
+                  <div class="mt-3 mr-3 bg-gray-500 w-28 rounded">{{ taskHour[index] }}</div>
                 </div>
               </div>
               <!-- 데이터 반복 구간 끝-->
@@ -92,10 +92,10 @@
 
           </div>
         </div>
-        <div class="flex text-white mt-10 pb-10">
+        <div class="flex text-gray-200 mt-10 pb-10">
           <div class="grow"></div>
           <button v-if="showEditBtn" @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button>
-          <button class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
+          <button @click="ConfirmData()" class="bg-emerald-500 w-10 hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
 
@@ -151,7 +151,7 @@ export default {
     //------------------------------------ AXIOS -------------------------------------------
     async ConfirmData(){
 
-      const perfConfirmDay = this.oneDayInfo[0].signStatus
+      const perfConfirmDay = this.oneDayInfo[0].perfDay
       console.log(perfConfirmDay)
 
       //axios 통신
@@ -168,10 +168,7 @@ export default {
               this.$router.go(0)
             }else if(res.data.code === 5006){
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }else{
               alert(this.backMessage)
               this.$router.push('/performance');
@@ -232,6 +229,14 @@ export default {
         return true;
       }
     },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
+    },
+
 
 
   },
@@ -263,6 +268,12 @@ export default {
   margin: auto;
   width: 1150px;
   height: 100px;
+}
+.perf-box{
+  width: 1150px;
+  margin: 10px 20px 0 23px;
+  padding: 10px;
+  background-color: rgb(75 85 99);
 }
 
 </style>

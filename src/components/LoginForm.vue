@@ -76,6 +76,7 @@ export default {
             localStorage.setItem('memberId', this.userData.memberId)
             localStorage.setItem('memberNm', this.userData.memberNm)
             localStorage.setItem('grade', this.userData.grade)
+            localStorage.setItem('deptNm', this.userData.deptNm);
             this.$emit('Grade')
             console.log(this.userData)
             //emit->Grade
@@ -170,6 +171,9 @@ input:focus {
   padding-top: 15px;
   margin-top: 10px;
 }
+.form-group input{
+  background-color: rgb(229 231 235);
+}
 
 label {
   position: absolute;
@@ -220,8 +224,8 @@ input:placeholder-shown + label {
 .login-wrapper {
   width: 800px;
   height: 440px;
-  background-color:  rgb(51 65 85);
-  box-shadow: 0px 2px 50px rgba(0, 0, 0, 0.2);
+  background-color: rgb(31 41 55);
+  box-shadow: 0px 2px 50px rgba(75, 85, 99, 0.5);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -354,16 +358,16 @@ input[type="checkbox"]:checked:after {
 }
 
 .btn-primary {
-  color: #fff;
-  background: linear-gradient(198.08deg, #22bf64 45.34%, #e281e7 224.21%);
+  color: #e5e7eb;
+  background: linear-gradient(198.08deg, #065f46 45.34%, #a7f3d0 224.21%);
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   text-align: right;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-  color: #fff;
-  background: linear-gradient(198.08deg, #1b984f 45.34%, #e281e7 224.21%);
+  color: #e5e7eb;
+  background: linear-gradient(198.08deg, #059669 45.34%, #a7f3d0 224.21%);
 }
 
 .btn-secondary {

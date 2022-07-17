@@ -21,8 +21,8 @@
 -->
 <template>
   <!--검색 부분 -->
-  <div style="height: 700px;" class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white main-scroll-bar">
-    <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+  <div style="height: 700px;" class="grow bg-gray-800	rounded-lg ml-2 mt-5 text-gray-200 main-scroll-bar">
+    <div class="rounded-lg h-16 bg-gray-600 ml-5 flex" style="max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
         <p>계획 정보 : {{ week }}</p>
       </div>
@@ -31,13 +31,13 @@
     </div>
     <div style="width: 1250px" class="flex mt-4" >
       <div class="grow"></div>
-      <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded mr-2">등록</button>
-      <button @click="PostData('2')" style="width: 50px" class="ml-4 text-white bg-rose-500 rounded">저장</button>
+      <button @click="PostData('1')" style="width: 50px" class="ml-4 text-gray-200 bg-emerald-500 rounded mr-2">등록</button>
+      <button @click="PostData('2')" style="width: 50px" class="ml-4 text-gray-200 bg-rose-500 rounded">저장</button>
     </div>
     <!--데이터 반복 시작 부분-->
     <div v-for="(date, dateIndex) in viewData" >
       <div v-if="isHoliday[dateIndex]" class="scroll-bar" style="height: 300px;">
-        <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-slate-800 rounded-t-lg" style="width: 1235px">
+        <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-gray-700 rounded-t-lg" style="width: 1235px">
           <div class=" border-b-2">
             <p class="mb-1 ml-5 text-xl ">{{ Viewdate[dateIndex] }} <span class="bg-gray-500 pr-1 pl-1 rounded">{{ ViewDay[dateIndex] }}</span>
               <span class="text-teal-500" v-if="dateIndex < 7"> - 1주차</span>
@@ -51,10 +51,10 @@
           </div>
         </div>
         <!-- 컨텐츠 부분 -->
-        <div class="pl-5 ml-4 pt-5 text-white sub-scroll-bar bg-slate-800 rounded-b-lg" style="width: 1235px; height: 200px;">
+        <div class="pl-5 ml-4 pt-5 text-gray-200 sub-scroll-bar bg-gray-700 rounded-b-lg" style="width: 1235px; height: 200px;">
           <!-- 표 만들기 -->
 
-          <div v-for="(Task,index) in viewData[dateIndex]" class="bg-slate-600 mr-4 rounded-xl mb-4" style="height: 120px">
+          <div v-for="(Task,index) in viewData[dateIndex]" class="bg-gray-600 mr-4 rounded-xl mb-4" style="height: 120px">
 
             <div class="flex">
               <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
@@ -69,8 +69,9 @@
                     {{ EndWorkTime[dateIndex] }}
                   </div>
                 </div>
-                <div class="mt-2 mr-4">
-                  <p>재택근무<span><input type="checkbox"></span></p>
+                <div class="mt-2 mr-4 flex">
+                  <p class="ml-10">재택근무</p>
+                  <div class="ml-3"><input type="checkbox"></div>
                 </div>
               </div>
               <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
@@ -98,7 +99,7 @@
                     <p>시간 :</p>
                   </div>
                   <div class="pb-1">
-                    <input @change="onChangeTaskHour_v2($event,index,dateIndex)" min="0" v-model="Task.taskHour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
+                    <input @change="onChangeTaskHour_v2($event,index,dateIndex)" min="1" v-model="Task.taskHour" style="width: 40px; height: 20px" class="ml-2 pl-3 text-black rounded" type="number">
                   </div>
                 </div>
                 <div class="mt-4 mr-4">
@@ -211,10 +212,7 @@ export default {
           this.taskType = res.data.result;
         }else{
           alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -228,10 +226,7 @@ export default {
           this.project = res.data.result;
         }else{
            alert(this.backMessage);
-          localStorage.setItem('memberId', '0')
-          localStorage.setItem('memberNm','No');
-          localStorage.setItem('grade','GEUST');
-          this.$router.push('/')
+          this.logout();
         }
       })
       .catch((res)=>{
@@ -248,10 +243,7 @@ export default {
                 console.log('주간데이터', this.searchWeekly)
               }else{
                 alert(this.backMessage);
-                localStorage.setItem('memberId', '0')
-                localStorage.setItem('memberNm','No');
-                localStorage.setItem('grade','GEUST');
-                this.$router.push('/')
+                this.logout();
               }
             })
             .catch((res)=>{
@@ -646,10 +638,7 @@ export default {
                 this.$router.push('/plan')
               }else if(res.data.code === 5006){
                 alert(this.backMessage);
-                localStorage.setItem('memberId', '0')
-                localStorage.setItem('memberNm','No');
-                localStorage.setItem('grade','GEUST');
-                this.$router.push('/')
+                this.logout();
               }else{
                 alert(res.data.message)
               }
@@ -658,6 +647,13 @@ export default {
               console.error(res);
             })
       }
+    },
+    logout(){
+      localStorage.setItem('memberId', '0')
+      localStorage.setItem('memberNm','No');
+      localStorage.setItem('grade','GEUST');
+      localStorage.setItem('deptNm', '무소속');
+      this.$router.push('/')
     },
   }
 }
@@ -682,7 +678,7 @@ export default {
 }
 .main-scroll-bar::-webkit-scrollbar-thumb{
   border-radius: 5px;
-  background-color: rgb(100 116 139);
+  background-color: rgb(55 65 81);
 }
 .scroll-bar{
   overflow: hidden;
@@ -693,11 +689,11 @@ export default {
 .sub-scroll-bar::-webkit-scrollbar{
   width: 10px;
   border-radius: 5px;
-  background-color: rgb(30 41 59);
+  background-color: rgb(31 41 55);
 }
 .sub-scroll-bar::-webkit-scrollbar-thumb{
   border-radius: 5px;
-  background-color: rgb(100 116 139);
+  background-color: rgb(55 65 81);
 }
 
 </style>

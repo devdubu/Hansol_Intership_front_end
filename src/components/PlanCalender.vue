@@ -5,15 +5,15 @@
   </div>
     <div>    
          <!--검색 부분 -->
-      <div class="bg-slate-700 rounded-lg ml-2 mt-2">
-        <div class="text-white">
+      <div class="bg-gray-800  rounded-lg ml-2 mt-2">
+        <div class="text-gray-200">
           <p class="text-left ml-5 text-xl">계획관리</p>
         </div>
-          <div class="mt-3 rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+          <div class="mt-3 rounded-lg h-16 bg-gray-600 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
                 <div class="flex">
                     <div class="mt-1.5">
-                        <span class="ml-4 text-white">년도</span>
+                        <span class="ml-4 text-gray-200">년도</span>
                     </div>
                     <div class="mt-1.5 ml-4">
                         <select v-model="selectYear" @change="calSelectWeek()">
@@ -31,16 +31,16 @@
 
             </div>
             <div class="grow"></div>
-            <div class="text-white mr-8 mt-5" style="max-width:1200px">
+            <div class="text-gray-200 mr-8 mt-5" style="max-width:1200px">
                 <div>
-                  <p class="text-left	">결제 시간 <span class="text-rose-500">{{ approvalTime }}Hr</span></p>
+                  <p class="text-left	">결제 시간 <span class="text-rose-700">{{ approvalTime }}Hr</span></p>
                 </div>
             </div>
-              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button @click="SearchDate()" class="w-10 h-8 place-self-center mr-5 text-gray-200 rounded-lg bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-500 focus:outline-none ">검색</button>
           </div>
-          <div class="flex text-white" style="max-width:1265px">
+          <div class="flex text-gray-200" style="max-width:1265px">
             <div class="ml-7 mt-7 text-xl">
-                <p>DT개발팀 Web R&D 파트</p>
+                <p>{{ departmentName }}</p>
             </div>
             <div class="grow"></div>
             <div class="flex mt-7">
@@ -57,12 +57,12 @@
             <!--상단 요일 표시-->
             <div class="flex flex-row " style="width:1200px;">
                 <div class="calendar-interval-top" v-for="(day, index) in DayOfTheWeek">
-                    <p class="bg-slate-500 text-white ">{{day}}</p>
+                    <p class="bg-gray-600 text-gray-200 ">{{day}}</p>
                   <!-- 1주차 월요일 -->
-                    <div class="relative calendar-interval bg-gray-100 box-border border-2" style="width:175px;">
+                    <div class="relative calendar-interval bg-gray-200 box-border border-2 border-gray-300" style="width:175px;">
                       <div class="flex">
                         <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']" >
-                          <p class="mt-2 text-white">{{viewDate[index]}}</p><!-- 휴일 체크란 -->
+                          <p class="mt-2 text-gray-200">{{viewDate[index]}}</p><!-- 휴일 체크란 -->
                         </div>
                         <div v-if="showCalenderData(index)" class="grow mt-2">
                           <p>{{ DayWorkTime[index] }}</p>
@@ -75,17 +75,17 @@
                         </div>
                       </div>
                       <div v-if="status[index]" class="absolute bottom-3 right-3 ml-2 ">
-                        <div v-if="showCalenderData(index)"  class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                        <div v-if="showCalenderData(index)"  class="w-10 h-6 text-center text-gray-200 rounded-lg bg-emerald-500">확정</div>
                       </div>
                       <div class="absolute bottom-3 right-0 mr-2 ">
-                        <button v-if="showCalenderData(index)"  @click="showViewModal(index)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button v-if="showCalenderData(index)"  @click="showViewModal(index)" class="w-10 h-6 text-center text-gray-200 rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                   <!--2주차 월요일-->
-                    <div class="relative calendar-interval bg-gray-100 box-border border-2 " style="width:175px">
+                    <div class="relative calendar-interval bg-gray-200 box-border border-2 border-gray-300 " style="width:175px">
                       <div class="flex">
                         <div class="flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']">
-                          <p class="mt-2 text-white">{{viewDate[index+7]}}</p>
+                          <p class="mt-2 text-gray-200">{{viewDate[index+7]}}</p>
                         </div>
                         <div v-if="showCalenderData(index+7)" class="grow mt-2">
                           <p>{{ DayWorkTime[index+7] }}</p>
@@ -98,10 +98,10 @@
                         </div>
                       </div>
                       <div v-if="status[index+7]" class="absolute bottom-3 right-3 ml-2 ">
-                        <div v-if="showCalenderData(index+7)"  class="w-10 h-6 text-center text-white rounded-lg bg-green-500">확정</div>
+                        <div v-if="showCalenderData(index+7)"  class="w-10 h-6 text-center text-gray-200 rounded-lg bg-emerald-500">확정</div>
                       </div>
                       <div v-if="viewDetailBtn" class="absolute bottom-3 right-0 mr-2 ">
-                        <button v-if="showCalenderData(index+7)"  @click="showViewModal(index+7)" class="w-10 h-6 text-center text-white rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
+                        <button v-if="showCalenderData(index+7)"  @click="showViewModal(index+7)" class="w-10 h-6 text-center text-gray-200 rounded-lg bg-gray-500 hover:bg-gray-600 active:bg-gray-700 focus:outline-none ">보기</button>
                       </div>
                     </div>
                 </div>
@@ -206,6 +206,7 @@ export default {
 
 
       //표시 데이터 셋
+      departmentName : '',
       viewDate:[], //완료
       DayWorkTime: [],
       DailyTask:[],
@@ -230,10 +231,7 @@ export default {
                 console.log('주간데이터', this.searchWeekly)
               }else{
                 alert(this.backMessage);
-                localStorage.setItem('memberId', '0')
-                localStorage.setItem('memberNm','No');
-                localStorage.setItem('grade','GEUST');
-                this.$router.push('/')
+                this.logout();
               }
             })
             .catch((res)=>{
@@ -330,7 +328,7 @@ export default {
         console.log('결과 값',this.copySearchWeekly);
       },
       showViewModal(index){
-        
+
         var tasknum = 0;
 
         for(var i = 0;i<this.plan.length;i++){
@@ -417,6 +415,7 @@ export default {
 
       //---------------------------캘린더에 W, P 와 수행시간을 보여주는 함수----------------------------
       printPrevWorkType(plan) {
+        this.departmentName = localStorage.getItem('deptNm')
         let total = this.plan.length;
 
         for(var i = 0;i<this.DayOfData.length;i++){
@@ -485,7 +484,13 @@ export default {
           this.showRegsiter = true
         }
       },
-      
+      logout(){
+        localStorage.setItem('memberId', '0')
+        localStorage.setItem('memberNm','No');
+        localStorage.setItem('grade','GEUST');
+        localStorage.setItem('deptNm', '무소속');
+        this.$router.push('/')
+      },
 
 
       //------------------------------------------------------------------------ 삭제 요망
