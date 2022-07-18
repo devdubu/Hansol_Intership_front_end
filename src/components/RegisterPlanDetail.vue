@@ -435,8 +435,12 @@ export default {
           }
       );
     },
-    removeTaskBox(dateIndex){
-      this.viewData[dateIndex].pop();
+     removeTaskBox(dateIndex){
+      if(this.viewData[dateIndex].length > 1){
+        this.viewData[dateIndex].pop();  
+      }else{
+        alert('삭제할 수 없습니다.');
+      }
     },
     onChangeSelectMain(event, dateIndex, index) {
       var sub = event.target.value
