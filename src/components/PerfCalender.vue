@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="mt-5 relative calendar-interval">
-                  <div class="absolute ml-2" style="width: 400px;">
+                  <div v-if="showCalenderData(index+7)" class="absolute ml-2" style="width: 400px;">
                     <p class="text-left text-ellipsis overflow-hidden" v-for="task in DailyTask[index+7]" >{{task}}</p>
                   </div>
                 </div>

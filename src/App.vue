@@ -68,7 +68,7 @@
               <ul v-if="LM_approveToggle" >
                 <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/confirm"><button class="ml-2 mt-0.5">실적 팀장 승인</button></router-link></li>
                 <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/non-enter"><button class="ml-2 mt-0.5">미입력자 관리</button></router-link></li>
-                <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/deadline" v-if="is_manager"><button class="ml-2 mt-0.5">마감 관리</button></router-link></li>
+                <li v-if="is_manager" class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/deadline" ><button class="ml-2 mt-0.5">마감 관리</button></router-link></li>
               </ul>
             </div>
 

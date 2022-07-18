@@ -193,14 +193,6 @@
             </div>
           </div>
       </div>
-      <div class="text-rose-300">
-        <p>{{firstWeek}}</p>
-        <p>{{secondWeek}}</p>
-        <p>{{thirdWeek}}</p>
-        <p>{{fourthWeek}}</p>
-        <p>{{fifthWeek}}</p>
-        <p>{{sixthWeek}}</p>
-      </div>
     </div>
     
 
