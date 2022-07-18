@@ -6,12 +6,12 @@
 
 <template>
       <!--검색 부분 -->
-     <div class="grow bg-slate-700	rounded-lg ml-2 mt-5">
-          <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+     <div class="grow	rounded-lg ml-2 mt-5">
+          <div class="rounded-lg h-16 bg-gray-700 ml-5 flex" style="max-width:1230px">
             <div class="h-8 place-self-center flex">
                 <div class="flex">
                     <div class="mt-1.5">
-                        <span class="ml-4 text-white">주 시작일</span>
+                        <span class="ml-4 text-gray-200">주 시작일</span>
                     </div>
                     <div class="mt-1.5 ml-4">
                         <select v-model="selectYear">
@@ -27,7 +27,7 @@
                 <div class="flex">
                     <div class="flex">
                         <div class="mt-1.5">
-                            <p class="ml-4 text-white">조직</p>
+                            <p class="ml-4 text-gray-200">조직</p>
                         </div>
                         <div class="mt-1.5 ml-4">
                             <select>
@@ -43,7 +43,7 @@
                             </select>
                         </div>
                         <div class="mt-1.5 ml-4">
-                            <p class="text-white">성명/사번</p>
+                            <p class="text-gray-200">성명/사번</p>
                         </div>
                         <div class="ml-4 mt-0.5">
                             <input style="height:30px;" class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md pl-3 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm" placeholder="Search for anything..." type="text" name="search"/> 
@@ -54,22 +54,22 @@
 
             </div>
             <div class="grow"></div>
-              <button class="w-10 h-8 place-self-center mr-5 text-white rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
+              <button class="w-10 h-8 place-self-center mr-5 text-gray-200 rounded-lg bg-green-500 hover:bg-green-600 active:bg-green-700 focus:outline-none ">검색</button>
           </div>
           <!--상단 버튼 부분 -->
           <div class="flex up-btn">
                 <div class="grow"></div>
-                <div class="flex text-white">
+                <div class="flex text-gray-200">
                     <button class="mr-4 bg-teal-500 rounded-lg hover:bg-teal-600 active:bg-teal-700 focus:outline-none " style="width: 100px"><p class="mt-0.5 ml-0.5">엑셀 다운</p></button>
                     <button class="mr-4 bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 focus:outline-none " style="width: 100px"><p class="mt-0.5 ml-0.5">PUSH 전송</p></button>
                     <button class="mr-4 bg-blue-500 rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none" style="width: 100px"><p class="mt-0.5 ml-0.5">SMS 전송</p></button>
                 </div>
             </div>
           <!-- 컨텐츠 부분 -->
-          <div class="ml-5 mt-5 text-white">
+          <div class="ml-5 mt-5 text-gray-200">
             <!-- 표 만들기 -->
             <!-- 상단 메뉴바 -->
-            <div class="bg-slate-600 h-10 mr-16 rounded-tl-lg rounded-tr-lg  table-size">
+            <div class="bg-gray-700 h-10 mr-16 rounded-tl-lg rounded-tr-lg  table-size">
               <div class="flex table-size">
                 <div class="mr-3 pt-2 ml-5 short-table"><p>부서 코드</p></div>
                 <div class="pt-2 border-l middle-table"><p>부서 명</p></div>
@@ -82,7 +82,7 @@
            
             <!-- 실제 데이터 인풋 -->
             <div class="noenter-table">
-              <div class="bg-slate-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
+              <div class="bg-gray-600 mr-16 border-t" style="width: 1230px;" v-for="(noenter,index) in noEnter">
                 <div class="flex table-size ">
                   <div class="mr-3 pt-2 ml-5 short-table"><p>{{ noenter.deptCode }}</p></div>
                   <div class="pt-2 border-l middle-table">

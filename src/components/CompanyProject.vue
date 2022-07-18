@@ -74,8 +74,8 @@
                   <!--SAP에 등록 날짜 임으로 ajax 요청 후에 교체 요망-->
                   <!---->
                   <div class="interval  bg-gray-600  border-l" style="width:120px;">
-                    <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-4 mt-2 text-gray-200 rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
-                    <button v-if="IsMyProjectForDelete(project.isMyProject)" @click="DeleteData(project.projectId)" class="w-10 h-4 mt-2 text-gray-200 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none ">삭제</button>
+                    <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-6 mt-2 text-gray-200 rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
+                    <button v-if="IsMyProjectForDelete(project.isMyProject)" @click="DeleteData(project.projectId)" class="w-10 h-6 mt-2 text-gray-200 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none ">삭제</button>
                   </div>
                 </div>
               </div>

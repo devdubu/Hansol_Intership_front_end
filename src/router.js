@@ -53,20 +53,28 @@ const routes = [
     component: DeadlineCalender,
   },
   {
-    path: "/registerplan",
+    path: "/registerplan:selectWeek",
+    name: "/registerplan",
     component: RegisterPlan,
+    props:true,
   },
   {
-    path: '/registerplanweek',
+    path: '/registerplanweek:selectWeek',
+    name : '/registerplanweek',
     component: RegisterPlanWeek,
+    props: true,
   },
   {
-    path: "/registerplandetail",
+    path: "/registerplandetail:selectWeek",
+    name: '/registerplandetail',
     component: RegisterPlanDetail,
+    props: true
   },
   {
-    path: "/viewplandetail",
-    component: ViewPlanDetail
+    path: "/viewplandetail:selectWeek",
+    component: ViewPlanDetail,
+    name: '/viewplandetail',
+    props:true
   }
 ];
 

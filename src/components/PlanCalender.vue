@@ -43,10 +43,9 @@
                 <p>{{ departmentName }}</p>
             </div>
             <div class="grow"></div>
-            <div class="flex mt-7">
-                <router-link to="/registerplan" v-if="showRegister"><button  style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
-                <router-link to="/viewplandetail"><button style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">상세보기</p></button></router-link>
-                <button style="width: 80px;" class="mr-4 bg-gray-500	w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획수정</p></button>
+            <div class="flex mt-7"> <!-- {path: `/menu01/exam06view/${bno2}`} -->
+                <router-link :to="{name: '/registerplan', params: {selectWeek: selectWeek} }" v-if="showRegsiter"><button  style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">계획등록</p></button></router-link>
+                <router-link :to="{name: '/viewplandetail', params: {selectWeek: selectWeek} }"><button v-if="!(showRegsiter)" style="width: 80px;" class="mr-4 bg-gray-500 w-16 rounded-lg	hover:bg-gray-600 active:bg-gray-700 focus:outline-none"><p class="mt-0.5 ml-0.5">상세보기</p></button></router-link>
             </div>
           </div>
 
@@ -174,7 +173,7 @@ export default {
       EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
       copySearchWeekly: [],
 
-      selectWeek: '',// AXIOS, startOfWeek 데이터 받는 부분 ------------------------------------------------>
+      selectWeek: '1',// AXIOS, startOfWeek 데이터 받는 부분 ------------------------------------------------>
       selectYear: '',// AXIOS, startOfWeek.slice(0,4) 데이터 받는 부분 ------------------------------------------------>
 
       selectDay : 0, //실제 파라미터 값으로 들어가는 값
@@ -218,7 +217,6 @@ export default {
     }
   },
     methods:{
-
       //------------------------------------ AXIOS -------------------------------------------
       async GetWeekData(){
         await axios.get('/api/biweekly',{withCredentials: true})
@@ -227,8 +225,7 @@ export default {
                 this.searchWeekly = res.data.result.twoWeeksDtos;
                 this.selectWeek = res.data.result.startOfWeek;
                 this.selectYear = this.selectWeek.slice(0,4);
-                console.log('시작날짜',this.selectWeek)
-                console.log('주간데이터', this.searchWeekly)
+                
               }else{
                 alert(this.backMessage);
                 this.logout();
@@ -258,21 +255,24 @@ export default {
       },
       // 상단 검색 버튼을 누르면 실행되는 메서드
       async SearchDate(){
-        await axios.get('/api/plans',{
-          params:{
-            day: this.selectWeek
-          },withCredentials:true
-        })
-            .then((res)=>{
-              if(res.data.code != 1000){
-                this.plan = res.data.result;
-              }else{
-                alert(res.data.message)
-              }
-            })
-            .catch((res)=>{
-              console.error(res)
-            })
+        this.showRegsiter = false;
+        this.HolidayCheck = [false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+        this.isDummy = [false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+        this.status = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+        
+        await this.GetData()
+
+
+        this.calDate_v2(this.plan[0].planDay, this.Date)
+        this.calDayOfData()
+        this.calDayWorkTime_v2()
+        this.printPrevWorkType(this.plan)
+        this.DistinguishHoliday()
+        this.calApprovalTime()
+        this.DistinguishStatus()
+        this.isDummyFunc()
+        this.showRegisterBtn()
+        console.log('이거 뜨나?',this.selectWeek)
       },
       //------------------------------------ AXIOS ------------------------------------------- 
       calNowDate(){
@@ -316,7 +316,6 @@ export default {
             content: this.searchWeekly[i].content
           })
         }
-        console.log('week 데이터',this.copySearchWeekly)
 
         for(var i = 0;i<this.copySearchWeekly.length;i++){
           if(this.selectYear != this.copySearchWeekly[i].year){
@@ -324,8 +323,6 @@ export default {
             i--;
           }
         }
-        console.log('대조군',this.selectYear);
-        console.log('결과 값',this.copySearchWeekly);
       },
       showViewModal(index){
 
@@ -364,12 +361,14 @@ export default {
 
         // console.log('새로운 달력', newMonthDay)
 
+        var newMonth = 0;
         for(var i = 0;i<this.twoWeek;i++){
           date[i] = this.plan[0].planDay+i;
           if(date[i] > EndDay){
             newDay = + parseInt(EndDay%10000) 
             newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
-            date[i] = newMonthDay;
+            date[i] = newMonthDay+newMonth;
+            newMonth++;
           }
         }
 
@@ -443,6 +442,7 @@ export default {
             this.HolidayCheck[i] = false;
           }
         }
+        console.log(this.HolidayCheck)
       },
       calApprovalTime(){
         for(var i = 0;i<this.DayOfData.length;i++){
@@ -465,12 +465,15 @@ export default {
               this.isDummy[i] = true
             }
           }
+          console.log(this.isDummy)
       },
       showCalenderData(index){
         if(this.HolidayCheck[index] && this.isDummy[index]){//휴일 false, 더미 false일때만
           return false;
-        }else{
+        }else if(!(this.HolidayCheck[index]) && !(this.isDummy[index])){
           return true; 
+        }else{
+          false;
         }
       },
       showRegisterBtn(){

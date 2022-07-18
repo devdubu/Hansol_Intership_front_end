@@ -5,8 +5,8 @@
 -->
 <template>
   <!--검색 부분 -->
-  <div style="height: 700px;" class="grow bg-slate-700	rounded-lg ml-2 mt-5 text-white main-scroll-bar">
-    <div class="rounded-lg h-16 bg-slate-600 ml-5 flex" style="max-width:1230px">
+  <div style="height: 700px;" class="grow	rounded-lg ml-2 mt-5 text-gray-200 main-scroll-bar">
+    <div class="rounded-lg h-16 bg-gray-700 ml-5 flex" style="max-width:1230px">
       <div class="h-8 place-self-center flex mt-2 ml-3">
         <p>계획 정보 : {{ week }}</p>
       </div>
@@ -19,7 +19,7 @@
     <!--데이터 반복 시작 부분-->
     <div v-for="(date, dateIndex) in viewData" >
       <div v-if="isHoliday[dateIndex]" class="scroll-bar" style="height: 300px;">
-        <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-slate-800 rounded-t-lg" style="width: 1235px">
+        <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-gray-700 rounded-t-lg" style="width: 1235px">
           <div class=" border-b-2">
             <p class="mb-1 ml-5 text-xl ">{{ Viewdate[dateIndex] }} <span class="bg-gray-500 pr-1 pl-1 rounded">{{ ViewDay[dateIndex] }}</span>
               <span class="text-teal-500" v-if="dateIndex < 7"> - 1주차</span>
@@ -31,15 +31,15 @@
           </div>
         </div>
         <!-- 컨텐츠 부분 -->
-        <div class="pl-5 ml-4 pt-5 text-white sub-scroll-bar bg-slate-800 rounded-b-lg" style="width: 1235px; height: 200px;">
+        <div class="pl-5 ml-4 pt-5 text-gray-200 sub-scroll-bar bg-gray-700 rounded-b-lg" style="width: 1235px; height: 200px;">
           <!-- 표 만들기 -->
 
-          <div v-for="(Task,index) in viewData[dateIndex]" class="bg-slate-600 mr-4 rounded-xl mb-4" style="height: 120px">
+          <div v-for="(Task,index) in viewData[dateIndex]" class="bg-gray-600 mr-4 rounded-xl mb-4" style="height: 120px">
 
             <div class="flex">
               <div class="mr-3 pt-4 ml-3 border-r" style="width:200px; height: 120px;">
                 <div class="flex mt-2 ml-8">
-                  <div class=" mr-1">
+                  <div class="mr-1">
                     <p class="text-xl">{{[StartWorkTime[dateIndex].slice(0,2),':',StartWorkTime[dateIndex].slice(2,4)].join('')}}</p>
                   </div>
                   <span class="text-xl">~</span>
@@ -48,26 +48,26 @@
                   </div>
                 </div>
                 <div style="width:300px;" class="mt-2 ml-10">
-                  <div style="width:105px;" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>                
+                  <div v-if="isWfh(dateIndex)" style="width:105px;" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>                
                 </div>
               </div>
-              <div class="ml-3 mt-5 pt-2" style="height:100px; width: 480px;">
+              <div class="ml-3 mt-5 pt-2" style="height:100px; width: 800px;">
                 <div class="flex">
-                  <div  class="mr-3">
+                  <div class="mr-3 bg-gray-500 shadow rounded">
                     <p style="width: 100px">{{Task.codeMainNm}}</p>
                   </div>
-                  <div style="width: 600px;" class="">
-                    <p style="width: 800px;">{{Task.codeSubNm}}</p>
+                  <div style="width: 700px; overflow: hidden;" class="bg-gray-500 shadow rounded">
+                    <p style="width: 800px;" class="text-left ml-2">{{Task.codeSubNm}}</p>
                   </div>
                 </div>
-                <div style="width: 400px" class="mt-3">
-                  <p>{{Task.workDetail}}</p>
+                <div style="width: 600px; overflow: hidden;" class="mt-3 bg-gray-500 shadow rounded">
+                  <p class="text-left ml-2">{{Task.workDetail}}</p>
                 </div>
               </div>
 
               <div class="grow"></div>
-              <div class="mr-4 mt-2">
-                <div class="flex mt-5">
+              <div class="mr-4 mt-5 bg-gray-500 pl-2 rounded shadow" style="height: 80px">
+                <div class="flex mt-3">
                   <div>
                     <p>시간 :</p>
                   </div>
@@ -75,7 +75,7 @@
                     <p>{{Task.taskHour}}</p>
                   </div>
                 </div>
-                <div class="mt-4 mr-4">
+                <div class="mt-2 mr-4">
                   <p>{{ renderTaskStartHour[dateIndex][index] }} ~ {{ renderTaskEndHour[dateIndex][index] }}</p>
                 </div>
               </div>
@@ -98,6 +98,8 @@ import axios from "axios";
 export default {
   name: 'ViewPlanDetail',
   async mounted() {
+    await this.getTask();
+    await this.getMyProject();
     await this.GetWeekData();
     this.SetStartWeek();
     await this.GetData();
@@ -110,8 +112,8 @@ export default {
   data() {
     return {
       //받는 데이터
-      taskType: registerTask,
-      project: registerProject,
+      taskType: [],
+      project: [],
       
       searchWeekly:[],
       startDate : 0,
@@ -144,6 +146,7 @@ export default {
       renderTaskEndHour:[],
       totalDayWorkTime: [],
       totalWeekWorkTime: 0,
+      EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
 
 
       startWorkTimeView: [],
@@ -157,6 +160,11 @@ export default {
       subProejct: [],
     }
   },
+  props:{
+    selectWeek:{
+      type: String,
+    } 
+  },
   methods: {
     //---------------------------------------------------axios get -------------------------------------
     async GetWeekData(){
@@ -164,9 +172,10 @@ export default {
             .then((res)=>{
               if(res.data.code === 1000){
                 this.searchWeekly = res.data.result.twoWeeksDtos;
-                this.startDate = res.data.result.startOfWeek;
-                console.log('시작날짜',this.selectWeek)
-                console.log('주간데이터', this.searchWeekly)
+                // this.startDate = res.data.result.startOfWeek;
+                // console.log('데이터',this.startDate)
+                // console.log('주간데이터', this.searchWeekly)
+                this.startDate = this.$route.params.selectWeek;
               }else{
                 alert(this.backMessage);
                 localStorage.setItem('memberId', '0')
@@ -206,7 +215,42 @@ export default {
           this.$router.push('/plan');
         }
       })
-    },  
+    },
+     async getTask(){
+      var testtask
+      await axios.get('/api/tasks',{withCredentials:true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              this.taskType = res.data.result;
+            }else{
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
+            }
+          })
+          .catch((res)=>{
+            console.error(res)
+          })
+    },
+    async getMyProject(){
+      await axios.get('/api/projects/me',{withCredentials:true})
+          .then((res)=>{
+            if(res.data.code === 1000){
+              this.project = res.data.result;
+            }else{
+              alert(this.backMessage);
+              localStorage.setItem('memberId', '0')
+              localStorage.setItem('memberNm','No');
+              localStorage.setItem('grade','GEUST');
+              this.$router.push('/')
+            }
+          })
+          .catch((res)=>{
+            console.error(res);
+          })
+    },
     MountDataSet(){
       
       var start = Number(this.startDate)
@@ -234,10 +278,36 @@ export default {
 
       //select 변수의 2차원 배열의 형태 셋팅
 
-      var date = []
+      var start = Number(this.startDate)
+      var year = start/10000
+
+      if(year === 0 && year%100 != 0 || year%400 === 0){
+          this.EndDayOfMonth[1] = 29;
+        }
+        var startMonth = parseInt((start%10000)/100);
+        console.log(startMonth)
+        var EndDay = this.EndDayOfMonth[startMonth-1];
+
+        EndDay = parseInt(start/100)*100+EndDay;
+        console.log(EndDay)
+        var newMonth = 0;
+        var newMonthDay = 0
+        var newDay = 0
+        var date =[]
+         for(var i = 0;i<14;i++){
+          date[i] = start+i;
+          if(date[i] > EndDay){
+            newDay = + parseInt(EndDay%10000) 
+            newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+            date[i] = newMonthDay+newMonth;
+            newMonth++;
+          }
+        }
+        console.log(date)
+
+
       for(var i = 0;i<14;i++){
         var strdate = ''
-        date[i] = this.startDate+i;
         strdate = String(date[i])
         this.Viewdate[i] = [strdate.slice(0,4),'.',strdate.slice(4,6),'.',strdate.slice(6,8)].join('');
 
@@ -379,11 +449,35 @@ export default {
         }
       }
 
+      if(this.year === 0 && this.year%100 != 0 || this.year%400 === 0){
+          this.EndDayOfMonth[1] = 29;
+        }
+        var startMonth = parseInt((start%10000)/100);
+        console.log(startMonth)
+        var EndDay = this.EndDayOfMonth[startMonth-1];
+
+        EndDay = parseInt(start/100)*100+EndDay;
+        console.log(EndDay)
+        var newMonth = 0;
+        var newMonthDay = 0
+        var newDay = 0
+        var date =[]
+         for(var i = 0;i<14;i++){
+          date[i] = start+i;
+          if(date[i] > EndDay){
+            newDay = + parseInt(EndDay%10000) 
+            newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+            date[i] = newMonthDay+newMonth;
+            newMonth++;
+          }
+        }
+        console.log(date)
+
       var index = 0;
       for(var i = 0;i<14;i++){
         for(var j = 0; j<this.viewData[i].length;j++){
           this.sendData[index] = {
-            plan_day: this.startDate+i,
+            plan_day: String(date[i]),
             seq: this.viewData[i][j].seq,
             taskHour: this.view[i][j].taskHour,
             dayHour: this.viewData[i][j].dayHour,
@@ -406,6 +500,13 @@ export default {
         }
       }
       console.log(this.sendData)
+    },
+    isWfh(index){
+      if(this.viewData[index][0].wfhYn === '0'){
+        return false;
+      }else{
+        true;
+      }
     },
   }
 }
@@ -430,7 +531,7 @@ export default {
 }
 .main-scroll-bar::-webkit-scrollbar-thumb{
   border-radius: 5px;
-  background-color: rgb(100 116 139);
+  background-color: rgb(30 41 59);
 }
 .scroll-bar{
   overflow: hidden;
@@ -441,11 +542,14 @@ export default {
 .sub-scroll-bar::-webkit-scrollbar{
   width: 10px;
   border-radius: 5px;
-  background-color: rgb(30 41 59);
+  background-color: rgb(100 116 139);
 }
 .sub-scroll-bar::-webkit-scrollbar-thumb{
   border-radius: 5px;
-  background-color: rgb(100 116 139);
+  background-color: rgb(30 41 59);
+}
+.shadow{
+  box-shadow: 1px 1px 0.3px 0.3px black;
 }
 
 </style>

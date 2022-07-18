@@ -39,7 +39,7 @@
       <div v-if="isHoliday[dateIndex]" class="scroll-bar" style="height: 300px;">
         <div class="flex pt-4 mt-2 pb-2 ml-4 pl-5 bg-gray-700 rounded-t-lg" style="width: 1235px">
           <div class=" border-b-2">
-            <p class="mb-1 ml-5 text-xl ">{{ Viewdate[dateIndex] }} <span class="bg-gray-500 pr-1 pl-1 rounded">{{ ViewDay[dateIndex] }}</span>
+            <p class="mb-1 ml-5 text-xl "><span :class="ColorDay[dateIndex]" class="pr-1 pl-1 rounded" >{{ ViewDay[dateIndex] }}</span>
             </p>
           </div>
           <div class="border-b-2 grow"></div>
@@ -120,6 +120,7 @@ import biweek from '../assets/biweekly.json';
 import registerTask from '../assets/task.json';
 import registerProject from '../assets/project.json'
 import axios from "axios";
+import { toHandlers } from 'vue';
 
 export default {
   name: 'RegisterPlanWeek',
@@ -154,6 +155,8 @@ export default {
       //날짜에 대한 변수
       Viewdate:[],
       ViewDay:['1주차', '2주차'],
+      ColorDay:['bg-teal-500','bg-lime-500'],
+      EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
 
 
       //시간에 대한 변수
@@ -200,6 +203,11 @@ export default {
       subProejct: [],
     }
   },
+  props:{
+    selectWeek:{
+      type: String,
+    } 
+  },
   methods: {
     async getTask(){
       var testtask
@@ -209,10 +217,7 @@ export default {
               this.taskType = res.data.result;
             }else{
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }
           })
           .catch((res)=>{
@@ -226,10 +231,7 @@ export default {
               this.project = res.data.result;
             }else{
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }
           })
           .catch((res)=>{
@@ -241,15 +243,12 @@ export default {
           .then((res)=>{
             if(res.data.code === 1000){
               this.searchWeekly = res.data.result.twoWeeksDtos;
-              this.startDate = res.data.result.startOfWeek;
-              console.log('시작날짜',this.selectWeek)
-              console.log('주간데이터', this.searchWeekly)
+              // this.startDate = res.data.result.startOfWeek;
+              // console.log('시작날짜',this.selectWeek)
+              console.log('주간데이터', this.searchWeekly);
             }else{
               alert(this.backMessage);
-              localStorage.setItem('memberId', '0')
-              localStorage.setItem('memberNm','No');
-              localStorage.setItem('grade','GEUST');
-              this.$router.push('/')
+              this.logout();
             }
           })
           .catch((res)=>{
@@ -257,12 +256,15 @@ export default {
           })
     },
     SetStartWeek(){
+      this.startDate = this.$route.params.selectWeek;
       for(var i = 0;i<this.searchWeekly.length;i++){
         if(this.searchWeekly[i].fromdt === this.startDate){
           this.week = this.searchWeekly[i].content;
           break;
         }
       }
+      this.ViewDay[0] = this.week.slice(0,6);
+      this.ViewDay[1] = this.week.slice(8,15);
     },
     MountDataSet(){
       var arr = []
@@ -293,6 +295,7 @@ export default {
       //시간에 대한 변수의 2차원 배열 셋팅
 
       //select 변수의 2차원 배열의 형태 셋팅
+      
 
       var date = []
       for(var i = 0;i<2;i++){
@@ -387,7 +390,7 @@ export default {
 
       this.viewData[dateIndex].push(
           {
-            "plan_id": 0,
+            "planId": 0,
             "seq": len+1,
             "taskHour": 0,
             "planDay": this.viewData[dateIndex][0].planDay,
@@ -406,6 +409,7 @@ export default {
             "isHoliday": "N"
           }
       );
+      console.log(this.viewData)
     },
     removeTaskBox(dateIndex){
       this.viewData[dateIndex].pop();
@@ -485,8 +489,8 @@ export default {
       for(var i = 0;i<this.taskTime[dateIndex].length;i++){
         sumTime += this.taskTime[dateIndex][i]
       }
-      this.totalDayWorkTime = sumTime
-
+      this.totalDayWorkTime[dateIndex] = sumTime
+      console.log(this.totalDayWorkTime)
       this.calTime_v2(dateIndex);
 
 
@@ -609,30 +613,66 @@ export default {
         }
       }
 
+      var start = Number(this.startDate)
+      var year = start/10000
+
+      if(year === 0 && year%100 != 0 || year%400 === 0){
+          this.EndDayOfMonth[1] = 29;
+        }
+        var startMonth = parseInt((start%10000)/100);
+        console.log(startMonth)
+        var EndDay = this.EndDayOfMonth[startMonth-1];
+
+        EndDay = parseInt(start/100)*100+EndDay;
+        console.log(EndDay)
+        var newMonth = 0;
+        var newMonthDay = 0
+        var newDay = 0
+        var date =[]
+         for(var i = 0;i<14;i++){
+          date[i] = start+i;
+          if(date[i] > EndDay){
+            newDay = + parseInt(EndDay%10000) 
+            newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+            date[i] = newMonthDay+newMonth;
+            newMonth++;
+          }
+        }
+        console.log(date)
+
+
       var index = 0;
-      for(var i = 0;i<2;i++){
-        for(var j = 0; j<this.viewData[i].length;j++){
-          this.sendData[index] = {
-            planDay: this.startDate+i,
-            seq: this.viewData[i][j].seq,
-            taskHour: this.viewData[i][j].taskHour,
-            dayHour: this.viewData[i][j].dayHour,
-            startedHour: this.viewData[i][j].started_hour,
-            endedHour: this.viewData[i][j].endedHour,
-            groupMainId: this.viewData[i][j].groupMainId,
-            groupSubId: this.viewData[i][j].groupSubId,
-            codeId : this.viewData[i][j].codeId,
-            codeMainNm: this.viewData[i][j].codeMainNm,
-            codeSubNm: this.viewData[i][j].codeSubNm,
-            workDetail : this.viewData[i][j].workDetail,
+      var dateindex = 0;
+      for(var i = 0;i<14;i++){
+        if(i === 6){
+            dateindex++;
+          }
+        for(var j = 0; j<this.viewData[dateindex].length;j++){
+          if(i === 5 || i === 6 || i === 12 || i === 13){
+            console.log(i,'주말')
+          }else{
+            this.sendData[index] = {
+            planId: 0,
+            planDay: String(date[i]),
+            seq: this.viewData[dateindex][j].seq,
+            taskHour: this.viewData[dateindex][j].taskHour,
+            dayHour: this.totalDayWorkTime[dateindex],
+            startedHour: this.viewData[dateindex][j].started_hour,
+            endedHour: this.viewData[dateindex][j].endedHour,
+            groupMainId: this.viewData[dateindex][j].groupMainId,
+            groupSubId: this.viewData[dateindex][j].groupSubId,
+            codeId : this.viewData[dateindex][j].codeId,
+            codeMainNm: this.viewData[dateindex][j].codeMainNm,
+            codeSubNm: this.viewData[dateindex][j].codeSubNm,
+            workDetail : this.viewData[dateindex][j].workDetail,
             wfhYn: "0",
             enrollYn: status,
             isHoliday :"N"
           }
-          if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].isHoliday = "Y";
-          }
+          
           index++;
+          }
+          
         }
       }
       console.log(this.sendData)
@@ -652,6 +692,19 @@ export default {
             .catch((res)=>{
               console.error(res);
             })
+      }else{
+        await axios.patch('/api/plans', this.sendData,{withCredentials:true})
+        .then((res)=>{
+          if(res.data.code === 1000){
+            alert('계획이 등록 되었습니다.')
+            this.$router.go(0)
+          }else if(res.data.code === 5006){
+                alert(this.backMessage);
+                this.logout();
+              }else{
+                alert(res.data.message)
+              }
+        })
       }
     },
     logout(){

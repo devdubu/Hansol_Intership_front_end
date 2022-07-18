@@ -18,7 +18,7 @@
       <div class="modal-total-time bg-gray-600 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-gray-200">
         <div class="ml-3 mr-3"><p>{{perfDay}}</p></div>
-        <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome()" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
@@ -182,7 +182,9 @@ export default {
 
       //보내는 데이터
       sendTaskData:[],
-      sendDeleteData:[],
+      sendDeleteData:{
+        perfIds: [],
+      },
 
       //보여주는 데이터
       default_value : 'selected',
@@ -408,7 +410,7 @@ export default {
       let arr = Object.values(this.DeleteData);
 
       console.log(arr);
-      this.sendDeleteData = [...arr];
+      this.sendDeleteData.perfIds = [...arr];
       if(this.sendTaskData.length < 2){
         this.deleteBox = false;
       }
@@ -473,7 +475,7 @@ export default {
     // 데이터 보내는 메서드
     
     workFromHome(){
-      if(this.sendTaskData[0].wfhYn === '0'){
+      if(this.oneDayInfo[0].wfhYn === '0'){
         return false;
       }else{
         return true;
@@ -618,14 +620,10 @@ export default {
         this.sendTaskData[i].overtimeDetail = this.overtimeDetail;
       }
       console.log(this.sendTaskData)
-      await axios.delete('/api/performances/',{
-        data:{
-          deleteId:this.sendDeleteData,
-        },
+      await axios.post('/api/performances/delete',this.sendDeleteData,{
         params:{
           day:String(this.sendTaskData[0].perfDay)
-        },withCredentials:true
-      })
+        },withCredentials:true })
       .then((res)=>{
         if(res.data.code!=1000){
           alert(res.data.message);

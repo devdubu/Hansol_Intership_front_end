@@ -283,13 +283,13 @@ export default {
   methods:{
     //------------------------------------------- 마운트 되기 전에 실행되야하는 함수 --------------------------------
     async GetApprove(){
-      
+      console.log(this.selectDate)
       await axios.get('/api/approvals',{
         params:{
-          day: this.selectDate,
-        },withCredentials:true
-      })
+          day: String(this.selectDate),
+        },withCredentials:true})
           .then((res)=>{
+            console.log(res.data.result)
             this.responseCode = res.data.code;
             this.backMessage = res.data.message;
             this.approval = res.data.result;
@@ -318,6 +318,7 @@ export default {
         this.selectDate = (year*1000)+(month*100)+day;
       }
       
+
     },
     SetCopyData(){
       this.departmentName = localStorage.getItem('deptNm')
@@ -336,20 +337,23 @@ export default {
     },
     //------------------------------------------- 데이터를 화면에 출력해주는 함수들 --------------------------------
     async SearchDate(){
+      await this.SearchDay();
+    },
+    async SearchDay(){
+      var sendDate = String(this.searchDay);
+      sendDate = sendDate.replaceAll('-','')
+      sendDate = Number(sendDate);
+      this.selectDate = sendDate;
+
+      this.CopyApprovalDate = []
+
+      console.log(this.selectDate)
       await this.GetApprove();
       this.SetCopyData()
       this.calDate(this.CopyApprovalDate[0].perfDay);
       this.extractionDeadline();
       this.calTeamMember(this.CopyApprovalDate);
       this.viewApprovalTableFunc(this.CopyApprovalDate);
-    },
-    SearchDay(){
-      var sendDate = String(this.searchDay);
-      sendDate = sendDate.replaceAll('-','')
-      sendDate = Number(sendDate);
-      this.selectDate = sendDate;
-
-      console.log(this.selectDate)
 
     },
     calDate(startdate){

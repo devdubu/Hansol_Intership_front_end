@@ -21,13 +21,13 @@
     <!--내용 부분-->
     <div class="flex" style="height: 800px">
       <div class="flex-none w-44 bg-emerald-800 text-left text-gray-300 ">
-        <div v-if="is_employee"  class="mt-4 shadow mb-1 mt-1 side-menu-bar">
-          <div class="text-lg bg-emerald-700 pl-2 rounded-t side-menu-bar">
+        <div v-if="is_employee"  class="mt-4  mb-1 mt-1 side-menu-bar">
+          <div class="text-lg bg-emerald-700 pl-2 shadow rounded-t side-menu-bar">
             <button @click="smallMenuToggle('manour')">맨아워관리</button>
           </div>
           <!--맨아워관리 폴더-->
           
-            <ul v-if="LM_manoutToggle" class="text-left text-gray-300 bg-emerald-600 pb-1 rounded-b">
+            <ul v-if="LM_manoutToggle" class="text-left text-gray-300 bg-emerald-600 pb-1 rounded-b shadow">
               <div>
                 <div class=""><button @click="smallMenuToggle('plan')" class="text-base ml-2">계획</button></div>
                   <ul v-if="LM_planToggle" class="bg-emerald-500 ml-3 text-sm rounded shadow mr-1">
@@ -47,8 +47,8 @@
         <!--맨아워관리 폴더-->
 
         <!--프로젝트 관리 폴더-->
-          <div v-if="is_employee" class="mb-1 shadow side-menu-bar">
-            <div class="text-lg bg-emerald-700 pl-2 rounded-t">
+          <div v-if="is_employee" class="mb-1 side-menu-bar">
+            <div class="text-lg bg-emerald-700 shadow pl-2 rounded-t">
               <button @click="smallMenuToggle('project')">프로젝트 관리</button>
             </div>
             <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
@@ -60,11 +60,11 @@
         <!--프로젝트 관리 폴더-->
 
         <!--승인 관리 폴더-->
-          <div v-if="is_leader" class="mb-1 shadow side-menu-bar">
-            <div  class="text-lg bg-emerald-700 rounded-t pl-2">
+          <div v-if="is_leader" class="mb-1 side-menu-bar">
+            <div  class="text-lg bg-emerald-700 shadow rounded-t pl-2">
               <button @click="smallMenuToggle('approve')">승인관리</button>
             </div>
-            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+            <div class="bg-emerald-600 rounded-b shadow pb-1 pt-0.5">
               <ul v-if="LM_approveToggle" >
                 <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/confirm"><button class="ml-2 mt-0.5">실적 팀장 승인</button></router-link></li>
                 <li class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1"><router-link to="/non-enter"><button class="ml-2 mt-0.5">미입력자 관리</button></router-link></li>
@@ -76,11 +76,11 @@
           
           <!--승인 관리 폴더-->
           <!--관리자 폴더-->
-          <div v-if="is_manager" class="mb-1 shadow side-menu-bar">
-            <div class="text-lg bg-emerald-700 rounded-t pl-2">
+          <div v-if="is_manager" class="mb-1  side-menu-bar">
+            <div class="text-lg bg-emerald-700 shadow rounded-t pl-2">
               <button @click="smallMenuToggle('manager')">관리자</button>
             </div>
-            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+            <div class="bg-emerald-600 rounded-b pb-1 shadow pt-0.5">
               <ul v-if="LM_managerToggle" class="text-sm rounded bg-emerald-500 ml-3 mt-1 shadow mr-1">
                 <router-link to="/standard"><button class="ml-2 mt-0.5">공통 코드 관리</button></router-link>
               </ul>

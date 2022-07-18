@@ -22,7 +22,7 @@
       <div class="modal-total-time bg-gray-600 mt-3 pt-3 rounded-md" style="margin-top:10px">
         <div class="flex text-gray-200">
           <div class="ml-3 mr-3"><p>{{ planDay }}</p></div>
-          <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+          <div v-if="workFromHome()" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
           <div class="grow"></div>
           <!--시작 시간-->
           <div class="text-gray-200 ml-3 mr-3 text-lg">
@@ -94,7 +94,7 @@
         </div>
         <div class="flex text-gray-200 mt-10 pb-10">
           <div class="grow"></div>
-          <button  @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button><!--v-if="showEditBtn"-->
+          <button v-if="showEditBtn" @click="$emit('showEditModal')" class="bg-yellow-500 mr-4 w-10 hover:bg-yellow-600 active:bg-yellow-700 focus:outline-none rounded">수정</button><!---->
           <button @click="ConfirmData()" class="bg-emerald-500 w-10 hover:bg-emerald-600 active:bg-emerald-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  

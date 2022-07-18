@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3000,
     contentBase:'.',
     proxy:{
-      '/api': 'http://192.168.0.103:8080/'
+      '/api': 'http://10.1.8.136:8080'
       }
     }
   })
@@ -18,7 +18,7 @@ export default defineConfig({
 // 'http://10.1.8.207:8080'
 
 // 민아님 노트북 IP
-//'http://10.1.9.80:8080'
+//'http://10.1.8.136:8080'
 
 // 집 테스크탑
 //'http://192.168.0.103:8080/'

@@ -55,8 +55,8 @@
             <!--상단 요일 표시-->
             <div class="flex" style="width:1400px;">
                   <div class="bg-gray-700 text-gray-200 rounded-tl-lg border-slate-600 border-r-2 border-b-2 flex" style="width: 110px;">
-                    <p class="ml-7">전체</p>
-                    <input class="ml-3 mt-0.5 week-check-box-size" type="checkbox" v-model="allSelected">
+                    <p class="ml-7 mt-0.5">전체</p>
+                    <input class="pl-3 pt-0.5 week-check-box-size" type="checkbox" v-model="allSelected">
                   </div>
                   <div class="bg-gray-700 text-gray-200 day-menu border-slate-600 border-r-2 border-b-2">
                     <button>Mon</button>
@@ -108,7 +108,7 @@
                   <p class="text-black mt-5">2주차</p>
                   <input type="checkbox" class="week-check-box-size" v-model="secondWeekSelected">
                 </div>
-                <div v-for="(month,second) in calendarData[1]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2">
+                <div v-for="(month,second) in calendarData[1]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2 relative">
                   <div v-if="calendarInfo[1][second]" class="date bg-zinc-500 rounded">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
@@ -126,7 +126,7 @@
                   <p class="text-black mt-5">3주차</p>
                   <input type="checkbox" class="week-check-box-size" v-model="thirdWeekSelected">
                 </div>
-                <div v-for="(month,three) in calendarData[2]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2">
+                <div v-for="(month,three) in calendarData[2]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2 relative">
                   <div v-if="calendarInfo[2][three]" class="date bg-zinc-500 rounded">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
@@ -144,7 +144,7 @@
                   <p class="text-black mt-5">4주차</p>
                   <input type="checkbox" class="week-check-box-size" v-model="fourthWeekSelected">
                 </div>
-                <div v-for="(month,four) in calendarData[3]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2">
+                <div v-for="(month,four) in calendarData[3]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2 relative">
                   <div v-if="calendarInfo[3][four]" class="date bg-zinc-500 rounded">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
@@ -162,7 +162,7 @@
                   <p class="text-black mt-5">5주차</p>
                   <input type="checkbox" class="week-check-box-size" v-model="fifthWeekSelected">
                 </div>
-                <div v-for="(month,five) in calendarData[4]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2">
+                <div v-for="(month,five) in calendarData[4]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2 relative">
                   <div v-if="calendarInfo[4][five]" class="date bg-zinc-500 rounded">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
@@ -180,7 +180,7 @@
                   <p class="text-black mt-5">6주차</p>
                   <input type="checkbox" class="week-check-box-size" v-model="sixthWeekSelected">
                 </div>
-                <div v-for="(month, six) in calendarData[5]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2" :class="{'rounded-br-lg': six === 6}">
+                <div v-for="(month, six) in calendarData[5]" class="bg-gray-300 text-gray-200  day-menu border-r-2 calendar border-slate-600 flex border-b-2 relative" :class="{'rounded-br-lg': six === 6}">
                   <div v-if="calendarInfo[5][six]" class="date bg-zinc-500 rounded">
                     <p class="pt-1">{{month.date.slice(6,8)}}</p>
                   </div>
@@ -192,6 +192,14 @@
               </div>
             </div>
           </div>
+      </div>
+      <div class="text-rose-300">
+        <p>{{firstWeek}}</p>
+        <p>{{secondWeek}}</p>
+        <p>{{thirdWeek}}</p>
+        <p>{{fourthWeek}}</p>
+        <p>{{fifthWeek}}</p>
+        <p>{{sixthWeek}}</p>
       </div>
     </div>
     
@@ -215,7 +223,8 @@ export default {
             {text: '1월', value: '01'},
             {text: '2월', value: '02'},
             {text: '3월', value: '03'},
-            {text: '4월', value: '05'},
+            {text: '4월', value: '04'},
+            {text: '5월', value: '05'},
             {text: '6월', value: '06'},
             {text: '7월', value: '07'},
             {text: '8월', value: '09'},
@@ -310,13 +319,13 @@ export default {
           })
     },
     async SearchDate(){
-
+      this.calendarData=[];
       this.processingCalenderData =[];
       this.firstWeekData = []
       this.secondWeekData = []
       this.thirdWeekData = []
       this.fourthWeekData = []
-      this.sixthWeekData = []
+      this.fifthWeekData = []
       this.sixthWeekData = []
       this.allData = []
 
@@ -330,6 +339,8 @@ export default {
       this.SetCalenderInfo()
       console.log('안넘어감?')
       this.setWeekAndAllSelect()
+
+      console.log(this.calendarData)
     },
     //------------------------------------ AXIOS -------------------------------------------
     SetNowDate(){
@@ -417,14 +428,18 @@ export default {
                 isDeadline: this.processingCalenderData[index].isDeadline,
               })
               index++;
-            } else{
+            }else{
               week.push({
                 date : '0',
                 isDeadline: '0',
               })
             }
+          }else{
+            week.push({
+              date: '0',
+              isDeadline : '0',
+            })
           }
-          
         }
         DeadLineMonth[i] = week;
       }
@@ -500,14 +515,13 @@ export default {
           }
         }
       }
-      for(var i = 0;i<this.showWeek.length;i++){
-        for(var j = 0;j<7;j++){
-          if(this.calendarData[i][j].date != '0'){
-            this.allData.push(this.calendarData[i][j]);
-          }
-        }
-      }
-      console.log(this.firstWeekData)
+      this.allData.push(this.firstWeekData);
+      this.allData.push(this.secondWeekData);
+      this.allData.push(this.thirdWeekData);
+      this.allData.push(this.fourthWeekData);
+      this.allData.push(this.fifithWeekData);
+      this.allData.push(this.sixthWeekData);
+      console.log(this.allData)
     },
     arrangementSendData(){
       this.sendData.push(...this.firstWeek)

@@ -290,7 +290,13 @@ export default {
       },
     // 상단 검색 버튼을 누르면 실행되는 메서드
     async SearchDate(){
-      
+      this.HolidayCheck = [false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+      this.isDummy = [false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+      this.status = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+    
+      this.confirm = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+      this.approve = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
+      this.ended = [false,false,false,false,false,false,false,false,false,false,false,false,false,false];
       await this.GetServer();
 
       this.SecondPlanTotalHour = 0;
@@ -541,10 +547,12 @@ export default {
           console.log(this.HolidayCheck);
       },
       showCalenderData(index){
-        if(this.HolidayCheck[index] || this.isDummy[index]){//휴일 false, 더미 false일때만
+        if(this.HolidayCheck[index] && this.isDummy[index]){//휴일 false, 더미 false일때만
           return false;
-        }else{
+        }else if(!(this.HolidayCheck[index]) && !(this.isDummy[index])){
           return true; 
+        }else{
+          false;
         }
       },
     logout(){

@@ -84,8 +84,8 @@
 
       <div class="flex mt-4">
         <div class="grow"></div>
-        <router-link to="/registerplanweek"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">주간 별 계획</button></router-link>
-        <router-link to="/registerplandetail"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">요일 별 계획</button></router-link>
+        <router-link :to="{name: '/registerplanweek' , params: {selectWeek: this.$route.params.selectWeek} }"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">주간 별 계획</button></router-link>
+        <router-link :to="{name: '/registerplandetail', params: {selectWeek: this.$route.params.selectWeek} }"><button style="width: 120px" class="text-white bg-sky-600 rounded ml-4">요일 별 계획</button></router-link>
         <button @click="PostData('0')" style="width: 50px" class="ml-4 text-white bg-gray-500 rounded">저장</button>
         <button @click="PostData('1')" style="width: 50px" class="ml-4 text-white bg-emerald-500 rounded">등록</button>
         <div class="grow"></div>
@@ -115,6 +115,7 @@ export default {
     this.ClassifyProject();
     this.MountSelect();
     this.SetTaskHour_v2();
+    console.log(this.$route.params.selectWeek);
   },
   data() {
     return {
@@ -133,7 +134,7 @@ export default {
       //화면에 뿌려주는 변수
       WeekWorkTime: 0,
       viewData: [{
-        Week: "7월 1주차 ~ 7월 2주차",
+        Week: '',
         seq: 1,
         taskHour: 8,
         dayHour: 8,
@@ -191,6 +192,11 @@ export default {
       subProejct: [],
     }
   },
+  props:{
+    selectWeek:{
+      type: String,
+    } 
+  },
   methods: {
     //----------------------------------------------AXIOS GET 통신 ----------------------------------------
     async getTask(){
@@ -227,9 +233,9 @@ export default {
             .then((res)=>{
               if(res.data.code === 1000){
                 this.searchWeekly = res.data.result.twoWeeksDtos;
-                this.startDate = res.data.result.startOfWeek;
-                console.log('시작날짜',this.selectWeek)
-                console.log('주간데이터', this.searchWeekly)
+                // this.startDate = res.data.result.startOfWeek;
+                console.log('시작날짜',this.startDate);
+                console.log('주간데이터', this.searchWeekly);
               }else{
                 alert(this.backMessage);
                 this.logout();
@@ -240,12 +246,14 @@ export default {
             })
       },
     SetStartWeek(){ 
+      this.startDate = this.$route.params.selectWeek;
       for(var i = 0;i<this.searchWeekly.length;i++){
         if(this.searchWeekly[i].fromdt === this.startDate){
           this.week = this.searchWeekly[i].content;
           break;
         }
       }
+      this.viewData[0].Week = this.week;
     },
     MountSelect() { // subTask 완성
       //MainTask - 완성
@@ -297,7 +305,7 @@ export default {
     addTaskBox() {
       this.viewData.push(
           {
-            Week: "7월 1주차 ~ 7월 2주차",
+            Week: this.week,
             seq: 1,
             taskHour: 8,
             dayHour: 8,
@@ -469,47 +477,61 @@ export default {
       var index = 0;
       for(var i = 0;i<14;i++){
         for(var j = 0; j<this.viewData.length;j++){
-          this.sendData[index] = {
-            planId: 0,
-            planDay: String(Number(this.startDate)+i),
-            seq: this.viewData[j].seq,
-            taskHour: this.viewData[j].taskHour,
-            dayHour: this.viewData[j].dayHour,
-            startedHour: this.viewData[j].started_hour,
-            endedHour: this.viewData[j].endedHour,
-            groupMainId: this.viewData[j].groupMainId,
-            groupSubId: this.viewData[j].groupSubId,
-            codeId : this.viewData[j].codeId,
-            codeMainNm: this.viewData[j].codeMainNm,
-            codeSubNm: this.viewData[j].codeSubNm,
-            workDetail : this.viewData[j].workDetail,
-            wfhYn: "0",
-            enrollYn: '0',
-            isHoliday :"N"
-          }
           if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].isHoliday = "Y";
+            console.log('주말데이터');
+          }else{
+            this.sendData[index] = {
+              planId: 0,
+              planDay: String(Number(this.startDate)+i),
+              seq: this.viewData[j].seq,
+              taskHour: this.viewData[j].taskHour,
+              dayHour: this.viewData[j].dayHour,
+              startedHour: this.viewData[j].started_hour,
+              endedHour: this.viewData[j].endedHour,
+              groupMainId: this.viewData[j].groupMainId,
+              groupSubId: this.viewData[j].groupSubId,
+              codeId : this.viewData[j].codeId,
+              codeMainNm: this.viewData[j].codeMainNm,
+              codeSubNm: this.viewData[j].codeSubNm,
+              workDetail : this.viewData[j].workDetail,
+              wfhYn: "0",
+              enrollYn: '0',
+              isHoliday :"N"
+            }
+            index++;  
           }
-          index++;
         }
       }
       console.log(this.sendData)
-      if(status === '0'){
-        await axios.post('/api/plans/drafts',this.sendData,{withCredentials: true})
-            .then((res)=>{
-              if(res.data.code === 1000){
-                alert('계획이 등록 되었습니다.')
-              }else if(res.data.code === 5006){
-                alert(this.backMessage);
-                this.logout();
-              }else{
-                alert(res.data.message)
-              }
-            })
-            .catch((res)=>{
-              console.error(res);
-            })
-      }
+      // if(status === '0'){
+      //   await axios.post('/api/plans/drafts',this.sendData,{withCredentials: true})
+      //       .then((res)=>{
+      //         if(res.data.code === 1000){
+      //           alert('계획이 등록 되었습니다.')
+      //         }else if(res.data.code === 5006){
+      //           alert(this.backMessage);
+      //           this.logout();
+      //         }else{
+      //           alert(res.data.message)
+      //         }
+      //       })
+      //       .catch((res)=>{
+      //         console.error(res);
+      //       })
+      // }else{
+      //   await axios.patch('/api/plans', this.sendData,{withCredentials:true})
+      //   .then((res)=>{
+      //     if(res.data.code === 1000){
+      //       alert('계획이 등록 되었습니다.')
+      //       this.$router.go(0)
+      //     }else if(res.data.code === 5006){
+      //           alert(this.backMessage);
+      //           this.logout();
+      //         }else{
+      //           alert(res.data.message)
+      //         }
+      //   })
+      // }
     },
     logout(){
       localStorage.setItem('memberId', '0')

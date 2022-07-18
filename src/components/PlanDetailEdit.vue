@@ -16,7 +16,7 @@
       <div class="modal-total-time bg-gray-600 mt-3 pt-3 rounded-md" style="margin-top:10px">
       <div class="flex text-gray-200 bg 	">
         <div class="ml-3 mr-3"><p>{{ planDay }}</p></div>
-        <div v-if="workFromHome" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
+        <div v-if="workFromHome()" class="bg-sky-300 w-16 h-6 rounded-md">재택근무</div>
         <div class="grow"></div>
         <!--시작 시간-->
         <div class="text-black ml-3 mr-3">
@@ -169,7 +169,9 @@ export default {
       //보내는 데이터
       DeleteData: [],
       sendTaskData:[],
-      sendDeleteData:[],
+      sendDeleteData:{
+        planIds: [],
+      },
       //보여주는 데이터
       default_value : 'selected',
       startTime:[
@@ -378,7 +380,7 @@ export default {
       let arr = Object.values(this.DeleteData);
 
       console.log(arr);
-      this.sendDeleteData = [...arr];
+      this.sendDeleteData.planIds = [...arr];
 
       if(this.sendTaskData.length<2){
         this.deleteBox = false
@@ -602,10 +604,7 @@ export default {
         console.error(res)
       })
 
-      await axios.delete('api/plans/',{
-        data:{
-          deleteId:this.sendDeleteData,
-        },
+      await axios.post('api/plans/delete',this.sendDeleteData,{
         params:{
           day: String(this.sendTaskData[0].perfDay)
         },withCredentials:true})

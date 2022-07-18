@@ -152,11 +152,13 @@ export default {
       viewData: [[]],
       isHoliday : [true, true, true, true, true, true, true, true, true, true, true, true, true, true],
       detailTask: [],
+      SendDate: [],
 
 
       //날짜에 대한 변수
       Viewdate:[],
       ViewDay:['월','화','수','목','금','토','일','월','화','수','목','금','토','일'],
+      EndDayOfMonth: [31,28,31,30,31,30,31,31,30,31,30,31],
 
 
       //시간에 대한 변수
@@ -203,6 +205,11 @@ export default {
       subProejct: [],
     }
   },
+  props:{
+    selectWeek:{
+      type: String,
+    } 
+  },
   methods: {
     async getTask(){
       var testtask
@@ -238,8 +245,8 @@ export default {
             .then((res)=>{
               if(res.data.code === 1000){
                 this.searchWeekly = res.data.result.twoWeeksDtos;
-                this.startDate = res.data.result.startOfWeek;
-                console.log('시작날짜',this.selectWeek)
+                // this.startDate = res.data.result.startOfWeek;
+                // console.log('데이터',this.startDate)
                 console.log('주간데이터', this.searchWeekly)
               }else{
                 alert(this.backMessage);
@@ -251,6 +258,7 @@ export default {
             })
       },
     SetStartWeek(){ 
+      this.startDate = this.$route.params.selectWeek;
       for(var i = 0;i<this.searchWeekly.length;i++){
         if(this.searchWeekly[i].fromdt === this.startDate){
           this.week = this.searchWeekly[i].content;
@@ -288,11 +296,37 @@ export default {
 
       //select 변수의 2차원 배열의 형태 셋팅
 
-      var date = []
+      var start = Number(this.startDate)
+      var year = start/10000
+
+      if(year === 0 && year%100 != 0 || year%400 === 0){
+          this.EndDayOfMonth[1] = 29;
+        }
+        var startMonth = parseInt((start%10000)/100);
+        console.log(startMonth)
+        var EndDay = this.EndDayOfMonth[startMonth-1];
+
+        EndDay = parseInt(start/100)*100+EndDay;
+        console.log(EndDay)
+        var newMonth = 0;
+        var newMonthDay = 0
+        var newDay = 0
+        var date =[]
+         for(var i = 0;i<14;i++){
+          date[i] = start+i;
+          if(date[i] > EndDay){
+            newDay = + parseInt(EndDay%10000) 
+            newMonthDay = parseInt(EndDay/10000)*10000 + (parseInt(newDay/100)+1)*100 + 1
+            date[i] = newMonthDay+newMonth;
+            newMonth++;
+          }
+        }
+        console.log(date)
+      
       for(var i = 0;i<14;i++){
         var strdate = ''
-        date[i] = this.startDate+i;
         strdate = String(date[i])
+        this.SendDate[i] = strdate
         this.Viewdate[i] = [strdate.slice(0,4),'.',strdate.slice(4,6),'.',strdate.slice(6,8)].join('');
 
         if(this.viewData[i][0].isHoliday === 'Y'){
@@ -451,6 +485,7 @@ export default {
         this.taskEndHour[j] = taskend
         this.taskTime[j] = tasktime
       }
+      
       for(var i = 0;i<14;i++){
         this.totalDayWorkTime[i] = this.viewData[i][0].dayHour;
         this.StartWorkTime[i] = this.viewData[i][0].started_hour;
@@ -461,6 +496,9 @@ export default {
           this.totalWeekWorkTime += this.totalDayWorkTime[i];
         }
       }
+      console.log(this.taskTime)
+      console.log(this.totalDayWorkTime);
+      console.log(this.totalWeekWorkTime)
       this.RenderTime_all()
     },
 
@@ -475,12 +513,23 @@ export default {
     onChangeTaskHour_v2(e, index,dateIndex){
 
       this.taskTime[dateIndex][index] = Number(e.target.value);
+      console.log(this.taskTime)
       var sumTime = 0
       for(var i = 0;i<this.taskTime[dateIndex].length;i++){
         sumTime += this.taskTime[dateIndex][i]
       }
-      this.totalDayWorkTime = sumTime
+      this.totalDayWorkTime[dateIndex] = sumTime
 
+      var sumWeek = 0;
+      for(var i = 0;i<this.totalDayWorkTime.length;i++){
+        if(i === 5 || i === 6 || i === 12|| i === 13){
+         console.log('주말') 
+        }else{
+          sumWeek += this.totalDayWorkTime[i];
+        }
+      }
+      this.totalWeekWorkTime = sumWeek;
+      console.log(this.totalWeekWorkTime)
       this.calTime_v2(dateIndex);
 
 
@@ -606,11 +655,15 @@ export default {
       var index = 0;
       for(var i = 0;i<14;i++){
         for(var j = 0; j<this.viewData[i].length;j++){
-          this.sendData[index] = {
-            planDay: this.startDate+i,
+          if(i === 5 || i === 6 || i === 12 || i === 13){
+            console.log(i,'주말')
+          }else{
+            this.sendData[index] = {
+            planId:0,
+            planDay: this.SendDate[i],
             seq: this.viewData[i][j].seq,
-            taskHour: this.viewData[i][j].taskHour,
-            dayHour: this.viewData[i][j].dayHour,
+            taskHour: this.taskTime[i][j],
+            dayHour: this.totalDayWorkTime[i],
             startedHour: this.viewData[i][j].started_hour,
             endedHour: this.viewData[i][j].endedHour,
             groupMainId: this.viewData[i][j].groupMainId,
@@ -623,19 +676,18 @@ export default {
             enrollYn: status,
             isHoliday :"N"
           }
-          if(i === 5 || i === 6 || i === 12 || i === 13){
-            this.sendData[index].isHoliday = "Y";
-          }
+          
           index++;
+          }
         }
       }
       console.log(this.sendData)
       if(status === '1'){
-        await axios.post('/api/drafts',this.sendData,{withCredentials: true})
+        await axios.post('/api/plans/drafts',this.sendData,{withCredentials: true})
             .then((res)=>{
               if(res.data.code === 1000){
                 alert('계획이 수정되었습니다.')
-                this.$router.push('/plan')
+                this.$router.go(0)
               }else if(res.data.code === 5006){
                 alert(this.backMessage);
                 this.logout();
@@ -646,6 +698,19 @@ export default {
             .catch((res)=>{
               console.error(res);
             })
+      }else{
+        await axios.patch('/api/plans', this.sendData,{withCredentials:true})
+        .then((res)=>{
+          if(res.data.code === 1000){
+            alert('계획이 등록 되었습니다.')
+            this.$router.go(0)
+          }else if(res.data.code === 5006){
+                alert(this.backMessage);
+                this.logout();
+              }else{
+                alert(res.data.message)
+              }
+        })
       }
     },
     logout(){
