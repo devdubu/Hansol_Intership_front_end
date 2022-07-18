@@ -75,6 +75,7 @@
                   <!---->
                   <div class="interval  bg-gray-600  border-l" style="width:120px;">
                     <button v-if="IsMyProject(project.isMyProject)" @click="PostData(project.projectId)" class="w-10 h-4 mt-2 text-gray-200 rounded-lg bg-sky-500 hover:bg-sky-600 active:bg-sky-700 focus:outline-none ">참여</button>
+                    <button v-if="IsMyProjectForDelete(project.isMyProject)" @click="DeleteData(project.projectId)" class="w-10 h-4 mt-2 text-gray-200 rounded-lg bg-red-500 hover:bg-red-600 active:bg-red-700 focus:outline-none ">삭제</button>
                   </div>
                 </div>
               </div>
@@ -146,6 +147,26 @@ export default {
         return false;
       }
     },
+    async DeleteData(projectId){
+      if(confirm('삭제하시겠습니까?') == true){
+        await axios.post('/api/projects/delete/'+projectId,{
+          memberId: localStorage.getItem('memberId')
+        },{withCredentials:true})
+            .then((res)=>{
+              if(res.data.code === 1000){
+                alert('삭제 되었습니다.')
+              }else{
+                alert(res.data.message);
+              }
+            })
+            .catch((res)=>{
+              console.error(res);
+            })
+        await this.GetProject();
+      }else{
+        return false;
+      }
+    },
     writeDate(){
      for(var i = 0; i<this.proj.length;i++){
       this.startedAt[i] = [this.proj[i].startedAt.slice(0,4),'-',this.proj[i].startedAt.slice(4,6),'-',this.proj[i].startedAt.slice(6,8)].join('')
@@ -157,6 +178,13 @@ export default {
       return false;
     }else{
       return true;
+    }
+    },
+    IsMyProjectForDelete(project){
+    if(project === '1'){
+      return true;
+    }else{
+      return false;
     }
    },
     logout(){
