@@ -413,7 +413,10 @@ export default {
     },
     removeTaskBox(dateIndex){
       if(this.viewData[dateIndex].length > 1){
-        this.viewData[dateIndex].pop();  
+        this.viewData[dateIndex].pop();
+        this.taskStartHour[dateIndex].pop();
+        this.taskEndHour[dateIndex].pop();
+        this.RenderTime_v2(dateIndex);
       }else{
         alert('삭제할 수 없습니다.');
       }
@@ -583,6 +586,7 @@ export default {
 
       if(EndTime > 2400){
         EndTime -= 2400;
+        this.taskEndHour[dateIndex][index] = EndTime;
         if(EndTime === 30){
           var EndDay = '00'+String(EndTime);
         }else{

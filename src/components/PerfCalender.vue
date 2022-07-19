@@ -101,7 +101,7 @@
               <!--2주차 월요일-->
               <div class="relative calendar-interval bg-gray-200 box-border border-2 border-gray-300" style="width:175px">
                 <div class="flex">
-                  <div class="ml-1 mt-1 flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index] ? 'bg-rose-500':'bg-gray-500']">
+                  <div class="ml-1 mt-1 flex-inital w-10 h-10 rounded" :class="[HolidayCheck[index+7] ? 'bg-rose-500':'bg-gray-500']">
                     <p class="mt-2 text-gray-200">{{viewDate[index+7]}}</p>
                   </div>
                   <div  v-if="showCalenderData(index+7)" class="grow mt-2">

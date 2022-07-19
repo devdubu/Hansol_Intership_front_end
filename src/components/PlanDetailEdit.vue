@@ -381,7 +381,10 @@ export default {
 
       console.log(arr);
       this.sendDeleteData.planIds = [...arr];
-
+      this.taskStartHour.pop();
+      this.taskEndHour.pop();
+      this.RenderTime_v2()
+      
       if(this.sendTaskData.length<2){
         this.deleteBox = false
       }
@@ -562,6 +565,7 @@ export default {
 
       if(EndTime > 2400){
         EndTime -= 2400;
+        this.taskEndHour[index] = EndTime;
         if(EndTime === 30){
           var EndDay = '00'+String(EndTime);
         }else{

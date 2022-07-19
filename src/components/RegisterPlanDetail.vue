@@ -437,7 +437,10 @@ export default {
     },
      removeTaskBox(dateIndex){
       if(this.viewData[dateIndex].length > 1){
-        this.viewData[dateIndex].pop();  
+        this.viewData[dateIndex].pop();
+        this.taskStartHour[dateIndex].pop();
+        this.taskEndHour[dateIndex].pop();
+        this.RenderTime_v2(dateIndex);
       }else{
         alert('삭제할 수 없습니다.');
       }
@@ -594,7 +597,26 @@ export default {
     },
     RenderTime_v2(dateIndex){
       for(var i = 0;i<this.taskStartHour[dateIndex].length;i++){
-        var start = this.taskStartHour[dateIndex][i];
+       
+      var index = this.taskStartHour[dateIndex].length-1
+
+      var EndTime = this.taskEndHour[dateIndex][index];
+
+      if(EndTime > 2400){
+        EndTime -= 2400;
+        this.taskEndHour[dateIndex][index] = EndTime;
+        if(EndTime === 30){
+          var EndDay = '00'+String(EndTime);
+        }else{
+          var EndDay = '0'+String(EndTime);
+        }
+      }else{
+        var EndDay = String(EndTime);
+      }
+
+      this.EndWorkTime[dateIndex] = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
+
+       var start = this.taskStartHour[dateIndex][i];
         var end = this.taskEndHour[dateIndex][i];
 
         if(start/100 < 10){
@@ -615,23 +637,6 @@ export default {
       this.StartWorkTime[dateIndex] = '0'+String(start)
 
 
-
-      var index = this.taskStartHour[dateIndex].length-1
-
-      var EndTime = this.taskEndHour[dateIndex][index];
-
-      if(EndTime > 2400){
-        EndTime -= 2400;
-        if(EndTime === 30){
-          var EndDay = '00'+String(EndTime);
-        }else{
-          var EndDay = '0'+String(EndTime);
-        }
-      }else{
-        var EndDay = String(EndTime);
-      }
-
-      this.EndWorkTime[dateIndex] = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
 
     },
     //---------------------------------------경고창 모음집--------------------------------------

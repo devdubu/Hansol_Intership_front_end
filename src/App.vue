@@ -51,7 +51,7 @@
             <div class="text-lg bg-emerald-700 shadow pl-2 rounded-t">
               <button @click="smallMenuToggle('project')">프로젝트 관리</button>
             </div>
-            <div class="bg-emerald-600 rounded-b pb-1 pt-0.5">
+            <div class="bg-emerald-600 rounded-b pb-1 shadow pt-0.5">
               <ul v-if="LM_projectToggle" class="text-sm rounded bg-emerald-500 ml-3 mt-0.5 shadow mr-1">
                 <router-link to="/project"><button class="ml-2 mt-0.5">내 프로젝트</button></router-link>
               </ul>

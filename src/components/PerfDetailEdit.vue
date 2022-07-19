@@ -408,6 +408,10 @@ export default {
       this.DeleteData.push(data)
 
       let arr = Object.values(this.DeleteData);
+      
+      this.taskStartHour.pop();
+      this.taskEndHour.pop();
+      this.RenderTime_v2()
 
       console.log(arr);
       this.sendDeleteData.perfIds = [...arr];
@@ -589,6 +593,7 @@ export default {
       var index = this.taskStartHour.length-1
       if(EndTime > 2400){
         EndTime -= 2400;
+        this.taskEndHour[index] = EndTime;
         if(EndTime === 30){
           var EndDay = '00'+String(EndTime);
         }else{
@@ -597,7 +602,7 @@ export default {
       }else{
         var EndDay = String(EndTime);
       }
-      
+
       this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('');
 
     },
