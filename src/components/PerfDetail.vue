@@ -75,7 +75,7 @@
                   <div class=" mt-3 ml-3 pr-3 border-r-2"><p>{{ data.codeMainNm }}</p></div>
                   <div class="mt-3 ml-3"><p>{{ data.codeSubNm }}</p></div>
                   <div class="grow"></div>
-                  <div v-if="confirm[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-green-500 rounded-xl"><p class="mt-0.5">확정</p></div>
+                  <div v-if="confirm[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-emerald-500 rounded-xl"><p class="mt-0.5">확정</p></div>
                   <div v-if="approve[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-fuchsia-500 rounded-xl"><p class="mt-0.5">팀장</p></div>
                   <div v-if="ended[index]" class="mt-2 h-7 w-11 mr-2 w-8 bg-rose-500 rounded-xl"><p class="mt-0.5">마감</p></div>
                 </div>
@@ -155,7 +155,7 @@ export default {
       console.log(perfConfirmDay)
 
       //axios 통신
-      await axios.post('/api/performances/confirm',{
+      await axios.patch('/api/performances/confirm',{},{
         params:{
           day: perfConfirmDay
         }

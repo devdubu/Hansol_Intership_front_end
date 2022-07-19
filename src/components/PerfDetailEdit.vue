@@ -71,7 +71,7 @@
           <div class="text-gray-200">
             <div class="mt-4 perf-box rounded">
               <div class="flex mb-2">
-                <div class="ml-2 border-l border-green-400 ml-3"><p class="ml-3">실적업무</p></div>
+                <div class="ml-2 border-l border-emerald-400 ml-3"><p class="ml-3">실적업무</p></div>
                 <div class="grow"></div>
                 <button v-if="deleteBox" @click="removeTaskBox" class="mr-2 bg-rose-500 w-6 rounded-md hover:bg-rose-600 active:bg-rose-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-xmark" /></button>
                 <button @click="addTaskBox" class="pt-0.5 rounded-md bg-teal-500 w-6 h-6 mr-5 hover:bg-teal-600 active:bg-teal-700 focus:outline-none"><font-awesome-icon icon="fa-solid fa-plus"/></button>
@@ -132,7 +132,7 @@
         <div class="flex text-gray-200 mt-10 pb-10">
           <div class="grow"></div>
           <button @click="PostData('1')" class="bg-teal-500 mr-4 w-10 hover:bg-teal-600 active:bg-teal-700 focus:outline-none rounded">저장</button>
-          <button @click="PostData('2')" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
+          <button @click="confirmPost()" class="bg-cyan-500 w-10 hover:bg-cyan-600 active:bg-cyan-700 focus:outline-none rounded">확정</button>
           <div class="grow"></div>
         </div>  
 
@@ -591,6 +591,8 @@ export default {
       this.StartWorkTime = '0'+String(start)
 
       var index = this.taskStartHour.length-1
+      var EndTime = this.taskEndHour[index]
+      
       if(EndTime > 2400){
         EndTime -= 2400;
         this.taskEndHour[index] = EndTime;

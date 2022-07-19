@@ -466,7 +466,7 @@ export default {
       for(var i = 0;i<this.checkDate.length;i++){
         if(this.checkDate[i].isDeadline === '1'){
           alert([this.checkDate[i].date.slice(0,4),'년 ',this.checkDate[i].date.slice(4,6),'월 ',this.checkDate[i].date.slice(6,8),'일'].join('')+'은 마감일 이므로 승인이 불가능합니다.')
-          return
+          return false;
         }
       }
 
@@ -517,7 +517,7 @@ export default {
           }
         }
       }
-      
+      return true;
       // memberid를 비교해서 결과물을 추출해본다.
 
 
@@ -565,6 +565,7 @@ export default {
             this.backMessage = res.data.message;
             if(this.responseCode === 1000){
               alert('승인 처리가 완료 되었습니다.')
+              this.$router.go(0);
             }else{
               alert(this.backMessage)
             }
@@ -599,6 +600,7 @@ export default {
           .then((res)=>{
             if(res.data.code === 1000){
               alert('승인 취소가 완료 되었습니다.')
+              this.$router.go(0)
             }else{
               alert(res.data.message);
             }
