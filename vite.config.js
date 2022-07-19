@@ -9,7 +9,7 @@ export default defineConfig({
     port: 3000,
     contentBase:'.',
     proxy:{
-      '/api': 'http://10.1.8.136:8080'
+      '/api': 'http://10.1.8.216:8080'
       }
     }
   })

@@ -441,7 +441,20 @@ export default {
       this.StartWorkTime = '0'+String(start)
 
       var index = this.taskStartHour.length-1
-      var EndDay = String(this.taskEndHour[index])
+
+      var EndTime = this.taskEndHour[index];
+
+      if(EndTime > 2400){
+        EndTime -= 2400;
+        if(EndTime === 30){
+          var EndDay = '00'+String(EndTime);
+        }else{
+          var EndDay = '0'+String(EndTime);
+        }
+      }else{
+        var EndDay = String(EndTime);
+      }
+
       this.EndWorkTime = [EndDay.slice(0,2),':',EndDay.slice(2,4)].join('')
 
     },
